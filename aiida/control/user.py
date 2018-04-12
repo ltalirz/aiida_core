@@ -36,7 +36,6 @@ def get_user_of_default_profile(config=None):
         from aiida.common.setup import get_or_create_config
         config = get_or_create_config()
 
-    from aiida.common.exceptions import NotExistent
     try:
         profiles = config['profiles']
         default_conf_name = config['default_profiles']['verdi']
@@ -52,5 +51,5 @@ def get_user_of_default_profile(config=None):
         duser = users[0]
         return duser
 
-    except (KeyError, NotExistent):
+    except (KeyError, IOError):
         return None
