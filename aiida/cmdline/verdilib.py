@@ -34,6 +34,7 @@ from aiida.cmdline.baseclass import VerdiCommand, VerdiCommandRouter
 from aiida.cmdline import pass_to_django_manage
 from aiida.backends import settings as settings_profile
 from aiida.control.postgres import Postgres, manual_setup_instructions, prompt_db_info
+from aiida.control.user import get_user_of_default_profile
 from aiida.cmdline.commands import verdi
 from  aiida.backends.profile import (BACKEND_DJANGO, BACKEND_SQLA)
 
@@ -604,6 +605,7 @@ def setup(profile, only_config, non_interactive=False, **kwargs):
 
     print "Setup finished."
 
+duser = None
 
 class Quicksetup(VerdiCommand):
     '''
@@ -623,15 +625,26 @@ class Quicksetup(VerdiCommand):
 
     @staticmethod
     def _ctx(args, info_name='verdi quicksetup', **kwargs):
+        global duser
+        duser = get_user_of_default_profile()
+
+        if duser is None:
+            duser = type('placeholder', (), {})()
+            duser.email = None
+            duser.first_name = None
+            duser.last_name = None
+            duser.institute = None
+
         return quicksetup.make_context(info_name, list(args), **kwargs)
 
 @verdi.command('quicksetup', context_settings=CONTEXT_SETTINGS)
 @click.option('--profile', prompt='Profile name', type=str, default='quicksetup')
+# Note: lambda functions are needed to delay evaluation of the default values
 @click.option('--email', prompt='Email Address (identifies your data when sharing)', type=str,
-                help='This email address will be associated with your data and will be exported along with it, should you choose to share any of your work')
-@click.option('--first-name', prompt='First Name', type=str)
-@click.option('--last-name', prompt='Last Name', type=str)
-@click.option('--institution', prompt='Institution', type=str)
+        help='This email address will be associated with your data and will be exported along with it, should you choose to share any of your work', default=lambda: duser.email)
+@click.option('--first-name', prompt='First Name', type=str, default=lambda: duser.first_name)
+@click.option('--last-name', prompt='Last Name', type=str, default=lambda: duser.last_name)
+@click.option('--institution', prompt='Institution', type=str, default=lambda: duser.institution)
 @click.option('--backend', type=click.Choice([BACKEND_DJANGO, BACKEND_SQLA]), default=BACKEND_DJANGO)
 @click.option('--db-port', type=int)
 @click.option('--db-user', type=str)
@@ -641,7 +654,7 @@ class Quicksetup(VerdiCommand):
 @click.option('--set-default/--no-set-default', default=None, help='Whether to set new profile as default for shell and daemon.')
 @click.option('--non-interactive', is_flag=True, help='never prompt the user for input, read values from options')
 @click.pass_obj
-def quicksetup(self, profile, email, first_name, last_name, institution, backend, db_port, db_user, db_user_pw, db_name,
+def quicksetup(ctx, profile, email, first_name, last_name, institution, backend, db_port, db_user, db_user_pw, db_name,
                     repo, set_default, non_interactive):
     '''Set up a sane aiida configuration with as little interaction as possible.'''
     from aiida.common.setup import create_base_dirs, AIIDA_CONFIG_FOLDER

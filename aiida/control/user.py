@@ -21,3 +21,35 @@ def get_or_new_user(**kwargs):
         user = User(**kwargs)
         created = True
     return user, created
+
+
+def get_user_of_default_profile(config=None):
+    """ Returns AiiDA user associated with default profile.
+
+    :param config: AiiDA configuration file
+
+    :return duser: Default user or None
+    :rtype duser: aiida.orm.user.User
+    """
+
+    if config is None:
+        from aiida.common.setup import get_or_create_config
+        config = get_or_create_config()
+
+    try:
+        profiles = config['profiles']
+        default_conf_name = config['default_profiles']['verdi']
+        default_conf = profiles[default_conf_name]
+        default_email = default_conf['default_user_email']
+
+        from aiida import load_dbenv, is_dbenv_loaded
+        if not is_dbenv_loaded():
+            load_dbenv()
+
+        from aiida.orm.user import User as AiiDAUser
+        users = AiiDAUser.search_for_users(email=default_email)
+        duser = users[0]
+        return duser
+
+    except KeyError:
+        return None
