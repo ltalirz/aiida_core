@@ -28,8 +28,8 @@ def get_user_of_default_profile(config=None):
 
     :param config: AiiDA configuration file
 
-    :return duser: Default user or None
-    :rtype duser: aiida.orm.user.User
+    :return default_user: Default user or None
+    :rtype default_user: aiida.orm.user.User
     """
 
     if config is None:
@@ -48,8 +48,9 @@ def get_user_of_default_profile(config=None):
 
         from aiida.orm.user import User as AiiDAUser
         users = AiiDAUser.search_for_users(email=default_email)
-        duser = users[0]
-        return duser
+        default_user = users[0]
 
-    except (KeyError, IOError):
-        return None
+    except KeyError:
+        default_user = None
+
+    return default_user

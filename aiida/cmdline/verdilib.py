@@ -605,7 +605,7 @@ def setup(profile, only_config, non_interactive=False, **kwargs):
 
     print "Setup finished."
 
-duser = None
+default_user = None
 
 class Quicksetup(VerdiCommand):
     '''
@@ -625,15 +625,18 @@ class Quicksetup(VerdiCommand):
 
     @staticmethod
     def _ctx(args, info_name='verdi quicksetup', **kwargs):
-        global duser
-        duser = get_user_of_default_profile()
+        global default_user
+        try:
+            default_user = get_user_of_default_profile()
+        except IOError:
+            default_user = None
 
-        if duser is None:
-            duser = type('placeholder', (), {})()
-            duser.email = None
-            duser.first_name = None
-            duser.last_name = None
-            duser.institute = None
+        if default_user is None:
+            default_user = type('placeholder', (), {})()
+            default_user.email = None
+            default_user.first_name = None
+            default_user.last_name = None
+            default_user.institute = None
 
         return quicksetup.make_context(info_name, list(args), **kwargs)
 
@@ -641,10 +644,10 @@ class Quicksetup(VerdiCommand):
 @click.option('--profile', prompt='Profile name', type=str, default='quicksetup')
 # Note: lambda functions are needed to delay evaluation of the default values
 @click.option('--email', prompt='Email Address (identifies your data when sharing)', type=str,
-        help='This email address will be associated with your data and will be exported along with it, should you choose to share any of your work', default=lambda: duser.email)
-@click.option('--first-name', prompt='First Name', type=str, default=lambda: duser.first_name)
-@click.option('--last-name', prompt='Last Name', type=str, default=lambda: duser.last_name)
-@click.option('--institution', prompt='Institution', type=str, default=lambda: duser.institution)
+        help='This email address will be associated with your data and will be exported along with it, should you choose to share any of your work', default=lambda: default_user.email)
+@click.option('--first-name', prompt='First Name', type=str, default=lambda: default_user.first_name)
+@click.option('--last-name', prompt='Last Name', type=str, default=lambda: default_user.last_name)
+@click.option('--institution', prompt='Institution', type=str, default=lambda: default_user.institution)
 @click.option('--backend', type=click.Choice([BACKEND_DJANGO, BACKEND_SQLA]), default=BACKEND_DJANGO)
 @click.option('--db-port', type=int)
 @click.option('--db-user', type=str)
