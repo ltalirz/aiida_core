@@ -30,7 +30,7 @@ from pgtest.pgtest import PGTest
 
 from aiida.cmdline.commands.cmd_setup import setup
 from aiida.cmdline.commands.cmd_quicksetup import quicksetup
-from aiida.control.postgres import Postgres
+from aiida.manage.external.postgres import Postgres
 from aiida.backends import settings as backend_settings
 
 

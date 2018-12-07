@@ -22,7 +22,7 @@ from aiida.cmdline.utils import echo
 from aiida.cmdline.utils.decorators import with_dbenv, deprecated_command
 from aiida.cmdline.utils.multi_line_input import ensure_scripts
 from aiida.common.exceptions import InputValidationError
-from aiida.control.code import CodeBuilder
+from aiida.manage.external.code import CodeBuilder
 
 
 @verdi.group('code')

@@ -18,7 +18,7 @@ import click
 from aiida.cmdline.commands.cmd_verdi import verdi
 from aiida.cmdline.utils import echo
 from aiida.cmdline.params import options, types
-from aiida.control.postgres import Postgres
+from aiida.manage.external.postgres import Postgres
 from aiida.common.setup import get_default_profile_name
 
 

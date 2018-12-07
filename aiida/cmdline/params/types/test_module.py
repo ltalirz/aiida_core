@@ -29,8 +29,8 @@ class TestModuleParamType(click.ParamType):
         prefix_db = 'db'
         modules_db = get_db_test_names()
         modules_base = [
-            'aiida.scheduler', 'aiida.transport', 'aiida.common', 'aiida.tests.work', 'aiida.utils', 'aiida.control',
-            'aiida.cmdline.tests'
+            'aiida.scheduler', 'aiida.transport', 'aiida.common', 'aiida.tests.work', 'aiida.utils',
+            'aiida.manage.external', 'aiida.cmdline.tests'
         ]
 
         test_modules = {}

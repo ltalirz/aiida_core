@@ -41,7 +41,7 @@ from contextlib import contextmanager
 
 from pgtest.pgtest import PGTest
 
-from aiida.control.postgres import Postgres
+from aiida.manage.external.postgres import Postgres
 from aiida import is_dbenv_loaded
 from aiida.backends.profile import BACKEND_DJANGO, BACKEND_SQLA
 from aiida.common import setup as aiida_cfg
@@ -180,7 +180,7 @@ class FixtureManager(object):
             raise FixtureError('AiiDA dbenv can not be loaded while creating a test profile')
         if not self.__is_running_on_test_db:
             self.create_aiida_db()
-        from aiida.control.profile import setup_profile
+        from aiida.manage.external.profile import setup_profile
         if not self.root_dir:
             self.create_root_dir()
         print(self.root_dir, self.config_dir)

@@ -225,7 +225,7 @@ def prompt_db_info(*args):  # pylint: disable=unused-argument
     """
     Prompt interactively for postgres database connecting details
 
-    Can be used as a setup fail callback for :py:class:`aiida.control.postgres.Postgres`
+    Can be used as a setup fail callback for :py:class:`aiida.manage.external.postgres.Postgres`
 
     :return: dictionary with the following keys: host, port, database, user
     """

@@ -44,7 +44,7 @@ def get_valid_test_paths():
         'aiida.transport',
         'aiida.common',
         'aiida.utils',
-        'aiida.control',
+        'aiida.manage.external',
         'aiida.cmdline.utils',
         'aiida.cmdline.params.types',
         'aiida.cmdline.params.options',

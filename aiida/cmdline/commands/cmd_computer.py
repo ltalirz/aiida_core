@@ -26,7 +26,7 @@ from aiida.cmdline.utils import echo
 from aiida.cmdline.utils.decorators import with_dbenv
 from aiida.cmdline.utils.multi_line_input import ensure_scripts
 from aiida.common.exceptions import ValidationError, InputValidationError
-from aiida.control.computer import ComputerBuilder
+from aiida.manage.external.computer import ComputerBuilder
 from aiida.plugins.entry_point import get_entry_points
 from aiida.transport import cli as transport_cli
 
