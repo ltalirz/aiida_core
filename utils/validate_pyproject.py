@@ -111,7 +111,7 @@ def update_environment_yml():
 
     with open(PATH_ENVIRONMENT, 'w') as env_file:
         env_file.write('# Usage: conda env create -f environment.yml\n')
-        yaml.dump(environment, env_file, explicit_start=True, 
+        yaml.safe_dump(environment, env_file, explicit_start=True, 
                   default_flow_style=False)
 
 cli.add_command(validate_pyproject)
