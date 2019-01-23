@@ -32,10 +32,10 @@ class TestQueryBuilderSQLA(AiidaTestCase):
                 (Group, User, Computer, Node, Data, ProcessNode),
                 (DbGroup, DbUser, DbComputer, DbNode, DbNode, DbNode),
                 (None, None, None, Node._query_type_string, Data._query_type_string, ProcessNode._query_type_string)):
-            cls, clstype, query_type_string = qb._get_ormclass(AiidaCls, None)
+            cls, classifiers = qb._get_ormclass(AiidaCls, None)
 
             self.assertEqual(cls, ORMCls)
-            self.assertEqual(query_type_string, typestr)
+            self.assertEqual(classifiers['query_type_string'], typestr)
 
 
 class QueryBuilderLimitOffsetsTestSQLA(AiidaTestCase):

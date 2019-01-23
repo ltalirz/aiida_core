@@ -48,43 +48,43 @@ class TestQueryBuilder(AiidaTestCase):
             qb._get_ormclass(None, '.')
 
         # Asserting that the query type string and plugin type string are returned:
-        for cls, clstype, query_type_string in (
+        for cls, classifiers in (
             qb._get_ormclass(StructureData, None),
             qb._get_ormclass(None, 'data.structure.StructureData.'),
         ):
-            self.assertEqual(clstype, StructureData._plugin_type_string)
-            self.assertEqual(query_type_string, StructureData._query_type_string)
+            self.assertEqual(classifiers['ormclass_type_string'], StructureData._plugin_type_string)
+            self.assertEqual(classifiers['query_type_string'], StructureData._query_type_string)
 
-        for cls, clstype, query_type_string in (
+        for cls, classifiers in (
                 qb._get_ormclass(Group, None),
                 qb._get_ormclass(None, 'group'),
                 qb._get_ormclass(None, 'Group'),
         ):
-            self.assertEqual(clstype, 'group')
-            self.assertEqual(query_type_string, None)
+            self.assertEqual(classifiers['ormclass_type_string'], 'group')
+            self.assertEqual(classifiers['query_type_string'], None)
 
-        for cls, clstype, query_type_string in (
+        for cls, classifiers in (
                 qb._get_ormclass(User, None),
                 qb._get_ormclass(None, "user"),
                 qb._get_ormclass(None, "User"),
         ):
-            self.assertEqual(clstype, 'user')
-            self.assertEqual(query_type_string, None)
+            self.assertEqual(classifiers['ormclass_type_string'], 'user')
+            self.assertEqual(classifiers['query_type_string'], None)
 
-        for cls, clstype, query_type_string in (
+        for cls, classifiers in (
                 qb._get_ormclass(Computer, None),
                 qb._get_ormclass(None, 'computer'),
                 qb._get_ormclass(None, 'Computer'),
         ):
-            self.assertEqual(clstype, 'computer')
-            self.assertEqual(query_type_string, None)
+            self.assertEqual(classifiers['ormclass_type_string'], 'computer')
+            self.assertEqual(classifiers['query_type_string'], None)
 
-        for cls, clstype, query_type_string in (
+        for cls, classifiers in (
                 qb._get_ormclass(Data, None),
                 qb._get_ormclass(None, 'data.Data.'),
         ):
-            self.assertEqual(clstype, Data._plugin_type_string)
-            self.assertEqual(query_type_string, Data._query_type_string)
+            self.assertEqual(classifiers['ormclass_type_string'], Data._plugin_type_string)
+            self.assertEqual(classifiers['query_type_string'], Data._query_type_string)
 
     def test_simple_query_1(self):
         """
