@@ -28,7 +28,7 @@ class TestQueryBuilder(AiidaTestCase):
         self.clean_db()
         self.insert_data()
 
-    def test_classification(self):
+    def test_ormclass_type_classification(self):
         """
         This tests the classifications of the QueryBuilder
         """
@@ -80,6 +80,36 @@ class TestQueryBuilder(AiidaTestCase):
                 qb._get_ormclass(None, 'data.Data.'),
         ):
             self.assertEqual(classifiers['ormclass_type_string'], Data._plugin_type_string)
+
+    def test_process_type_classification(self):
+        """
+        This tests the classifications of the QueryBuilder
+        """
+        from aiida.orm.querybuilder import QueryBuilder
+        from aiida.work import WorkChain
+        from aiida.work.workchain import WorkChainNode
+        from aiida.orm import CalculationFactory
+
+        ArithmeticAdd = CalculationFactory('arithmetic.add')
+
+        qb = QueryBuilder()
+
+        # When passing a WorkChain class, it should return the type of the corresponding Node
+        # including the appropriate filter on the process_type
+        cls, classifiers = qb._get_ormclass(WorkChain, None)
+        self.assertEqual(classifiers['ormclass_type_string'], 'node.process.workflow.workchain.WorkChainNode.')
+        self.assertEqual(classifiers['process_type_string'], 'aiida.work.workchain.WorkChain')
+
+        # When passing a WorkChainNode, no process_type filter is applied
+        cls, classifiers = qb._get_ormclass(WorkChainNode, None)
+        self.assertEqual(classifiers['ormclass_type_string'], 'node.process.workflow.workchain.WorkChainNode.')
+        self.assertEqual(classifiers['process_type_string'], None)
+
+        # Same tests for a calculation
+        cls, classifiers = qb._get_ormclass(ArithmeticAdd, None)
+        self.assertEqual(classifiers['ormclass_type_string'], 'node.process.calculation.calcjob.CalcJobNode.')
+        self.assertEqual(classifiers['process_type_string'], 'aiida.calculations:arithmetic.add')
+
 
     def test_simple_query_1(self):
         """
