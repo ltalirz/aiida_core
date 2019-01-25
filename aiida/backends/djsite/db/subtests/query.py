@@ -42,14 +42,11 @@ class TestQueryBuilderDjango(AiidaTestCase):
         ):
             self.assertEqual(classifiers['ormclass_type_string'], 'data.structure.StructureData.')
             self.assertTrue(issubclass(cls, DbNode))
-            self.assertEqual(classifiers['query_type_string'],
-                             StructureData._query_type_string)
 
         for cls, classifiers in (
                 qb._get_ormclass(DbNode, None),
         ):
             self.assertEqual(classifiers['ormclass_type_string'], Node._plugin_type_string)
-            self.assertEqual(classifiers['query_type_string'], Node._query_type_string)
             self.assertTrue(issubclass(cls, DbNode))
 
         for cls, classifiers in (
@@ -59,7 +56,6 @@ class TestQueryBuilderDjango(AiidaTestCase):
                 qb._get_ormclass(None, 'Group'),
         ):
             self.assertEqual(classifiers['ormclass_type_string'], 'group')
-            self.assertEqual(classifiers['query_type_string'], None)
             self.assertTrue(issubclass(cls, DbGroup))
 
         for cls, classifiers in (
@@ -69,7 +65,6 @@ class TestQueryBuilderDjango(AiidaTestCase):
                 qb._get_ormclass(None, "User"),
         ):
             self.assertEqual(classifiers['ormclass_type_string'], 'user')
-            self.assertEqual(classifiers['query_type_string'], None)
             self.assertTrue(issubclass(cls, DbUser))
 
         for cls, classifiers in (
@@ -79,7 +74,6 @@ class TestQueryBuilderDjango(AiidaTestCase):
                 qb._get_ormclass(None, 'Computer'),
         ):
             self.assertEqual(classifiers['ormclass_type_string'], 'computer')
-            self.assertEqual(classifiers['query_type_string'], None)
             self.assertTrue(issubclass(cls, DbComputer))
 
         for cls, classifiers in (
@@ -87,5 +81,4 @@ class TestQueryBuilderDjango(AiidaTestCase):
                 qb._get_ormclass(None, 'data.Data.'),
         ):
             self.assertEqual(classifiers['ormclass_type_string'], Data._plugin_type_string)
-            self.assertEqual(classifiers['query_type_string'], Data._query_type_string)
             self.assertTrue(issubclass(cls, DbNode))

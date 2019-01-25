@@ -53,7 +53,6 @@ class TestQueryBuilder(AiidaTestCase):
             qb._get_ormclass(None, 'data.structure.StructureData.'),
         ):
             self.assertEqual(classifiers['ormclass_type_string'], StructureData._plugin_type_string)
-            self.assertEqual(classifiers['query_type_string'], StructureData._query_type_string)
 
         for cls, classifiers in (
                 qb._get_ormclass(Group, None),
@@ -61,7 +60,6 @@ class TestQueryBuilder(AiidaTestCase):
                 qb._get_ormclass(None, 'Group'),
         ):
             self.assertEqual(classifiers['ormclass_type_string'], 'group')
-            self.assertEqual(classifiers['query_type_string'], None)
 
         for cls, classifiers in (
                 qb._get_ormclass(User, None),
@@ -69,7 +67,6 @@ class TestQueryBuilder(AiidaTestCase):
                 qb._get_ormclass(None, "User"),
         ):
             self.assertEqual(classifiers['ormclass_type_string'], 'user')
-            self.assertEqual(classifiers['query_type_string'], None)
 
         for cls, classifiers in (
                 qb._get_ormclass(Computer, None),
@@ -77,14 +74,12 @@ class TestQueryBuilder(AiidaTestCase):
                 qb._get_ormclass(None, 'Computer'),
         ):
             self.assertEqual(classifiers['ormclass_type_string'], 'computer')
-            self.assertEqual(classifiers['query_type_string'], None)
 
         for cls, classifiers in (
                 qb._get_ormclass(Data, None),
                 qb._get_ormclass(None, 'data.Data.'),
         ):
             self.assertEqual(classifiers['ormclass_type_string'], Data._plugin_type_string)
-            self.assertEqual(classifiers['query_type_string'], Data._query_type_string)
 
     def test_simple_query_1(self):
         """
