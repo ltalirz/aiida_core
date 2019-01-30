@@ -110,6 +110,37 @@ class TestQueryBuilder(AiidaTestCase):
         self.assertEqual(classifiers['ormclass_type_string'], 'node.process.calculation.calcjob.CalcJobNode.')
         self.assertEqual(classifiers['process_type_string'], 'aiida.calculations:arithmetic.add')
 
+    def test_process_query(self):
+        """
+        Test querying for a process class.
+        """
+        from aiida.orm.querybuilder import QueryBuilder
+        from aiida.backends.tests.work.work_chain import Wf, PotentialFailureWorkChain
+        from aiida.orm.data.base import Str, Int
+        from aiida.work import run
+        from aiida.work.workchain import WorkChainNode
+
+        # Run a simple test WorkChain
+        A = Str('A')
+        three = Int(3)
+        _future = run(Wf, value=A, n=three)
+
+        # Query for nodes associated with this type of WorkChain
+        qb = QueryBuilder()
+        qb.append(Wf)
+
+        # There should be one result of type WorkChainNode
+        self.assertEqual(qb.count(), 1)
+        self.assertTrue(isinstance(qb.all()[0][0], WorkChainNode))
+
+        # Query for nodes of a different type of WorkChain
+        qb = QueryBuilder()
+        qb.append(PotentialFailureWorkChain)
+
+        # There should be no result
+        self.assertEqual(qb.count(), 0)
+
+
 
     def test_simple_query_1(self):
         """
