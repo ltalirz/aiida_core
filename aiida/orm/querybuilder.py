@@ -409,7 +409,7 @@ class QueryBuilder(object):
         """
         Get ORM classifiers from either class(es) or ormclass_type_string(s).
         
-        :param class cls: a class or tuple/set/list of classes that are either AiiDA ORM classes or backend ORM classes.
+        :param cls: a class or tuple/set/list of classes that are either AiiDA ORM classes or backend ORM classes.
         :param ormclass_type_string: type string for ORM class
 
         :returns: the ORM class as well as a dictionary with additional classifier strings
