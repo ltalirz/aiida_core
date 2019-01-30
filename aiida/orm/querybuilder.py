@@ -460,7 +460,7 @@ class QueryBuilder(object):
 
             Can also be a list of dictionaries, when multiple classes are passed to QueryBuilder.append
 
-        :returns: A tag, as a string.
+        :returns: A tag as a string (it is a single string also when passing multiple classes).
         """
 
         def get_tag_from_type(classifiers):
@@ -621,7 +621,13 @@ class QueryBuilder(object):
 
         l_class_added_to_map = False
         if cls:
-            if cls in self._cls_to_tag_map.keys():
+            # Note: tuples can be used as array keys, lists & sets can't
+            if isinstance(cls, (list, set)):
+                tag_key = tuple(cls)
+            else:
+                tag_key = cls
+
+            if tag_key in self._cls_to_tag_map.keys():
                 # In this case, this class already stands for another
                 # tag that was used before.
                 # This means that the first tag will be the correct
@@ -630,7 +636,7 @@ class QueryBuilder(object):
                 pass
 
             else:
-                self._cls_to_tag_map[cls] = tag
+                self._cls_to_tag_map[tag_key] = tag
                 l_class_added_to_map = True
 
         # ALIASING ##############################

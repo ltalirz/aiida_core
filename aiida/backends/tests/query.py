@@ -394,6 +394,10 @@ class TestQueryBuilder(AiidaTestCase):
                                    filters={'attributes.cat': 'miau'}, subclassing=False)
         self.assertEqual(qb.count(), 2)
 
+        # Just for safety, also test for using a list instead of a tuple
+        qb = QueryBuilder().append(cls=[StructureData, ParameterData], filters={'attributes.cat': 'miau'})
+        self.assertEqual(qb.count(), 2)
+
     def test_list_behavior(self):
         from aiida.orm import Node
         from aiida.orm.querybuilder import QueryBuilder
