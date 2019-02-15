@@ -113,9 +113,9 @@ class SqlaLogCollection(BackendLogCollection):
         """
         Delete all log entries in the table
         """
-        if not filters:
+        if not filters or filters == {}:
             for entry in models.DbLog.query.all():
                 entry.delete()
             get_scoped_session().commit()
         else:
-            raise NotImplementedError('Only deleting all by passing an empty filer dictionary is currently supported')
+            raise NotImplementedError('Only deleting all by passing an empty filter dictionary is currently supported')
