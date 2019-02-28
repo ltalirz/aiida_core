@@ -18,23 +18,19 @@ import time
 from six.moves import range
 
 from aiida.common import exceptions
+from aiida.engine import run_get_node, submit
+from aiida.engine.daemon.client import get_daemon_client
+from aiida.engine.persistence import ObjectLoader
 from aiida.manage.caching import enable_caching
-from aiida.daemon.client import get_daemon_client
-from aiida.orm import Code, load_node
-from aiida.orm.nodes.data.int import Int
-from aiida.orm.nodes.data.str import Str
-from aiida.orm.nodes.data.list import List
-from aiida.orm import CalcJobNode
+from aiida.orm import CalcJobNode, Code, load_node, Int, Str, List
 from aiida.plugins import CalculationFactory, DataFactory
-from aiida.work.launch import run_get_node, submit
-from aiida.work.persistence import ObjectLoader
 from workchains import (
     NestedWorkChain, DynamicNonDbInput, DynamicDbInput, DynamicMixedInput, ListEcho, CalcFunctionRunnerWorkChain,
     WorkFunctionRunnerWorkChain, NestedInputNamespace, SerializeWorkChain
 )
 
 
-ParameterData = DataFactory('parameter')
+Dict = DataFactory('dict')
 
 codename = 'doubler@torquessh'
 timeout_secs = 4 * 60  # 4 minutes
@@ -207,8 +203,8 @@ def create_calculation_process(code, inputval):
     Create the process and inputs for a submitting / running a calculation.
     """
     TemplatereplacerCalculation = CalculationFactory('templatereplacer')
-    parameters = ParameterData(dict={'value': inputval})
-    template = ParameterData(dict={
+    parameters = Dict(dict={'value': inputval})
+    template = Dict(dict={
         # The following line adds a significant sleep time.
         # I set it to 1 second to speed up tests
         # I keep it to a non-zero value because I want
