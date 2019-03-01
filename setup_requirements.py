@@ -10,16 +10,16 @@
 
 install_requires = [
     'reentry==1.2.2',
-    'python-dateutil==2.7.2',
+    'python-dateutil==2.8.0',
     'python-mimeparse==1.6.0',
     'django==1.7.11',  # Upgrade to Django 1.9 does prevent AiiDA functioning
     'django-extensions==1.5.0',
     'tzlocal==1.5.1',
-    'pytz==2018.4',
-    'PyYAML==3.12',
-    'six==1.11.0',
-    'future==0.16.0',
-    'pathlib2==2.3.0',
+    'pytz==2018.9',
+    'PyYAML==3.13',
+    'six==1.12.0',
+    'future==0.17.1',
+    'pathlib2==2.3.3',
     # We need for the time being to stay with an old version
     # of celery, including the versions of the AMQP libraries below,
     # because the support for a SQLA broker has been dropped in later
@@ -28,33 +28,33 @@ install_requires = [
     # Note that however this requires a new server process.
     # We also need to fix the celery version because support for Django 1.7
     # was dropped from celery 3.2
-    'celery==3.1.25',
+    'celery==4.2.1',
     # The next two are internal dependencies of celery, but since
     # in the past we had version mismatch problems, we freeze them
     # as well
     'billiard==3.3.0.23',
-    'amqp==1.4.9',
+    'amqp==2.4.1',
     'anyjson==0.3.3',
     'plumpy==0.7.12',
-    'portalocker==1.1.0',
-    'psutil==5.4.5',
+    'portalocker==1.4.0',
+    'psutil==5.5.1',
     'meld3==1.0.2',
-    'numpy==1.15.4',
+    'numpy==1.16.2',
     'SQLAlchemy==1.0.19',  # Upgrade to SQLalchemy 1.1.5 does break tests, see #465
     'SQLAlchemy-Utils==0.33.0',
-    'alembic==0.9.9',
+    'alembic==1.0.7',
     'ujson==1.35',
     'enum34==1.1.6',
-    'voluptuous==0.11.1',
-    'aldjemy==0.8.0',
+    'voluptuous==0.11.5',
+    'aldjemy==0.9.1',
     'passlib==1.7.1',
     'validate-email==1.3',
     'click==6.7',
-    'click-plugins==1.0.3',
-    'click-spinner==0.1.7',
-    'tabulate==0.8.2',
+    'click-plugins==1.0.4',
+    'click-spinner==0.1.8',
+    'tabulate==0.8.3',
     'ete3==3.1.1',
-    'uritools==2.1.0',
+    'uritools==2.2.0',
     'psycopg2-binary==2.7.4',
     'paramiko==2.4.2',
     'ecdsa==0.13',
@@ -73,37 +73,37 @@ extras_require = {
     # Requirements for RESTful API
     'rest': [
         'Flask==1.0.2',
-        'Flask-RESTful==0.3.6',
-        'Flask-Cors==3.0.4',
-        'pyparsing==2.2.0',
-        'Pattern==2.6',
-        'Flask-SQLAlchemy==2.3.2',
-        'sqlalchemy-migrate==0.11.0',
-        'marshmallow-sqlalchemy==0.13.2',
-        'flask-marshmallow==0.9.0',
-        'itsdangerous==0.24',
-        'Flask-HTTPAuth==3.2.3',
         'Flask-Cache==0.13.1',
+        'Flask-RESTful==0.3.7',
+        'Flask-Cors==3.0.7',
+        'Flask-HTTPAuth==3.2.4',
+        'flask-marshmallow==0.9.0',
+        'pyparsing==2.3.1',
+        'Pattern==3.6.0',
+        'Flask-SQLAlchemy==2.3.2',
+        'sqlalchemy-migrate==0.12.0',
+        'marshmallow-sqlalchemy==0.16.0',
+        'itsdangerous==1.1.0',
         'python-memcached==1.59',
     ],
     # Requirements to building documentation
     'docs': [
-        'Sphinx==1.7.4',
-        'Pygments==2.2.0',
+        'Sphinx==1.8.4',
+        'Pygments==2.3.1',
         'docutils==0.14',
         'Jinja2==2.10',
-        'MarkupSafe==1.0',
-        'sphinx-rtd-theme==0.3.1',  # Required by readthedocs
+        'MarkupSafe==1.1.1',
+        'sphinx-rtd-theme==0.4.3',  # Required by readthedocs
     ],
     # Requirements for non-core functionalities that rely on external atomic manipulation/processing software
     'atomic_tools': [
-        'spglib==1.10.3.65',
-        'pymatgen==2018.12.12',  # last version with py2 support
-        'ase==3.12.0',  # Updating breaks tests
-        'PyMySQL==0.8.0',  # Required by ICSD tools
+        'spglib==1.12.2.post0',
+        'pymatgen<=2018.12.12',  # last version with py2 support
+        'ase==3.17.0',  # Updating breaks tests
+        'PyMySQL==0.9.3',  # Required by ICSD tools
         'PyCifRW==4.2.1',  # Updating breaks tests
-        'seekpath==1.8.1',
-        'qe-tools==1.1.0',
+        'seekpath==1.8.4',
+        'qe-tools==1.1.2',
     ],
     # Requirements for jupyter notebook
     'notebook': [
@@ -115,15 +115,15 @@ extras_require = {
         'pgtest==1.1.0',
         'pg8000<1.13.0',
         'sqlalchemy-diff==0.1.3',
-        'coverage==4.5.1',
+        'coverage==4.5.2',
         'codecov==2.0.15'
     ],
     'dev_precommit': [
-        'pre-commit==1.13.0',
-        'yapf==0.24.0',
-        'prospector==0.12.7',
-        'pylint==1.8.4',
-        'toml==0.9.4'
+        'pre-commit==1.14.4',
+        'yapf==0.26.0',
+        'prospector==1.1.5',
+        'pylint==1.9.4',
+        'toml==0.10.0'
     ],
 }
 
