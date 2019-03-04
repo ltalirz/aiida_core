@@ -117,10 +117,14 @@ def temporary_directory():
 
 
 def with_temp_dir(function):
-    """Create a temporary directory for the duration of the wrapped function."""
+    """Create a temporary directory for the duration of the wrapped function.
+
+    The path of the temporary directory is passed to the wrapped function via
+    the 'temp_dir' parameter (which it must accept).
+    """
 
     def decorated_function(*args, **kwargs):
         with temporary_directory() as tmpdir:
-            function(*args, temp_dir=tmpdir, **kwargs)  # your test should have a "tmpdir" variable
+            function(*args, temp_dir=tmpdir, **kwargs)
 
     return decorated_function
