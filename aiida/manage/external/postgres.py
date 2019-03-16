@@ -39,6 +39,14 @@ _GET_USERS_COMMAND = "SELECT usename FROM pg_user WHERE usename='{}'"
 _CHECK_DB_EXISTS_COMMAND = "SELECT datname FROM pg_database WHERE datname='{}'"
 _COPY_DB_COMMAND = 'CREATE DATABASE "{}" WITH TEMPLATE "{}" OWNER "{}"'
 
+DEFAULT_DBINFO = {
+    'host': 'localhost',
+    'port': 5432,
+    'user': None,
+    'database': None,
+    'password': None,
+}
+
 
 class Postgres(object):  # pylint: disable=useless-object-inheritance
     """
@@ -92,24 +100,20 @@ class Postgres(object):  # pylint: disable=useless-object-inheritance
         self.setup_max_tries = 1
 
         if dbinfo is None:
-            dbinfo = {
-                'host': 'localhost',
-                'port': 5432,
-                'user': None,
-            }
-
-        self._dbinfo = dbinfo
+            self._dbinfo = DEFAULT_DBINFO
+        else:
+            self._dbinfo = dbinfo
 
     @classmethod
     def from_profile(cls, profile, **kwargs):
         """Create Postgres instance with dbinfo from profile data."""
         get = profile.dictionary.get
         dbinfo = dict(
-            host=get('AIIDADB_HOST', 'localhost'),
-            port=get('AIIDADB_PORT', 5432),
-            user=get('AIIDADB_USER', None),
-            database=get('AIIDADB_NAME', None),
-            password=get('AIIDADB_PASS', None),
+            host=get('AIIDADB_HOST', DEFAULT_DBINFO['host']),
+            port=get('AIIDADB_PORT', DEFAULT_DBINFO['port']),
+            user=get('AIIDADB_USER', DEFAULT_DBINFO['user']),
+            database=get('AIIDADB_NAME', DEFAULT_DBINFO['database']),
+            password=get('AIIDADB_PASS', DEFAULT_DBINFO['password']),
         )
         return Postgres(dbinfo=dbinfo, **kwargs)
 
@@ -140,15 +144,13 @@ class Postgres(object):  # pylint: disable=useless-object-inheritance
         """
         # find out if we run as a postgres superuser or can connect as postgres
         # This will work on OSX in some setups but not in the default Debian one
-        dbinfo = self.get_dbinfo()
+        dbinfo = self._dbinfo.copy()
         dbinfo['database'] = 'template1'
-        dbinfo['password'] = None
         for pg_user in (None, 'postgres'):
-            local_dbinfo = dbinfo.copy()
-            local_dbinfo['user'] = pg_user
-            if _try_connect_psycopg(**local_dbinfo):
+            dbinfo['user'] = pg_user
+            if _try_connect_psycopg(**dbinfo):
                 self.pg_execute = _pg_execute_psyco
-                self._dbinfo = local_dbinfo
+                self._dbinfo = dbinfo
                 break
 
         # This will work for the default Debian postgres setup, assuming that sudo is available to the user

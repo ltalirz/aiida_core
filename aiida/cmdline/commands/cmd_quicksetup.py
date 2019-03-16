@@ -65,8 +65,7 @@ def quicksetup(profile_name, only_config, set_default, non_interactive, backend,
     create_instance_directories()
     config = load_config(create=True)
 
-    # create a profile, by default 'quicksetup' and prompt the user if already exists
-    profile_name = profile_name or 'quicksetup'
+    # create profile, prompt the user if already exists
     write_profile = False
     while not write_profile:
         if profile_name in config.profile_names:
@@ -91,55 +90,53 @@ def quicksetup(profile_name, only_config, set_default, non_interactive, backend,
 
     # default database user name is aiida_qs_<login-name>
     # default password is random
-    # default database name is <profile_name>_<login-name>
-    # this ensures that for profiles named test_... the database will also be named test_...
-    dbuser = db_username or 'aiida_qs_' + osuser + '_' + config_dir_hash
-    dbpass = db_password or get_random_string(length=50)
+    db_user = db_username or 'aiida_qs_' + osuser + '_' + config_dir_hash
+    db_password = db_password or get_random_string(length=50)
 
     # check if there is a profile that contains the db user already
-    # and if yes, take the db user password from there
-    # This is ok because a user can only see his own config files
-    dbname = db_name or profile_name + '_' + osuser + '_' + config_dir_hash
+    # if yes, take the db user password from there
+    # Note: A user can only see his or her own config files
     for profile in config.profiles:
-        if profile.dictionary.get('AIIDADB_USER', '') == dbuser and not db_password:
-            dbpass = profile.dictionary.get('AIIDADB_PASS')
-            echo.echo('using found password for {}'.format(dbuser))
+        if profile.dictionary.get('AIIDADB_USER', '') == db_user and not db_password:
+            db_password = profile.dictionary.get('AIIDADB_PASS')
+            echo.echo('using found password for {}'.format(db_user))
             break
+
+    # default database name is <profile_name>_<login-name>
+    # this ensures that for profiles named test_... the database will also be named test_...
+    dbname = db_name or profile_name + '_' + osuser + '_' + config_dir_hash
 
     try:
         create = True
-        if not postgres.dbuser_exists(dbuser):
-            postgres.create_dbuser(dbuser, dbpass)
+        if not postgres.dbuser_exists(db_user):
+            postgres.create_dbuser(db_user, db_password)
         else:
             dbname, create = _check_db_name(dbname, postgres)
         if create:
-            postgres.create_db(dbuser, dbname)
+            postgres.create_db(db_user, dbname)
     except Exception as exception:
         echo.echo_error('\n'.join([
-            'Oops! Something went wrong while creating the database for you.',
-            'You may continue with the quicksetup, however:',
-            'For aiida to work correctly you will have to do that yourself as follows.',
-            manual_setup_instructions(dbuser=dbuser, dbname=dbname), '',
-            'Or setup your (OS-level) user to have permissions to create databases and rerun quicksetup.', ''
+            'Oops! quicksetup was unable to create the AiiDA database for you.',
+            'For AiiDA to work, please either create the database yourself as follows:',
+            manual_setup_instructions(dbuser=db_user, dbname=dbname), '',
+            'Alternatively, give your (operating system) user permission to create postgresql databases' +
+            'and run quicksetup again.', ''
         ]))
         raise exception
 
-    dbhost = postgres.get_dbinfo().get('host', 'localhost')
-    dbport = postgres.get_dbinfo().get('port', '5432')
-
-    repo = repository or 'repository/{}/'.format(profile_name)
-    if not os.path.isabs(repo):
-        repo = os.path.join(config.dirpath, repo)
+    repository = repository or 'repository/{}/'.format(profile_name)
+    if not os.path.isabs(repository):
+        repository = os.path.join(config.dirpath, repository)
 
     setup_args = {
         'backend': backend,
         'email': email,
-        'db_host': dbhost,
-        'db_port': dbport,
+        'db_host': db_host,
+        'db_port': db_port,
         'db_name': dbname,
-        'db_user': dbuser,
-        'db_pass': dbpass,
-        'repo': repo,
+        'db_user': db_user,
+        'db_pass': db_password,
+        'repo': repository,
         'first_name': first_name,
         'last_name': last_name,
         'institution': institution,

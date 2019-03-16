@@ -16,9 +16,11 @@ from __future__ import absolute_import
 import click
 
 from aiida.backends.profile import BACKEND_DJANGO, BACKEND_SQLA
+from aiida.manage.external.postgres import DEFAULT_DBINFO
 from .. import types
 from .multivalue import MultipleValueOption
 from .overridable import OverridableOption
+
 
 __all__ = (
     'PROFILE', 'CALCULATION', 'CALCULATIONS', 'CODE', 'CODES', 'COMPUTER', 'COMPUTERS', 'DATUM', 'DATA', 'GROUP',
@@ -177,11 +179,13 @@ BACKEND = OverridableOption(
 DB_HOST = OverridableOption(
     '--db-host',
     type=click.STRING,
+    default=DEFAULT_DBINFO['host'],
     help='Database server host.')
 
 DB_PORT = OverridableOption(
     '--db-port',
     type=click.INT,
+    default=DEFAULT_DBINFO['port'],
     help='Database server port.')
 
 DB_USERNAME = OverridableOption(
