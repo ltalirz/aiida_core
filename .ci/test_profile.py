@@ -49,7 +49,7 @@ class QuicksetupTestCase(unittest.TestCase):
         self.backend = os.environ.get('TEST_AIIDA_BACKEND', 'django')
 
     @with_temporary_config_instance
-    def test_user_setup(self):
+    def test_quicksetup_non_interactive(self):
         """Test `verdi quicksetup` non-interactively."""
         result = self.runner.invoke(quicksetup, [
             '--backend={}'.format(self.backend), '--email=giuseppe.verdi@ope.ra', '--first-name=Giuseppe',
@@ -60,17 +60,17 @@ class QuicksetupTestCase(unittest.TestCase):
 
     @with_temporary_config_instance
     def test_postgres_failure(self):
-        """Test `verdi quicksetup` non-interactively."""
+        """Test `verdi quicksetup` with wrong postgres settings."""
         result = self.runner.invoke(
-            quicksetup, [
+            quicksetup,
+            [
                 '--backend={}'.format(self.backend), '--email=giuseppe2.verdi@ope.ra', '--first-name=Giuseppe',
-                '--last-name=Verdi', '--institution=Scala', '--db-port=1111', '--db-name=aiida_giuseppe2_{}'.format(
-                    self.backend), '--repository=aiida_giuseppe2_{}'.format(
-                        self.backend), '--non-interactive', 'giuseppe2-{}'.format(self.backend)
+                '--last-name=Verdi', '--institution=Scala', '--db-port=1111', '--db-host=nohost',
+                '--db-name=aiida_giuseppe2_{}'.format(self.backend), '--repository=aiida_giuseppe2_{}'.format(
+                    self.backend), '--non-interactive', 'giuseppe2-{}'.format(self.backend)
             ],
-            input='nohost\n1111\naiida_giuseppe2_{}\npostgres\n\n'.format(self.backend),
-            catch_exceptions=False)
-        self.assertFalse(result.exception, msg=get_debug_msg(result))
+        )
+        self.assertTrue(result.exception, msg=get_debug_msg(result))
 
 
 class SetupTestCase(unittest.TestCase):
@@ -95,6 +95,7 @@ class SetupTestCase(unittest.TestCase):
         self.postgres.drop_dbuser(self.dbuser)
         self.pg_test.close()
 
+    @with_temporary_config_instance
     def test_user_setup(self):
         """
         Test `verdi setup` non-interactively
@@ -109,6 +110,7 @@ class SetupTestCase(unittest.TestCase):
         ])
         self.assertFalse(result.exception, msg=get_debug_msg(result))
 
+    @with_temporary_config_instance
     def test_user_configure(self):
         """
         Test `verdi setup` configure user
