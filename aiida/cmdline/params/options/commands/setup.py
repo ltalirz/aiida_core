@@ -24,6 +24,7 @@ from aiida.cmdline.params.options.interactive import InteractiveOption
 from aiida.cmdline.params.options.overridable import OverridableOption
 from aiida.cmdline.utils import echo
 from aiida.manage.configuration import get_config, get_config_option, Profile
+from aiida.manage.external.postgres import DEFAULT_DBINFO
 
 PASSWORD_UNCHANGED = '***'  # noqa
 
@@ -77,11 +78,15 @@ def get_quicksetup_repository_uri(ctx, param, value):  # pylint: disable=unused-
 def get_quicksetup_database_name(ctx, param, value):  # pylint: disable=unused-argument
     """Determine the database name to be used as default for the Postgres connection in `verdi quicksetup`
 
-    If a value is explicitly passed, that value is returned. If there is no value, the name will be based on the
-    name of the current operating system user and the hash of the path of the configuration directory.
+    If a value is explicitly passed, that value is returned unchanged.
+
+    If no value is passed, the name will be <profile_name>_<os_user>_<hash>, where <os_user> is the name of the current
+    operating system user and <hash> is a hash of the path of the configuration directory.
+
+    Note: This ensures that profiles named test_... will have databases named test_... .
 
     :param ctx: click context which should contain the contextual parameters
-    :return: the password
+    :return: the database name
     """
     if value is not None:
         return value
@@ -101,7 +106,7 @@ def get_quicksetup_username(ctx, param, value):  # pylint: disable=unused-argume
     name of the current operating system user and the hash of the path of the configuration directory.
 
     :param ctx: click context which should contain the contextual parameters
-    :return: the password
+    :return: the username
     """
     if value is not None:
         return value
@@ -217,10 +222,10 @@ QUICKSETUP_DATABASE_BACKEND = OverridableOption(
     type=click.Choice([BACKEND_DJANGO, BACKEND_SQLA]))
 
 QUICKSETUP_DATABASE_HOSTNAME = OverridableOption(
-    '--db-host', help='Hostname to connect to the database.', default='localhost', type=click.STRING)
+    '--db-host', help='Hostname to connect to the database.', default=DEFAULT_DBINFO['host'], type=click.STRING)
 
 QUICKSETUP_DATABASE_PORT = OverridableOption(
-    '--db-port', help='Port to connect to the database.', default=5432, type=click.INT)
+    '--db-port', help='Port to connect to the database.', default=DEFAULT_DBINFO['port'], type=click.INT)
 
 QUICKSETUP_DATABASE_NAME = OverridableOption(
     '--db-name', help='Name of the database to connect to.', type=click.STRING, callback=get_quicksetup_database_name)
