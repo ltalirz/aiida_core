@@ -40,7 +40,7 @@ def default_link_styles(link_type):
         },
         LinkType.INPUT_WORK: {
             "style": "dashed",
-            "color": "#0000FF"  # blue
+            "color": "#000000"  # blue
         },
         LinkType.CALL_CALC: {
             "style": "dotted",
@@ -48,15 +48,15 @@ def default_link_styles(link_type):
         },
         LinkType.CALL_WORK: {
             "style": "dotted",
-            "color": "#0000FF"  # blue
+            "color": "#000000"  # black
         },
         LinkType.CREATE: {
             "style": "solid",
-            "color": "#006400"  # green
+            "color": "#000000"  # black
         },
         LinkType.RETURN: {
             "style": "dashed",
-            "color": "#006400"  # green
+            "color": "#000000"  # black
         }
     }[link_type]
 
@@ -76,15 +76,17 @@ def default_data_styles(node):
         default = {
             "shape": "ellipse",
             "style": "filled",
-            "fillcolor": "#FFFFF0",  # ivory
-            "pencolor": "black"
+            #"fillcolor": "#8cd499ff",  # ivory
+            "color": "#8cd499ff",  # ivory
+            #"color": "white"
         }
     mapping = {
         "data.code.Code.": {
-            "shape": "diamond",
+            "shape": "ellipse",
             "style": "filled",
-            "fillcolor": "#FFFFFF",  # white
-            "pencolor": "orange"
+            "color": "#4ca4b9aa",  # ivory
+            #"color": "#ff0000ff",  # white
+            #"pencolor": "orange"
         }
     }
     return mapping.get(class_node_type, default)
@@ -154,26 +156,22 @@ def default_process_styles(node):
         "process.calculation.calcjob.CalcJobNode.": {
             "style": "filled",
             "shape": "rectangle",
-            "pencolor": "black",
-            "fillcolor": "#87CEFA"  # light blue
+            "color": "#de707fff"  # red
         },
         "process.calculation.calcfunction.CalcFunctionNode.": {
             "style": "filled",
-            "shape": "parallelogram",
-            "pencolor": "black",
-            "fillcolor": "#87CEFA"  # light blue
+            "shape": "rectangle",
+            "color": "#de707f77"  # red
         },
         "process.workflow.workchain.WorkChainNode.": {
             "style": "filled",
-            "shape": "octagon",
-            "pencolor": "black",
-            "fillcolor": "#FFA500"
+            "shape": "rectangle",
+            "color": "#e38851ff"
         },
         "process.workflow.workfunction.WorkFunctionNode.": {
             "style": "filled",
-            "shape": "hexagon",
-            "pencolor": "black",
-            "fillcolor": "#FFA500"  # light blue
+            "shape": "rectangle",
+            "color": "#e3885177"
         }
     }
 
