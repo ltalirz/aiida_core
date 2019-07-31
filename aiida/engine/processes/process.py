@@ -23,9 +23,9 @@ import six
 from six.moves import filter, range
 from pika.exceptions import ConnectionClosed
 
-from kiwipy.communications import UnroutableError
 import plumpy
 from plumpy import ProcessState
+from kiwipy.communications import UnroutableError
 
 from aiida import orm
 from aiida.common import exceptions
@@ -135,6 +135,17 @@ class Process(plumpy.Process):
         if self._logger is None:
             self.set_logger(self.node.logger)
 
+    @classmethod
+    def get_exit_statuses(cls, exit_code_labels):
+        """Return the exit status (integers) for the given exit code labels.
+
+        :param exit_code_labels: a list of strings that reference exit code labels of this process class
+        :return: list of exit status integers that correspond to the given exit code labels
+        :raises AttributeError: if at least one of the labels does not correspond to an existing exit code
+        """
+        exit_codes = cls.exit_codes
+        return [getattr(exit_codes, label).status for label in exit_code_labels]
+
     @classproperty
     def exit_codes(cls):  # pylint: disable=no-self-argument
         """Return the namespace of exit codes defined for this WorkChain through its ProcessSpec.
@@ -195,8 +206,8 @@ class Process(plumpy.Process):
             try:
                 self.runner.persister.save_checkpoint(self)
             except plumpy.PersistenceError:
-                self.logger.exception("Exception trying to save checkpoint, this means you will "
-                                      "not be able to restart in case of a crash until the next successful checkpoint.")
+                self.logger.exception('Exception trying to save checkpoint, this means you will '
+                                      'not be able to restart in case of a crash until the next successful checkpoint.')
 
     @override
     def save_instance_state(self, out_state, save_context):
@@ -902,8 +913,8 @@ def get_query_string_from_process_type_string(process_type_string):  # pylint: d
     :return: string that can be used to query for subclasses of the process type using 'LIKE <string>'
     :rtype: str
     """
-    if ":" in process_type_string:
-        return process_type_string + "."
+    if ':' in process_type_string:
+        return process_type_string + '.'
 
     path = process_type_string.rsplit('.', 2)[0]
-    return path + "."
+    return path + '.'

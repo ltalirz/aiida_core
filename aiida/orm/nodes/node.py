@@ -120,7 +120,8 @@ class Node(Entity):
             raise ValueError('the user cannot be None')
 
         backend_entity = backend.nodes.create(
-            node_type=self.class_node_type, user=user.backend_entity, computer=computer, **kwargs)
+            node_type=self.class_node_type, user=user.backend_entity, computer=computer, **kwargs
+        )
         super(Node, self).__init__(backend_entity)
 
     def __repr__(self):
@@ -829,12 +830,9 @@ class Node(Entity):
 
         self._incoming_cache.append(link_triple)
 
-    def get_stored_link_triples(self,
-                                node_class=None,
-                                link_type=(),
-                                link_label_filter=None,
-                                link_direction='incoming',
-                                only_uuid=False):
+    def get_stored_link_triples(
+        self, node_class=None, link_type=(), link_label_filter=None, link_direction='incoming', only_uuid=False
+    ):
         """Return the list of stored link triples directly incoming to or outgoing of this node.
 
         Note this will only return link triples that are stored in the database. Anything in the cache is ignored.
@@ -872,14 +870,16 @@ class Node(Entity):
                 with_incoming='main',
                 project=node_project,
                 edge_project=['type', 'label'],
-                edge_filters=edge_filters)
+                edge_filters=edge_filters
+            )
         else:
             builder.append(
                 node_class,
                 with_outgoing='main',
                 project=node_project,
                 edge_project=['type', 'label'],
-                edge_filters=edge_filters)
+                edge_filters=edge_filters
+            )
 
         return [LinkTriple(entry[0], LinkType(entry[1]), entry[2]) for entry in builder.all()]
 
@@ -899,7 +899,8 @@ class Node(Entity):
 
         if self.is_stored:
             link_triples = self.get_stored_link_triples(
-                node_class, link_type, link_label_filter, 'incoming', only_uuid=only_uuid)
+                node_class, link_type, link_label_filter, 'incoming', only_uuid=only_uuid
+            )
         else:
             link_triples = []
 
@@ -910,8 +911,9 @@ class Node(Entity):
                 link_triple = LinkTriple(link_triple.node.uuid, link_triple.link_type, link_triple.link_label)
 
             if link_triple in link_triples:
-                raise exceptions.InternalError('Node<{}> has both a stored and cached link triple {}'.format(
-                    self.pk, link_triple))
+                raise exceptions.InternalError(
+                    'Node<{}> has both a stored and cached link triple {}'.format(self.pk, link_triple)
+                )
 
             if not link_type or link_triple.link_type in link_type:
                 if link_label_filter is not None:
@@ -1051,7 +1053,8 @@ class Node(Entity):
         for link_triple in self._incoming_cache:
             if not link_triple.node.is_stored:
                 raise exceptions.ModificationNotAllowed(
-                    'Cannot store because source node of link triple {} is not stored'.format(link_triple))
+                    'Cannot store because source node of link triple {} is not stored'.format(link_triple)
+                )
 
     def _store_from_cache(self, cache_node, with_transaction):
         """Store this node from an existing cache node."""
@@ -1085,7 +1088,7 @@ class Node(Entity):
     def get_hash(self, ignore_errors=True, **kwargs):
         """Return the hash for this node based on its attributes."""
         if not self.is_stored:
-            raise exceptions.InvalidOperation("You can get the hash only after having stored the node")
+            raise exceptions.InvalidOperation('You can get the hash only after having stored the node')
 
         return self._get_hash(ignore_errors=ignore_errors, **kwargs)
 
@@ -1173,7 +1176,7 @@ class Node(Entity):
         clean_value() on the attributes to normalise them.
         """
         if not allow_before_store and not self.is_stored:
-            raise exceptions.InvalidOperation("You can get the hash only after having stored the node")
+            raise exceptions.InvalidOperation('You can get the hash only after having stored the node')
         node_hash = self._get_hash()
 
         if not node_hash or not self._cachable:
@@ -1212,72 +1215,72 @@ class Node(Entity):
         :return: get schema of the node
         """
         return {
-            "attributes": {
-                "display_name": "Attributes",
-                "help_text": "Attributes of the node",
-                "is_foreign_key": False,
-                "type": "dict"
+            'attributes': {
+                'display_name': 'Attributes',
+                'help_text': 'Attributes of the node',
+                'is_foreign_key': False,
+                'type': 'dict'
             },
-            "attributes.state": {
-                "display_name": "State",
-                "help_text": "AiiDA state of the calculation",
-                "is_foreign_key": False,
-                "type": ""
+            'attributes.state': {
+                'display_name': 'State',
+                'help_text': 'AiiDA state of the calculation',
+                'is_foreign_key': False,
+                'type': ''
             },
-            "ctime": {
-                "display_name": "Creation time",
-                "help_text": "Creation time of the node",
-                "is_foreign_key": False,
-                "type": "datetime.datetime"
+            'ctime': {
+                'display_name': 'Creation time',
+                'help_text': 'Creation time of the node',
+                'is_foreign_key': False,
+                'type': 'datetime.datetime'
             },
-            "extras": {
-                "display_name": "Extras",
-                "help_text": "Extras of the node",
-                "is_foreign_key": False,
-                "type": "dict"
+            'extras': {
+                'display_name': 'Extras',
+                'help_text': 'Extras of the node',
+                'is_foreign_key': False,
+                'type': 'dict'
             },
-            "id": {
-                "display_name": "Id",
-                "help_text": "Id of the object",
-                "is_foreign_key": False,
-                "type": "int"
+            'id': {
+                'display_name': 'Id',
+                'help_text': 'Id of the object',
+                'is_foreign_key': False,
+                'type': 'int'
             },
-            "label": {
-                "display_name": "Label",
-                "help_text": "User-assigned label",
-                "is_foreign_key": False,
-                "type": "str"
+            'label': {
+                'display_name': 'Label',
+                'help_text': 'User-assigned label',
+                'is_foreign_key': False,
+                'type': 'str'
             },
-            "mtime": {
-                "display_name": "Last Modification time",
-                "help_text": "Last modification time",
-                "is_foreign_key": False,
-                "type": "datetime.datetime"
+            'mtime': {
+                'display_name': 'Last Modification time',
+                'help_text': 'Last modification time',
+                'is_foreign_key': False,
+                'type': 'datetime.datetime'
             },
-            "node_type": {
-                "display_name": "Type",
-                "help_text": "Node type",
-                "is_foreign_key": False,
-                "type": "str"
+            'node_type': {
+                'display_name': 'Type',
+                'help_text': 'Node type',
+                'is_foreign_key': False,
+                'type': 'str'
             },
-            "user_id": {
-                "display_name": "Id of creator",
-                "help_text": "Id of the user that created the node",
-                "is_foreign_key": True,
-                "related_column": "id",
-                "related_resource": "_dbusers",
-                "type": "int"
+            'user_id': {
+                'display_name': 'Id of creator',
+                'help_text': 'Id of the user that created the node',
+                'is_foreign_key': True,
+                'related_column': 'id',
+                'related_resource': '_dbusers',
+                'type': 'int'
             },
-            "uuid": {
-                "display_name": "Unique ID",
-                "help_text": "Universally Unique Identifier",
-                "is_foreign_key": False,
-                "type": "unicode"
+            'uuid': {
+                'display_name': 'Unique ID',
+                'help_text': 'Universally Unique Identifier',
+                'is_foreign_key': False,
+                'type': 'unicode'
             },
-            "process_type": {
-                "display_name": "Process type",
-                "help_text": "Process type",
-                "is_foreign_key": False,
-                "type": "str"
+            'process_type': {
+                'display_name': 'Process type',
+                'help_text': 'Process type',
+                'is_foreign_key': False,
+                'type': 'str'
             }
         }

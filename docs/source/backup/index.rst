@@ -158,7 +158,15 @@ Remember to give the script execute permissions::
 
 Finally make sure your database folder (``/home/USERNAME/.aiida/``) containing this dump file and the ``repository`` directory, is properly backed up by your backup software (under Ubuntu, 12.04: Backup -> check the "Folders" tab, 18.04: Backups -> check the "Folder to save" tab).
 
+<<<<<<< HEAD
 .. note::
+=======
+.. note:: If your database is very large (more than a few hundreds of thousands
+  of nodes), a standard backup of your repository folder will be
+  very slow (up to days), thus slowing down your computer dramatically. To fix
+  this problem you can set up an incremental backup of your repository by following
+  the instructions :ref:`here<repository_backup>`.
+>>>>>>> develop
 
   If your database is very large (more than a few hundreds of thousands of nodes), a standard backup of your repository folder will be very slow (up to days), thus slowing down your computer dramatically.
   To fix this problem you can set up an incremental backup of your repository by following the instructions :ref:`here <repository_backup>`.
@@ -265,3 +273,131 @@ If everything went fine, you can delete the old database location.
 
 .. _repository_backup:
 
+<<<<<<< HEAD
+=======
+Setup repository backup
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Apart from the database backup, you should also backup the AiiDA repository.
+For small repositories, this can be easily done by a simple directory copy or,
+even better, with the use of the rsync command which can copy only the differences.
+However, both of the aforementioned approaches are not efficient in big
+repositories where even a partial recursive directory listing may take
+significant time, especially for filesystems where accessing a directory has
+a constant (and significant) latency time. Therefore, we provide scripts for
+making efficient backups of the AiiDA repository.
+
+Before running the backup script, you will have to configure it. Therefore you
+should execute the ``backup_setup.py`` which is located under
+``MY_AIIDA_FOLDER/aiida/manage/backup``. For example::
+
+	verdi -p PROFILENAME run MY_AIIDA_FOLDER/aiida/manage/backup/backup_setup.py
+
+where PROFILENAME is the name of the profile you want to use (if you don't specify the ``-p`` option, the default profile will be used). This will ask a set of questions. More precisely, it will initially ask for:
+
+ * The backup folder. This is the destination of the backup *configuration file*.
+   By default a folder named ``backup`` in your ``.aiida`` directory is
+   proposed to be created.
+
+ * The destination folder of the backup. This is the destination folder of the
+   files to be backed up. By default it is a folder inside the aforementioned
+   ``backup`` folder (e.g. ``/home/aiida_user/.aiida/backup/backup_dest``).
+
+.. note:: You should backup the repository on a different disk than the one in
+  which you have the AiiDA repository! If you just use the same disk, you don't
+  have any security against the most common data loss cause: disk failure.
+  The best option is to use a destination folder mounted over ssh. For this
+  you need to install ``sshfs`` (under ubuntu: ``sudo apt-get install sshfs``).
+
+  E.g. Imagine that you run your calculations on server_1 and you would like to
+  take regular repository backups to server_2. Then, you could mount a server_2
+  directory via sshfs on server_1 using the following command on server_1:
+
+  ``sshfs -o idmap=user -o rw backup_user@server_2:/home/backup_user/backup_destination_dir/``
+  ``/home/aiida_user/remote_backup_dir/``
+
+  You should put this line into the actions performed at start-up (under gnome you
+  can access them by typing ``gnome-session-properties`` in a terminal), so that the
+  remote directory is mounted automatically after a reboot.
+  Do **not** put it in your shell's startup file (e.g. ``.bashrc``) -
+  otherwise each time you open a new terminal, your computer will complain that
+  the mount point is not empty...
+
+
+A template backup configuration file (``backup_info.json.tmpl``) will be copied
+in the backup folder. You can set the backup variables by yourself after renaming
+the template file to ``backup_info.json``, or you can answer the questions asked
+by the script, and then ``backup_info.json`` will be created based on you answers.
+
+The main script backs up the AiiDA repository that is referenced by the current
+AiiDA database. The script will start from the ``oldest_object_backedup`` date
+or the date of the oldest node object found and it will periodically
+backup (in periods of ``periodicity`` days) until the ending date of the backup
+specified by ``end_date_of_backup`` or ``days_to_backup``
+
+The backup parameters to be set in the ``backup_info.json`` are:
+
+ * ``periodicity`` (in days): The backup runs periodically for a number of days
+   defined in the periodicity variable. The purpose of this variable is to limit
+   the backup to run only on a few number of days and therefore to limit the
+   number of files that are backed up at every round. e.g. ``"periodicity": 2``
+   Example: if you have files in the AiiDA repositories created in the past 30
+   days, and periodicity is 15, the first run will backup the files of the first
+   15 days; a second run of the script will backup the next 15 days, completing
+   the backup (if it is run within the same day). Further runs will only backup
+   newer files, if they are created.
+
+ * ``oldest_object_backedup`` (timestamp or null): This is the timestamp of the
+   oldest object that was backed up. If you are not aware of this value or if it
+   is the first time that you start a backup up for this repository, then set
+   this value to ``null``. Then the script will search the creation date of the
+   oldest node object in the database and it will start
+   the backup from that date. E.g. ``"oldest_object_backedup": "2015-07-20 11:13:08.145804+02:00"``
+
+ * ``end_date_of_backup``: If set, the backup script will backup files that
+   have a modification date until the value specified by this variable. If not set,
+   the ending of the backup will be set by the following variable
+   (``days_to_backup``) which specifies how many days to backup from the start
+   of the backup. If none of these variables are set (``end_date_of_backup``
+   and ``days_to_backup``), then the end date of backup is set to the current date.
+   E.g. ``"end_date_of_backup": null`` or ``"end_date_of_backup": "2015-07-20 11:13:08.145804+02:00"``
+
+
+ * ``days_to_backup``: If set, you specify how many days you will backup from the starting date
+   of your backup. If it set to ``null`` and also
+   ``end_date_of_backup`` is set to ``null``, then the end date of the backup is set
+   to the current date. You can not set ``days_to_backup`` & ``end_date_of_backup``
+   at the same time (it will lead to an error). E.g. ``"days_to_backup": null``
+   or ``"days_to_backup": 5``
+
+ * ``backup_length_threshold`` (in hours): The backup script runs in rounds and
+   on every round it backs-up a number of days that are controlled primarily by
+   ``periodicity`` and also by ``end_date_of_backup`` / ``days_to_backup``,
+   for the last backup round. The ``backup_length_threshold`` specifies the
+   lowest acceptable round length. This is important for the end of the backup.
+
+ * ``backup_dir``: The destination directory of the backup. e.g.
+   ``"backup_dir": "/home/aiida_user/.aiida/backup/backup_dest"``
+
+To start the backup, run the ``start_backup.py`` script. Run as often as needed to complete a
+full backup, and then run it periodically (e.g. calling it from a cron script, for instance every
+day) to backup new changes.
+
+.. note:: You can set up a cron job using the following command::
+
+    sudo crontab -u aiida_user -e
+
+  It will open an editor where you can add a line of the form::
+
+    00 03 * * * /home/aiida_user/.aiida/backup/start_backup.py 2>&1 | mail -s "Incremental backup of the repository" aiida_user_email@domain.net
+
+  or (if you need to backup a different profile than the default one)::
+
+    00 03 * * * verdi -p PROFILENAME run /home/aiida_user/.aiida/backup/start_backup.py 2>&1 | mail -s "Incremental backup of the repository" aiida_user_email@domain.net
+
+  This will launch the backup of the database every day at 3 AM, and send the output
+  (or any error message) to the email address of the user (provided the ``mail``
+  command -- from ``mailutils`` -- is configured appropriately).
+
+Finally, do not forget to exclude the repository folder from the normal backup
+of your home directory!
+>>>>>>> develop
