@@ -27,11 +27,11 @@ def verdi_devel():
 
 def get_valid_test_paths():
     """
-    Return a dictionary with the available test folders
+    Return a dictionary with the available tests folders
 
     The content of the dict is:
-        None for a simple folder test
-        A list of strings for db tests, one for each test to run
+        None for a simple folder tests
+        A list of strings for db tests, one for each tests to run
     """
     from aiida.backends.tests import get_db_test_names
 
@@ -67,7 +67,7 @@ def devel_run_daemon():
 
 @verdi_devel.command('tests')
 @click.argument('paths', nargs=-1, type=TestModuleParamType(), required=False)
-@options.VERBOSE(help='Print the class and function name for each test.')
+@options.VERBOSE(help='Print the class and function name for each tests.')
 @decorators.with_dbenv()
 def devel_tests(paths, verbose):  # pylint: disable=too-many-locals,too-many-statements,too-many-branches
     """Run the unittest suite or parts of it."""
@@ -92,7 +92,7 @@ def devel_tests(paths, verbose):  # pylint: disable=too-many-locals,too-many-sta
         for path in paths:
             if path in get_valid_test_paths():
                 dbtests = get_valid_test_paths()[path]
-                # Anything that has been added is a DB test
+                # Anything that has been added is a DB tests
                 if dbtests is not None:
                     do_db = True
                     for dbtest in dbtests:
@@ -101,7 +101,7 @@ def devel_tests(paths, verbose):  # pylint: disable=too-many-locals,too-many-sta
                     test_folders.append(path)
             else:
                 valid_tests = '\n'.join('  * {}'.format(a) for a in sorted(get_valid_test_paths().keys()))
-                echo.echo_critical('{} is not a valid test, allowed test folders are:\n{}'.format(path, valid_tests))
+                echo.echo_critical('{} is not a valid tests, allowed tests folders are:\n{}'.format(path, valid_tests))
     else:
         # Without arguments, run all tests
         do_db = True
@@ -110,7 +110,7 @@ def devel_tests(paths, verbose):  # pylint: disable=too-many-locals,too-many-sta
                 # Non-db tests
                 test_folders.append(key)
             else:
-                # DB test
+                # DB tests
                 for dbtest in value:
                     db_test_list.append(dbtest)
 
@@ -127,9 +127,9 @@ def devel_tests(paths, verbose):  # pylint: disable=too-many-locals,too-many-sta
         tot_num_tests += test_results.testsRun
 
     if do_db:
-        # Even if each test would fail if we are not in a test profile,
+        # Even if each tests would fail if we are not in a tests profile,
         # it's still better to not even run them in the case the profile
-        # is not a test one.
+        # is not a tests one.
         try:
             check_if_tests_can_run()
         except TestsNotAllowedError as exception:

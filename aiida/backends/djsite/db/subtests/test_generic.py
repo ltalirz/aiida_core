@@ -74,7 +74,7 @@ class TestGroupsDjango(AiidaTestCase):
         g1.add_nodes([n1, n2])
         g2.add_nodes([n1, n3])
 
-        newuser = backend.users.create(email='test@email.xx')
+        newuser = backend.users.create(email='tests@email.xx')
         g3 = backend.groups.create(label='testquery3', user=newuser).store()
         self.addCleanup(lambda: backend.groups.delete(g3.id))
 
@@ -84,7 +84,7 @@ class TestGroupsDjango(AiidaTestCase):
 
         # NOTE: Here we pass type_string='' to all query and get calls in the groups collection because
         # otherwise run the risk that we will pick up autogroups as well when really we're just interested
-        # the the ones that we created in this test
+        # the the ones that we created in this tests
         # Try queries
         res = backend.groups.query(nodes=n4, type_string='')
         self.assertListEqual([_.pk for _ in res], [])

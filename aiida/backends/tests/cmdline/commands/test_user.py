@@ -28,7 +28,7 @@ user_2 = {
     'email': 'testuser2@localhost',
     'first_name': 'Sabine',
     'last_name': 'Garching',
-    'institution': 'Second testing instiute'
+    'institution': 'Second tests instiute'
 }
 
 

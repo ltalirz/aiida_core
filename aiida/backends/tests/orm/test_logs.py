@@ -36,7 +36,7 @@ class TestBackendLog(AiidaTestCase):
             'dbnode_id': None,
             'message': 'This is a template record message',
             'metadata': {
-                'content': 'test'
+                'content': 'tests'
             },
         }
 
@@ -286,7 +286,7 @@ class TestBackendLog(AiidaTestCase):
     def test_raise_wrong_metadata_type_error(self):
         """
         Test a TypeError exception is thrown with string metadata.
-        Also test that metadata is correctly created.
+        Also tests that metadata is correctly created.
         """
         from aiida.common import json
 

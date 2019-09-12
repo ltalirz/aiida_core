@@ -24,11 +24,11 @@ class TestRun(AiidaTestCase):
     @staticmethod
     def test_run():
         """Test the `run` function."""
-        inputs = {'a': Int(2), 'b': Str('test')}
+        inputs = {'a': Int(2), 'b': Str('tests')}
         run(DummyProcess, **inputs)
 
     def test_run_get_node(self):
         """Test the `run_get_node` function."""
-        inputs = {'a': Int(2), 'b': Str('test')}
+        inputs = {'a': Int(2), 'b': Str('tests')}
         result, node = run_get_node(DummyProcess, **inputs)  # pylint: disable=unused-variable
         self.assertIsInstance(node, ProcessNode)

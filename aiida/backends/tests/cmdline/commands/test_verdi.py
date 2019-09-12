@@ -27,14 +27,14 @@ class TestVerdi(AiidaTestCase):
         self.cli_runner = CliRunner()
 
     def test_verdi_version(self):
-        """Regression test for #2238: verify that `verdi --version` prints the current version"""
+        """Regression tests for #2238: verify that `verdi --version` prints the current version"""
         result = self.cli_runner.invoke(cmd_verdi.verdi, ['--version'])
         self.assertIsNone(result.exception, result.output)
         self.assertIn(get_version(), result.output)
 
     @with_temporary_config_instance
     def test_verdi_with_empty_profile_list(self):
-        """Regression test for #2424: verify that verdi remains operable even if profile list is empty"""
+        """Regression tests for #2424: verify that verdi remains operable even if profile list is empty"""
         from aiida.manage.configuration import CONFIG
 
         # Run verdi command with updated CONFIG featuring an empty profile list

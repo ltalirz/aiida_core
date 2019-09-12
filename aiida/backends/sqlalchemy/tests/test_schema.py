@@ -39,7 +39,7 @@ class TestRelationshipsSQLA(AiidaTestCase):
 
     def test_outputs_children_relationship(self):
         """
-        This test checks that the outputs_q, children_q relationship and the
+        This tests checks that the outputs_q, children_q relationship and the
         corresponding properties work as expected.
         """
         n1 = Data().store()
@@ -66,7 +66,7 @@ class TestRelationshipsSQLA(AiidaTestCase):
 
     def test_inputs_parents_relationship(self):
         """
-        This test checks that the inputs_q, parents_q relationship and the
+        This tests checks that the inputs_q, parents_q relationship and the
         corresponding properties work as expected.
         """
         n1 = Data().store()

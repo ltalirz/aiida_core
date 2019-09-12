@@ -117,7 +117,7 @@ class Parser(object):
         It's storing method will also be disabled, making it impossible to store, because storing it afterwards would
         not have the expected effect, as the outputs it produced will not be stored with it.
 
-        This method is useful to test parsing in unit tests where a `CalcJobNode` can be mocked without actually having
+        This method is useful to tests parsing in unit tests where a `CalcJobNode` can be mocked without actually having
         to run a `CalcJob`. It can also be useful to actually re-perform the parsing of a completed `CalcJob` with a
         different parser.
 

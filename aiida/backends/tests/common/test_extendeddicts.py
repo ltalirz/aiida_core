@@ -59,14 +59,14 @@ class TestAttributeDictAccess(unittest.TestCase):
     def test_access_dict_to_attr(self):
         """Test dictionary to attribute."""
         dictionary = extendeddicts.AttributeDict()
-        dictionary['test'] = 'abc'
+        dictionary['tests'] = 'abc'
         self.assertEqual(dictionary.test, 'abc')
 
     def test_access_attr_to_dict(self):
         """Test attribute to dictionary."""
         dictionary = extendeddicts.AttributeDict()
         dictionary.test = 'def'
-        self.assertEqual(dictionary['test'], 'def')
+        self.assertEqual(dictionary['tests'], 'def')
 
     def test_access_nonexisting_asattr(self):
         """Test non-existing attribute."""
@@ -78,13 +78,13 @@ class TestAttributeDictAccess(unittest.TestCase):
         """Test non-existing attribute as key."""
         dictionary = extendeddicts.AttributeDict()
         with self.assertRaises(KeyError):
-            dictionary['test']
+            dictionary['tests']
 
     def test_del_nonexisting_askey(self):
         """Test deleting non-existing attribute as key."""
         dictionary = extendeddicts.AttributeDict()
         with self.assertRaises(KeyError):
-            del dictionary['test']
+            del dictionary['tests']
 
     def test_del_nonexisting_asattr(self):
         """Test deleting non-existing attribute."""
@@ -301,7 +301,7 @@ class TestFFAD(unittest.TestCase):
 
     def test_class_attribute(self):
         """
-        I test that the get_valid_fields() is working as a class method,
+        I tests that the get_valid_fields() is working as a class method,
         so I don't need to instantiate the class to get the list.
         """
         self.assertEqual(set(TestFFADExample.get_valid_fields()), set(['alpha', 'beta', 'gamma']))
@@ -338,7 +338,7 @@ class TestDFAD(unittest.TestCase):
 
     def test_class_attribute(self):
         """
-        I test that the get_default_fields() is working as a class method,
+        I tests that the get_default_fields() is working as a class method,
         so I don't need to instantiate the class to get the list.
         """
         self.assertEqual(set(TestDFADExample.get_default_fields()), set(['alpha', 'beta', 'gamma']))

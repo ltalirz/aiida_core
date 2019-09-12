@@ -75,18 +75,18 @@ class TestCodDbImporter(AiidaTestCase):
 
     def test_datatype_checks(self):
         """
-        Rather complicated, but wide-coverage test for data types, accepted
+        Rather complicated, but wide-coverage tests for data types, accepted
         and rejected by CodDbImporter._*_clause methods.
         """
         from aiida.tools.dbimporters.plugins.cod import CodDbImporter
 
         codi = CodDbImporter()
         messages = ['',
-                    "incorrect value for keyword 'test' -- " + \
+                    "incorrect value for keyword 'tests' -- " + \
                     'only integers and strings are accepted',
-                    "incorrect value for keyword 'test' -- " + \
+                    "incorrect value for keyword 'tests' -- " + \
                     'only strings are accepted',
-                    "incorrect value for keyword 'test' -- " + \
+                    "incorrect value for keyword 'tests' -- " + \
                     'only integers and floats are accepted',
                     "invalid literal for int() with base 10: 'text'"]
         values = [10, 'text', u'text', '10', 1.0 / 3, [1, 2, 3]]
@@ -107,7 +107,7 @@ class TestCodDbImporter(AiidaTestCase):
             for j in range(len(values)):
                 message = messages[0]
                 try:
-                    methods[i]('test', 'test', [values[j]])
+                    methods[i]('tests', 'tests', [values[j]])
                 except ValueError as exc:
                     message = str(exc)
                 self.assertEquals(message, messages[results[i][j]])
@@ -267,7 +267,7 @@ class TestNnincDbImporter(AiidaTestCase):
         entry = results.at(0)
 
         path_root = os.path.split(aiida.__file__)[0]
-        path_pseudos = os.path.join(path_root, 'backends', 'tests', 'fixtures', 'pseudos')
+        path_pseudos = os.path.join(path_root, 'backends', 'tests', 'tests', 'pseudos')
         with io.open(os.path.join(path_pseudos, '{}.UPF'.format(upf)), 'r', encoding='utf8') as f:
             entry._contents = f.read()
 

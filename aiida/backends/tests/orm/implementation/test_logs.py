@@ -51,7 +51,7 @@ class TestBackendLog(AiidaTestCase):
             levelname=logging.getLevelName(LOG_LEVEL_REPORT),
             dbnode_id=dbnode_id,
             message=self.log_message,
-            metadata={'content': 'test'}
+            metadata={'content': 'tests'}
         )
 
     def test_creation(self):
@@ -67,7 +67,7 @@ class TestBackendLog(AiidaTestCase):
         self.assertTrue(isinstance(log.levelname, six.string_types))
         self.assertTrue(isinstance(log.dbnode_id, int))
         self.assertEqual(log.message, self.log_message)
-        self.assertEqual(log.metadata, {'content': 'test'})
+        self.assertEqual(log.metadata, {'content': 'tests'})
 
         log.store()
 
@@ -80,7 +80,7 @@ class TestBackendLog(AiidaTestCase):
         self.assertTrue(isinstance(log.levelname, six.string_types))
         self.assertTrue(isinstance(log.dbnode_id, int))
         self.assertEqual(log.message, self.log_message)
-        self.assertEqual(log.metadata, {'content': 'test'})
+        self.assertEqual(log.metadata, {'content': 'tests'})
 
         # Try to construct a UUID from the UUID value to prove that it has a valid UUID
         UUID(log.uuid)

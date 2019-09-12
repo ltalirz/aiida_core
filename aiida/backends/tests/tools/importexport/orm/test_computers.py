@@ -36,7 +36,7 @@ class TestComputer(AiidaTestCase):
     def test_same_computer_import(self, temp_dir):
         """
         Test that you can import nodes in steps without any problems. In this
-        test we will import a first calculation and then a second one. The
+        tests we will import a first calculation and then a second one. The
         import should work as expected and have in the end two job
         calculations.
 
@@ -135,7 +135,7 @@ class TestComputer(AiidaTestCase):
     @with_temp_dir
     def test_same_computer_different_name_import(self, temp_dir):
         """
-        This test checks that if the computer is re-imported with a different
+        This tests checks that if the computer is re-imported with a different
         name to the same database, then the original computer will not be
         renamed. It also checks that the names were correctly imported (without
         any change since there is no computer name collision)
@@ -220,7 +220,7 @@ class TestComputer(AiidaTestCase):
     @with_temp_dir
     def test_different_computer_same_name_import(self, temp_dir):
         """
-        This test checks that if there is a name collision, the imported
+        This tests checks that if there is a name collision, the imported
         computers are renamed accordingly.
         """
         from aiida.tools.importexport.common.config import DUPL_SUFFIX
@@ -318,7 +318,7 @@ class TestComputer(AiidaTestCase):
     @with_temp_dir
     def test_import_of_computer_json_params(self, temp_dir):
         """
-        This test checks that the metadata and transport params are exported and imported correctly in both backends.
+        This tests checks that the metadata and transport params are exported and imported correctly in both backends.
         """
         # Set the computer name
         comp1_name = 'localhost_1'

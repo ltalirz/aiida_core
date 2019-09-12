@@ -240,7 +240,7 @@ class TestTransitiveNoLoops(AiidaTestCase):
 
 class TestTypes(AiidaTestCase):
     """
-    Generic test class to test types
+    Generic tests class to tests types
     """
 
     def test_uuid_type(self):
@@ -646,8 +646,8 @@ class TestNodeBasic(AiidaTestCase):
         a = orm.Data()
 
         # Since Node uses the same method of Folder(),
-        # for this test I create a test folder by hand
-        # For any non-test usage, use SandboxFolder()!
+        # for this tests I create a tests folder by hand
+        # For any non-tests usage, use SandboxFolder()!
 
         directory = os.path.realpath(os.path.join('/', 'tmp', 'tmp_try'))
         while os.path.exists(os.path.join(directory)):
@@ -852,7 +852,7 @@ class TestNodeBasic(AiidaTestCase):
         """
         Multiple nodes with the same key. This should not be a problem
 
-        I test only extras because the two tables are formally identical
+        I tests only extras because the two tables are formally identical
         """
         n1 = orm.Data().store()
         n2 = orm.Data().store()
@@ -1078,7 +1078,7 @@ class TestNodeBasic(AiidaTestCase):
         after = timezone.now() + timedelta(seconds=1)
 
         # Make sure comments are sorted to avoid
-        # random test failures
+        # random tests failures
         comments = sorted(a.get_comments(), key=lambda comment: comment.ctime)
 
         times = [i.ctime for i in comments]
@@ -1211,14 +1211,14 @@ class TestNodeBasic(AiidaTestCase):
 
     def test_code_description(self):
         """
-        This test checks that the code description is retrieved correctly
+        This tests checks that the code description is retrieved correctly
         when the code is searched with its id and label.
         """
         # Create a code node
         code = orm.Code()
         code.set_remote_computer_exec((self.computer, '/bin/true'))
         code.label = 'test_code_label'
-        code.description = 'test code description'
+        code.description = 'tests code description'
         code.store()
 
         q_code1 = orm.Code.get(label=code.label)
@@ -1229,7 +1229,7 @@ class TestNodeBasic(AiidaTestCase):
 
     def test_list_for_plugin(self):
         """
-        This test checks the Code.list_for_plugin()
+        This tests checks the Code.list_for_plugin()
         """
         code1 = orm.Code()
         code1.set_remote_computer_exec((self.computer, '/bin/true'))
@@ -1255,15 +1255,15 @@ class TestNodeBasic(AiidaTestCase):
         """
         from aiida.common.exceptions import NotExistent
 
-        # I only need one node to test
+        # I only need one node to tests
         node = orm.Data().store()
         uuid_stored = node.uuid  # convenience to store the uuid
-        # Simple test to see whether I load correctly from the pk:
+        # Simple tests to see whether I load correctly from the pk:
         self.assertEqual(uuid_stored, orm.load_node(pk=node.pk).uuid)
         # Testing the loading with the uuid:
         self.assertEqual(uuid_stored, orm.load_node(uuid=uuid_stored).uuid)
 
-        # Here I'm testing whether loading the node with the beginnings of a uuid works
+        # Here I'm tests whether loading the node with the beginnings of a uuid works
         for i in range(10, len(uuid_stored), 2):
             start_uuid = uuid_stored[:i]
             self.assertEqual(uuid_stored, orm.load_node(uuid=start_uuid).uuid)

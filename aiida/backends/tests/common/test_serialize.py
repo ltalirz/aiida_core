@@ -28,14 +28,14 @@ class TestSerialize(AiidaTestCase):
         node_a = orm.Data().store()
         node_b = orm.Data().store()
 
-        data = {'test': 1, 'list': [1, 2, 3, node_a], 'dict': {('Si',): node_b, 'foo': 'bar'}, 'baz': 'aar'}
+        data = {'tests': 1, 'list': [1, 2, 3, node_a], 'dict': {('Si',): node_b, 'foo': 'bar'}, 'baz': 'aar'}
 
         serialized_data = serialize.serialize(data)
         deserialized_data = serialize.deserialize(serialized_data)
 
         # For now manual element-for-element comparison until we come up with general
         # purpose function that can equate two node instances properly
-        self.assertEqual(data['test'], deserialized_data['test'])
+        self.assertEqual(data['tests'], deserialized_data['tests'])
         self.assertEqual(data['baz'], deserialized_data['baz'])
         self.assertEqual(data['list'][:3], deserialized_data['list'][:3])
         self.assertEqual(data['list'][3].uuid, deserialized_data['list'][3].uuid)
@@ -102,7 +102,7 @@ class TestSerialize(AiidaTestCase):
             serialize.serialize(computer)
 
     def test_mixed_attribute_normal_dict(self):
-        """Regression test for #3092.
+        """Regression tests for #3092.
 
         The yaml mapping constructor in `aiida.orm.utils.serialize` was not properly "deeply" reconstructing nested
         mappings, causing a mix of attribute dictionaries and normal dictionaries to lose information in a round-trip.

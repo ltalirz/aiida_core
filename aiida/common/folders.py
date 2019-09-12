@@ -472,11 +472,11 @@ class SandboxFolder(Folder):
 
 
 class SubmitTestFolder(Folder):
-    """Sandbox folder that can be used for the test submission of `CalcJobs`.
+    """Sandbox folder that can be used for the tests submission of `CalcJobs`.
 
     The directory will be created in the current working directory with a configurable basename.
     Then a sub folder will be created within this base folder based on the current date and an index in order to
-    not overwrite already existing created test folders.
+    not overwrite already existing created tests folders.
     """
 
     _sub_folder = None
@@ -486,7 +486,7 @@ class SubmitTestFolder(Folder):
 
         The directory will be created in the current working directory with the name given by `basepath`.
         Then a sub folder will be created within this base folder based on the current date and an index in order to
-        not overwrite already existing created test folders.
+        not overwrite already existing created tests folders.
 
         :param basepath: name of the base directory that will be created in the current working directory
         """

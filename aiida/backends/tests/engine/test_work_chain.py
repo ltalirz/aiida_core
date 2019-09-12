@@ -190,7 +190,7 @@ class PotentialFailureWorkChain(WorkChain):
 
 class TestExitStatus(AiidaTestCase):
     """
-    This class should test the various ways that one can exit from the outline flow of a WorkChain, other than
+    This class should tests the various ways that one can exit from the outline flow of a WorkChain, other than
     it running it all the way through. Currently this can be done directly in the outline by calling the `return_`
     construct, or from an outline step function by returning a non-zero integer or an ExitCode with a non-zero status
     """
@@ -672,7 +672,7 @@ class TestWorkchain(AiidaTestCase):
 
     def test_if_block_persistence(self):
         """
-        This test was created to capture issue #902
+        This tests was created to capture issue #902
         """
         runner = get_manager().get_runner()
         wc = IfTest()
@@ -772,7 +772,7 @@ class TestWorkchain(AiidaTestCase):
 
     def test_namespace_nondb_mapping(self):
         """
-        Regression test for a bug in _flatten_inputs
+        Regression tests for a bug in _flatten_inputs
         """
         value = {'a': 1, 'b': {'c': 2}}
 
@@ -1112,7 +1112,7 @@ class SerializeWorkChain(WorkChain):
         super(SerializeWorkChain, cls).define(spec)
 
         spec.input(
-            'test',
+            'tests',
             valid_type=Str,
             serializer=lambda x: Str(ObjectLoader().identify_object(x)),
         )

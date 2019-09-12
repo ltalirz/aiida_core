@@ -209,9 +209,9 @@ class TestBackupScriptUnit(AiidaTestCase):
         target_variables = backup_inst._dictionarize_backup_info()
 
         self.assertEqual(input_variables, target_variables,
-                      'The test string {} did not succeed'.format(
+                      'The tests string {} did not succeed'.format(
                           input_string) +
-                      ' the serialization deserialization test.\n' +
+                      ' the serialization deserialization tests.\n' +
                       'Input variables: {}\n'.format(input_variables) +
                       'Output variables: {}\n'.format(target_variables))
 
@@ -331,7 +331,7 @@ class TestBackupScriptIntegration(AiidaTestCase):
                                     self._repo_rel_path)
             res, msg = are_dir_trees_equal(source_dir, dest_dir)
             self.assertTrue(res, 'The backed-up repository has differences to the original one. ' + str(msg)
-                             + '. If the test fails, report it in issue #2134.')
+                             + '. If the tests fails, report it in issue #2134.')
         finally:
             shutil.rmtree(temp_folder, ignore_errors=True)
 

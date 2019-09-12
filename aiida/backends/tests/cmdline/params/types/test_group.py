@@ -23,9 +23,9 @@ class TestGroupParamType(AiidaTestCase):
     @classmethod
     def setUpClass(cls, *args, **kwargs):
         """
-        Create some groups to test the GroupParamType parameter type for the command line infrastructure
+        Create some groups to tests the GroupParamType parameter type for the command line infrastructure
         We create an initial group with a random name and then on purpose create two groups with a name
-        that matches exactly the ID and UUID, respectively, of the first one. This allows us to test
+        that matches exactly the ID and UUID, respectively, of the first one. This allows us to tests
         the rules implemented to solve ambiguities that arise when determing the identifier type
         """
         super(TestGroupParamType, cls).setUpClass(*args, **kwargs)

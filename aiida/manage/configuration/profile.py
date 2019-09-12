@@ -101,7 +101,7 @@ class Profile(object):  # pylint: disable=too-many-public-methods
             from uuid import uuid4
             self.uuid = uuid4().hex
 
-        # Currently, whether a profile is a test profile is solely determined by its name starting with 'test_'
+        # Currently, whether a profile is a tests profile is solely determined by its name starting with 'test_'
         self._test_profile = bool(self.name.startswith('test_'))
 
     @property
@@ -242,9 +242,9 @@ class Profile(object):  # pylint: disable=too-many-public-methods
 
     @property
     def is_test_profile(self):
-        """Return whether the profile is a test profile
+        """Return whether the profile is a tests profile
 
-        :return: boolean, True if test profile, False otherwise
+        :return: boolean, True if tests profile, False otherwise
         """
         return self._test_profile
 

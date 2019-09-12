@@ -49,7 +49,7 @@ class RESTApiTestCase(AiidaTestCase):
         cls.app.config['TESTING'] = True
         AiidaApi(cls.app, **kwargs)
 
-        # create test inputs
+        # create tests inputs
         cell = ((2., 0., 0.), (0., 2., 0.), (0., 0., 2.))
         structure = orm.StructureData(cell=cell)
         structure.append_atom(position=(0., 0., 0.), symbols=['Ba'])
@@ -981,7 +981,7 @@ class RESTApiTestSuite(RESTApiTestCase):
     ############### schema #############
     def test_schema(self):
         """
-        test schema
+        tests schema
         """
         for nodetype in ['nodes', 'calculations', 'data', 'codes', 'computers', 'users', 'groups']:
             url = self.get_url_prefix() + '/' + nodetype + '/schema'

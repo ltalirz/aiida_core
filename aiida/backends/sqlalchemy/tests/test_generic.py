@@ -92,7 +92,7 @@ class TestGroupsSqla(AiidaTestCase):
 
         # NOTE: Here we pass type_string to query and get calls so that these calls don't
         # find the autogroups (otherwise the assertions will fail)
-        newuser = backend.users.create(email='test@email.xx')
+        newuser = backend.users.create(email='tests@email.xx')
         g3 = backend.groups.create(label='testquery3', user=newuser).store()
 
         # I should find it

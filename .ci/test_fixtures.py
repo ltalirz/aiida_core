@@ -7,7 +7,7 @@
 # For further information on the license, see the LICENSE.txt file        #
 # For further information please visit http://www.aiida.net               #
 ###########################################################################
-"""Unittests for plugin test fixture manager"""
+"""Unittests for plugin tests fixture manager"""
 from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
@@ -16,16 +16,16 @@ import unittest
 
 from pgtest import pgtest
 
-from aiida.manage.fixtures import FixtureManager, FixtureError
+from aiida.manage.tests import TestManager, TestManagerError
 from aiida.common.utils import Capturing
 from aiida.backends import BACKEND_DJANGO, BACKEND_SQLA
 
 
 class FixtureManagerTestCase(unittest.TestCase):
-    """Test the FixtureManager class"""
+    """Test the TestManager class"""
 
     def setUp(self):
-        self.fixture_manager = FixtureManager()
+        self.fixture_manager = TestManager()
         self.backend = BACKEND_DJANGO if os.environ.get(
             'TEST_AIIDA_BACKEND', BACKEND_DJANGO
         ) == BACKEND_DJANGO else BACKEND_SQLA
@@ -42,12 +42,12 @@ class FixtureManagerTestCase(unittest.TestCase):
 
     def test_create_use_destroy_profile(self):
         """
-        Test temporary test profile creation
+        Test temporary tests profile creation
 
         * The profile gets created, the dbenv loaded
         * Data can be stored in the db
         * reset_db deletes all data added after profile creation
-        * destroy_all removes all traces of the test run
+        * destroy_all removes all traces of the tests run
         """
         with Capturing() as output:
             self.fixture_manager.create_profile()
@@ -65,7 +65,7 @@ class FixtureManagerTestCase(unittest.TestCase):
         data_pk = data.pk
         self.assertTrue(load_node(data_pk))
 
-        with self.assertRaises(FixtureError):
+        with self.assertRaises(TestManagerError):
             self.test_create_aiida_db()
 
         self.fixture_manager.reset_db()

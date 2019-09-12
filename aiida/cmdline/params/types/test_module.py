@@ -17,11 +17,11 @@ import click
 class TestModuleParamType(click.ParamType):
     """Parameter type to represent a unittest module."""
 
-    name = 'test module'
+    name = 'tests module'
 
     @staticmethod
     def get_test_modules():
-        """Returns a list of known test modules."""
+        """Returns a list of known tests modules."""
         from aiida.backends.tests import get_db_test_names
 
         prefix_db = 'db'

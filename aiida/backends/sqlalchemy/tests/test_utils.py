@@ -9,7 +9,7 @@
 ###########################################################################
 
 """
-In this file various data management functions, needed for the SQLA test,
+In this file various data management functions, needed for the SQLA tests,
 are added. They are "heavily inspired" by the sqlalchemy_utils.functions.database
 (SQLAlchemy-Utils package).
 
@@ -47,7 +47,7 @@ def database_exists(url):
 
     :param url: A SQLAlchemy engine URL.
 
-    Performs backend-specific testing to quickly determine if a database
+    Performs backend-specific tests to quickly determine if a database
     exists on the server.
 
     """

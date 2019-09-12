@@ -47,7 +47,7 @@ class TestImportPath(AiidaTestCase):
         """Test a TypeError is raised when wrong type is given for timeout_seconds"""
 
         with self.assertRaises(TypeError):
-            ImportPath(timeout_seconds='test')
+            ImportPath(timeout_seconds='tests')
 
     def test_range_timeout(self):
         """Test timeout_seconds defines extrema when out of range

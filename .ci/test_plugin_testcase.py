@@ -8,7 +8,7 @@
 # For further information please visit http://www.aiida.net               #
 ###########################################################################
 """
-Test the plugin test case
+Test the plugin tests case
 
 This must be in a standalone script because it would clash with other tests,
 Since the dbenv gets loaded on the temporary profile.
@@ -23,7 +23,7 @@ import unittest
 import tempfile
 import shutil
 
-from aiida.manage.fixtures import PluginTestCase, TestRunner
+from aiida.manage.tests.unittest_classes import PluginTestCase, TestRunner
 from aiida.backends import BACKEND_DJANGO, BACKEND_SQLA
 
 
@@ -33,7 +33,7 @@ def determine_backend():
 
 class PluginTestCase1(PluginTestCase):
     """
-    Test the PluginTestCase from utils.fixtures
+    Test the PluginTestCase from utils.tests
     """
 
     def setUp(self):
@@ -48,7 +48,7 @@ class PluginTestCase1(PluginTestCase):
         Return some Dict
         """
         from aiida.plugins import DataFactory
-        data = DataFactory('dict')(dict={'data': 'test'})
+        data = DataFactory('dict')(dict={'data': 'tests'})
         data.store()
         return data
 
@@ -97,7 +97,7 @@ class PluginTestCase2(PluginTestCase):
 
     def test_stupid(self):
         """
-        Dummy test for 2nd plugin testcase class.
+        Dummy tests for 2nd plugin testcase class.
 
         Just making sure that setup/teardown is safe for
         multiple testcase classes (this was broken in #1425).

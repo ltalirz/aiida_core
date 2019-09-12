@@ -19,7 +19,7 @@ import tempfile
 
 
 def create_mock_profile(name, repository_dirpath=None, **kwargs):
-    """Create mock profile for testing purposes.
+    """Create mock profile for tests purposes.
 
     :param name: name of the profile
     :param repository_dirpath: optional absolute path to use as the base for the repository path

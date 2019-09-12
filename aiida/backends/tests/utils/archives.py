@@ -25,14 +25,14 @@ from aiida.common.folders import SandboxFolder
 
 def get_archive_file(archive, filepath=None, external_module=None):
     """
-    Return the absolute path of the archive file used for testing purposes. The expected path for these files:
+    Return the absolute path of the archive file used for tests purposes. The expected path for these files:
 
-        aiida.backends.tests.fixtures.filepath
+        aiida.backends.tests.tests.filepath
 
     :param archive: the relative filename of the archive
     :param filepath: str of directories of where to find archive (starting "/"s are irrelevant)
     :param external_module: string with name of external module, where archive can be found
-    :return: absolute filepath of the archive test file
+    :return: absolute filepath of the archive tests file
     """
     import importlib
 
@@ -65,9 +65,9 @@ def get_archive_file(archive, filepath=None, external_module=None):
 
         dirpath_archive = os.path.join(external_path, dirpath_archive)
     else:
-        # Add absolute path to local repo's fixtures
+        # Add absolute path to local repo's tests
         dirpath_current = os.path.dirname(os.path.realpath(__file__))
-        dirpath_migrate = os.path.join(dirpath_current, os.pardir, 'fixtures')
+        dirpath_migrate = os.path.join(dirpath_current, os.pardir, 'tests')
 
         dirpath_archive = os.path.join(dirpath_migrate, dirpath_archive)
 
@@ -79,7 +79,7 @@ def get_archive_file(archive, filepath=None, external_module=None):
 
 
 def import_archive(archive, filepath=None, external_module=None):
-    """Import a test archive that is an AiiDA export archive
+    """Import a tests archive that is an AiiDA export archive
 
     :param archive: the relative filename of the archive
     :param filepath: str of directories of where to find archive (starting "/"s are irrelevant)

@@ -61,7 +61,7 @@ class TestExportFileMigration(AiidaTestCase):
         cls.core_archive = {'filepath': 'export/migrate'}
 
     def setUp(self):
-        """Reset database before each test"""
+        """Reset database before each tests"""
         super(TestExportFileMigration, self).setUp()
         self.reset_database()
 

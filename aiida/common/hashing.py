@@ -216,7 +216,7 @@ def _(mapping, **kwargs):
     """
     Hashing of OrderedDicts
 
-    :param odict_as_unordered: hash OrderedDicts as normal dicts (mostly for testing)
+    :param odict_as_unordered: hash OrderedDicts as normal dicts (mostly for tests)
     """
 
     if kwargs.get('odict_as_unordered', False):

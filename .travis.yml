@@ -36,7 +36,7 @@ before_install:
     # the Travis machine, causing certain scripts sourced in the `.bashrc` to fail
     - sed -i 's/TRAVIS_HOME/HOME/g' /home/travis/.travis/job_stages
     # This is needed for the SSH tests (being able to ssh to localhost)
-    # And will also be used for the docker test
+    # And will also be used for the docker tests
     - ssh-keygen -t rsa -N "" -f "${HOME}/.ssh/id_rsa"
     - cp "${HOME}/.ssh/id_rsa.pub" "${HOME}/.ssh/authorized_keys"
     - ssh-keyscan -H localhost >> "${HOME}/.ssh/known_hosts"
@@ -57,8 +57,8 @@ install:
     - if [ "$TEST_TYPE" == "docs" ]; then pip install . && pip install -r docs/requirements_for_rtd.txt; else pip install .[all]; fi
 
 env:
-    ## Build matrix to test both backends, and the docs
-    ## I still let it create the test backend for django
+    ## Build matrix to tests both backends, and the docs
+    ## I still let it create the tests backend for django
     ## also when building the docs
     ## because otherwise the code would complain. Also, I need latex.
     - TEST_TYPE="pre-commit"

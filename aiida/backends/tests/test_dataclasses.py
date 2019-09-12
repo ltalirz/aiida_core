@@ -179,7 +179,7 @@ class TestCifData(AiidaTestCase):
             tmpf.flush()
             a = CifData(file=tmpf.name)
 
-        self.assertEquals(list(a.values.keys()), ['test'])
+        self.assertEquals(list(a.values.keys()), ['tests'])
 
     @unittest.skipIf(not has_pycifrw(), 'Unable to import PyCifRW')
     def test_change_cifdata_file(self):
@@ -190,14 +190,14 @@ class TestCifData(AiidaTestCase):
             tmpf.flush()
             a = CifData(file=tmpf.name)
 
-        self.assertEquals(a.values['test']['_cell_length_a'], '10(1)')
+        self.assertEquals(a.values['tests']['_cell_length_a'], '10(1)')
 
         with tempfile.NamedTemporaryFile(mode='w+') as tmpf:
             tmpf.write(file_content_2)
             tmpf.flush()
             a.set_file(tmpf.name)
 
-        self.assertEquals(a.values['test']['_cell_length_a'], '11(1)')
+        self.assertEquals(a.values['tests']['_cell_length_a'], '11(1)')
 
     @unittest.skipIf(not has_ase(), 'Unable to import ase')
     @unittest.skipIf(not has_pycifrw(), 'Unable to import PyCifRW')
@@ -556,9 +556,9 @@ _tag   {}
 
         ret_dict = refine_inline(a)
         b = ret_dict['cif']
-        self.assertEqual(list(b.values.keys()), ['test'])
-        self.assertEqual(b.values['test']['_chemical_formula_sum'], 'C O2')
-        self.assertEqual(b.values['test']['_symmetry_equiv_pos_as_xyz'], [
+        self.assertEqual(list(b.values.keys()), ['tests'])
+        self.assertEqual(b.values['tests']['_chemical_formula_sum'], 'C O2')
+        self.assertEqual(b.values['tests']['_symmetry_equiv_pos_as_xyz'], [
             'x,y,z', '-x,-y,-z', '-y,x,z', 'y,-x,-z', '-x,-y,z', 'x,y,-z', 'y,-x,z', '-y,x,-z', 'x,-y,-z', '-x,y,z',
             '-y,-x,-z', 'y,x,z', '-x,y,-z', 'x,-y,z', 'y,x,-z', '-y,-x,z'
         ])
@@ -613,7 +613,7 @@ _tag   {}
         """
         Test empty CifData
 
-        Note: This test does not need PyCifRW.
+        Note: This tests does not need PyCifRW.
         """
         with tempfile.NamedTemporaryFile(mode='w+') as tmpf:
             tmpf.write(self.valid_sample_cif_str)
@@ -787,7 +787,7 @@ class TestKindValidSymbols(AiidaTestCase):
 
     def test_unknown_symbol(self):
         """
-        Should test if symbol X is valid and defined
+        Should tests if symbol X is valid and defined
         in the elements dictionary.
         """
         Kind(symbols=['X'])
@@ -1359,7 +1359,7 @@ class TestStructureData(AiidaTestCase):
         """
         Test the management of kinds (automatic creation of new kind
         if name is not specified and properties are different).
-        This test was failing in, e.g., commit f6a8f4b.
+        This tests was failing in, e.g., commit f6a8f4b.
         """
         from aiida.common.constants import elements
 
@@ -1383,7 +1383,7 @@ class TestStructureData(AiidaTestCase):
         """
         Test the management of kinds (automatic creation of new kind
         if name is not specified and properties are different).
-        This test was failing in, e.g., commit f6a8f4b. This also includes
+        This tests was failing in, e.g., commit f6a8f4b. This also includes
         the unknown entry.
         """
         from aiida.common.constants import elements
@@ -1407,7 +1407,7 @@ class TestStructureData(AiidaTestCase):
     @unittest.skipIf(not has_ase(), 'Unable to import ase')
     def test_kind_5_bis_ase(self):
         """
-        Same test as test_kind_5_bis, but using ase
+        Same tests as test_kind_5_bis, but using ase
         """
         import ase
 
@@ -1437,7 +1437,7 @@ class TestStructureData(AiidaTestCase):
     @unittest.skipIf(not has_ase(), 'Unable to import ase')
     def test_kind_5_bis_ase_unknown(self):
         """
-        Same test as test_kind_5_bis_unknown, but using ase
+        Same tests as test_kind_5_bis_unknown, but using ase
         """
         import ase
 
@@ -3235,7 +3235,7 @@ class TestKpointsData(AiidaTestCase):
 
     def test_path_wrapper_legacy(self):
         """
-        This is a clone of the test_path test but instead it goes through the new wrapper
+        This is a clone of the test_path tests but instead it goes through the new wrapper
         calling the deprecated legacy implementation. This tests that the wrapper maintains
         the same behavior of the old implementation
         """
@@ -3256,7 +3256,7 @@ class TestKpointsData(AiidaTestCase):
 
         structure = StructureData(cell=cell)
 
-        # test the various formats for specifying the path
+        # tests the various formats for specifying the path
         get_explicit_kpoints_path(
             structure, method='legacy', value=[
                 ('G', 'M'),
@@ -3292,7 +3292,7 @@ class TestKpointsData(AiidaTestCase):
 
     def test_tetra_z_wrapper_legacy(self):
         """
-        This is a clone of the test_tetra_z test but instead it goes through the new wrapper
+        This is a clone of the test_tetra_z tests but instead it goes through the new wrapper
         calling the deprecated legacy implementation. This tests that the wrapper maintains
         the same behavior of the old implementation
         """
@@ -3671,7 +3671,7 @@ class TestBandsData(AiidaTestCase):
         b.set_kpointsdata(k)
 
         # 4 bands with linearly increasing energies, it does not make sense
-        # but is good for testing
+        # but is good for tests
         input_bands = numpy.array([numpy.ones(4) * i for i in range(k.get_kpoints().shape[0])])
 
         b.set_bands(input_bands, units='eV')

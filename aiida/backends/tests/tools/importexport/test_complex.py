@@ -36,7 +36,7 @@ class TestComplex(AiidaTestCase):
     @with_temp_dir
     def test_complex_graph_import_export(self, temp_dir):
         """
-        This test checks that a small and bit complex graph can be correctly
+        This tests checks that a small and bit complex graph can be correctly
         exported and imported.
 
         It will create the graph, store it to the database, export it to a file
@@ -159,7 +159,7 @@ class TestComplex(AiidaTestCase):
         # Creating a folder for the import/export files
         chars = string.ascii_uppercase + string.digits
         size = 10
-        grouplabel = 'test-group'
+        grouplabel = 'tests-group'
 
         nparr = np.random.random((4, 3, 2))
         trial_dict = {}
@@ -189,7 +189,7 @@ class TestComplex(AiidaTestCase):
         calc.store()
         # I want the array to be an output of the calculation
         array.add_incoming(calc, link_type=LinkType.CREATE, link_label='output_array')
-        group = orm.Group(label='test-group')
+        group = orm.Group(label='tests-group')
         group.store()
         group.add_nodes(array)
 

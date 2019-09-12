@@ -585,7 +585,7 @@ fi
 
             # Now get the time in seconds which has been used
             # Only if it is RUNNING; otherwise it is not meaningful,
-            # and may be not set (in my test, it is set to zero)
+            # and may be not set (in my tests, it is set to zero)
             if this_job.job_state == JobState.RUNNING:
                 try:
                     requested_walltime = psd_finish_time - psd_start_time

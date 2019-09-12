@@ -538,7 +538,7 @@ class Capturing(object):
             with Capturing() as output:
                 sys.exit()
 
-    But out of the testing environment, the code instead just exits.
+    But out of the tests environment, the code instead just exits.
 
     To use it, access the obj.stdout_lines, or just iterate over the object
 

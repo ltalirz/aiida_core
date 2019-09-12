@@ -21,7 +21,7 @@ from aiida.schedulers.plugins.slurm import *
 TEXT_SQUEUE_TO_TEST = """862540^^^PD^^^Dependency^^^n/a^^^user1^^^20^^^640^^^(Dependency)^^^normal^^^1-00:00:00^^^0:00^^^N/A^^^longsqw_L24_q_10_0^^^2013-05-22T01:41:11
 863100^^^PD^^^Resources^^^n/a^^^user2^^^32^^^1024^^^(Resources)^^^normal^^^10:00^^^0:00^^^2013-05-23T14:44:44^^^eq_solve_e4.slm^^^2013-05-22T04:23:59
 863546^^^PD^^^Priority^^^n/a^^^user3^^^2^^^64^^^(Priority)^^^normal^^^8:00:00^^^0:00^^^2013-05-23T14:44:44^^^S2-H2O^^^2013-05-22T08:08:41
-863313^^^PD^^^JobHeldUser^^^n/a^^^user4^^^1^^^1^^^(JobHeldUser)^^^normal^^^1:00:00^^^0:00^^^N/A^^^test^^^2013-05-23T00:28:12
+863313^^^PD^^^JobHeldUser^^^n/a^^^user4^^^1^^^1^^^(JobHeldUser)^^^normal^^^1:00:00^^^0:00^^^N/A^^^tests^^^2013-05-23T00:28:12
 862538^^^R^^^None^^^rosa10^^^user5^^^20^^^640^^^nid0[0099,0156-0157,0162-0163,0772-0773,0826,0964-0965,1018-1019,1152-1153,1214-1217,1344-1345]^^^normal^^^1-00:00:00^^^32:10^^^2013-05-23T11:41:30^^^longsqw_L24_q_11_0^^^2013-05-23T03:04:21
 861352^^^R^^^None^^^rosa11^^^user6^^^4^^^128^^^nid00[192,246,264-265]^^^normal^^^1-00:00:00^^^23:30:20^^^2013-05-22T12:43:20^^^Pressure_PBEsol_0^^^2013-05-23T09:35:23
 863553^^^R^^^None^^^rosa1^^^user5^^^1^^^32^^^nid00471^^^normal^^^30:00^^^29:29^^^2013-05-23T11:44:11^^^bash^^^2013-05-23T10:42:11
@@ -129,7 +129,7 @@ class TestTimes(unittest.TestCase):
         self.assertEquals(scheduler._convert_time('01-3:05:7'), 86400 + 3 * 3600 + 5 * 60 + 7)
         self.assertEquals(scheduler._convert_time('01-03:05:07'), 86400 + 3 * 3600 + 5 * 60 + 7)
 
-        # Disable logging to avoid excessive output during test
+        # Disable logging to avoid excessive output during tests
         logging.disable(logging.ERROR)
         with self.assertRaises(ValueError):
             # Empty string not valid

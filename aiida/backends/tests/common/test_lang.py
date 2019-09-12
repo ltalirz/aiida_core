@@ -20,7 +20,7 @@ protected_unchecked = lang.protected_decorator(check=False)  # pylint: disable=i
 
 
 class Protected(object):
-    """Class to test the protected decorator."""
+    """Class to tests the protected decorator."""
 
     # pylint: disable=no-self-use
 

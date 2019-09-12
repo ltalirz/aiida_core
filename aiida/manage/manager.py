@@ -292,7 +292,7 @@ class Manager(object):
 
     def create_daemon_runner(self, loop=None):
         """
-        Create a new daemon runner.  This is used by workers when the daemon is running and in testing.
+        Create a new daemon runner.  This is used by workers when the daemon is running and in tests.
 
         :param loop: the (optional) tornado event loop to use
         :type loop: :class:`tornado.ioloop.IOLoop`

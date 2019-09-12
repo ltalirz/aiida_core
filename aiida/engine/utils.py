@@ -252,7 +252,7 @@ def set_process_state_change_timestamp(process):
     elif isinstance(process.node, WorkflowNode):
         process_type = 'work'
     elif isinstance(process.node, ProcessNode):
-        # This will only occur for testing, as in general users cannot launch plain Process classes
+        # This will only occur for tests, as in general users cannot launch plain Process classes
         return
     else:
         raise ValueError('unsupported calculation node type {}'.format(type(process.node)))

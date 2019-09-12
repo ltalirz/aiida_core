@@ -146,7 +146,7 @@ class UniqueTest(unittest.TestCase):
             self.assertEqual(backup_utils.ask_question('', int, False), int(answers[2]))
 
             # Test that a question that asks for a date is working correctly.
-            # The behavior is similar to the above test.
+            # The behavior is similar to the above tests.
             self.seq = -1
             answers = ['', '3fd43', '2015-07-28 20:48:53.197537+02:00', 'yes']
             backup_utils.input = lambda _: answers[self.array_counter()]

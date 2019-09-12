@@ -18,16 +18,16 @@ import uuid
 from aiida.schedulers.plugins.lsf import *
 
 BJOBS_STDOUT_TO_TEST = '764213236|EXIT|TERM_RUNLIMIT: job killed after reaching LSF run time limit' \
-                       '|b681e480bd|inewton|1|-|b681e480bd|test|Feb  2 00:46|Feb  2 00:45|-|Feb  2 00:44|aiida-1033269\n' \
+                       '|b681e480bd|inewton|1|-|b681e480bd|tests|Feb  2 00:46|Feb  2 00:45|-|Feb  2 00:44|aiida-1033269\n' \
                        '764220165|PEND|-|-|inewton|-|-|-|8nm|-|-|-|Feb  2 01:46|aiida-1033444\n' \
-                       '764220167|PEND|-|-|fchopin|-|-|-|test|-|-|-|Feb  2 01:53 L|aiida-1033449\n' \
-                       '764254593|RUN|-|lxbsu2710|inewton|1|-|lxbsu2710|test|Feb  2 07:40|Feb  2 07:39|-|Feb  2 07:39|test\n' \
-                       '764255172|RUN|-|b68ac74822|inewton|1|-|b68ac74822|test|Feb  2 07:48 L|Feb  2 07:47|15.00% L|Feb  2 07:47|test\n' \
-                       '764245175|RUN|-|b68ac74822|dbowie|1|-|b68ac74822|test|Jan  1 05:07|Dec  31 23:48 L|25.00%|Dec  31 23:40|test\n' \
-                       '764399747|DONE|-|p05496706j68144|inewton|1|-|p05496706j68144|test|Feb  2 14:56 L|Feb  2 14:54|38.33% L|Feb  2 14:54|test'
+                       '764220167|PEND|-|-|fchopin|-|-|-|tests|-|-|-|Feb  2 01:53 L|aiida-1033449\n' \
+                       '764254593|RUN|-|lxbsu2710|inewton|1|-|lxbsu2710|tests|Feb  2 07:40|Feb  2 07:39|-|Feb  2 07:39|tests\n' \
+                       '764255172|RUN|-|b68ac74822|inewton|1|-|b68ac74822|tests|Feb  2 07:48 L|Feb  2 07:47|15.00% L|Feb  2 07:47|tests\n' \
+                       '764245175|RUN|-|b68ac74822|dbowie|1|-|b68ac74822|tests|Jan  1 05:07|Dec  31 23:48 L|25.00%|Dec  31 23:40|tests\n' \
+                       '764399747|DONE|-|p05496706j68144|inewton|1|-|p05496706j68144|tests|Feb  2 14:56 L|Feb  2 14:54|38.33% L|Feb  2 14:54|tests'
 BJOBS_STDERR_TO_TEST = 'Job <864220165> is not found'
 
-SUBMIT_STDOUT_TO_TEST = 'Job <764254593> is submitted to queue <test>.'
+SUBMIT_STDOUT_TO_TEST = 'Job <764254593> is submitted to queue <tests>.'
 BKILL_STDOUT_TO_TEST = 'Job <764254593> is being terminated'
 
 
@@ -44,7 +44,7 @@ class TestParserBjobs(unittest.TestCase):
         import datetime
         scheduler = LsfScheduler()
 
-        # Disable logging to avoid excessive output during test
+        # Disable logging to avoid excessive output during tests
         logging.disable(logging.ERROR)
 
         retval = 255
@@ -65,14 +65,14 @@ class TestParserBjobs(unittest.TestCase):
         self.assertEquals(job_parsed, job_on_cluster)
 
         job_queued = 2
-        job_queue_name = ['8nm', 'test']
+        job_queue_name = ['8nm', 'tests']
         job_queued_parsed = len([j for j in job_list if j.job_state and j.job_state == JobState.QUEUED])
         job_queue_name_parsed = [j.queue_name for j in job_list if j.job_state and j.job_state == JobState.QUEUED]
         self.assertEquals(job_queued, job_queued_parsed)
         self.assertEquals(job_queue_name, job_queue_name_parsed)
 
         job_done = 2
-        job_done_title = ['aiida-1033269', 'test']
+        job_done_title = ['aiida-1033269', 'tests']
         job_done_annotation = ['TERM_RUNLIMIT: job killed after reaching LSF run time limit', '-']
         job_done_parsed = len([j for j in job_list if j.job_state and j.job_state == JobState.DONE])
         job_done_title_parsed = [j.title for j in job_list if j.job_state and j.job_state == JobState.DONE]

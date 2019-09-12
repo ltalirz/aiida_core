@@ -26,7 +26,7 @@ from django.utils.encoding import python_2_unicode_compatible
 
 from aiida.backends.djsite.db.subtests.migrations.test_migrations_common import TestMigrations
 
-# The following sample dictionary can be used for the conversion test of attributes and extras
+# The following sample dictionary can be used for the conversion tests of attributes and extras
 SAMPLE_DICT = {
     'bool': True,
     '001': 2,
@@ -57,16 +57,16 @@ db_extra_base_model = None
 
 class TestAttributesExtrasToJSONMigrationSimple(TestMigrations):
     """
-    A "simple" test for the attributes and extra migration from EAV to JSONB.
+    A "simple" tests for the attributes and extra migration from EAV to JSONB.
     It stores a sample dictionary using the EAV deserialization of AiiDA Django
-    for the attributes and extras. Then the test checks that they are corerctly
+    for the attributes and extras. Then the tests checks that they are corerctly
     converted to JSONB.
     """
     migrate_from = '0036_drop_computer_transport_params'
     migrate_to = '0037_attributes_extras_settings_json'
 
     # In the following dictionary we store the generated nodes (ids, attributes and extras)
-    # The correct migration of these nodes will be checked at the test
+    # The correct migration of these nodes will be checked at the tests
     nodes_to_verify = dict()
 
     def setUpBeforeMigration(self):
@@ -111,7 +111,7 @@ class TestAttributesExtrasToJSONMigrationSimple(TestMigrations):
 
 class TestAttributesExtrasToJSONMigrationManyNodes(TestMigrations):
     """
-    This test comparing to the previous one (TestAttributesExtrasToJSONMigrationSimple), it
+    This tests comparing to the previous one (TestAttributesExtrasToJSONMigrationSimple), it
     creates several nodes with different atributes and extras and checks their correct
     migration one-by-one.
     """
@@ -119,7 +119,7 @@ class TestAttributesExtrasToJSONMigrationManyNodes(TestMigrations):
     migrate_to = '0037_attributes_extras_settings_json'
 
     # In the following dictionary we store the generated nodes (ids, attributes and extras)
-    # The correct migration of these nodes will be checked at the test
+    # The correct migration of these nodes will be checked at the tests
     nodes_to_verify = dict()
 
     # Number of nodes to create
@@ -179,7 +179,7 @@ class TestAttributesExtrasToJSONMigrationManyNodes(TestMigrations):
 
 class TestSettingsToJSONMigration(TestMigrations):
     """
-    This test checks the correct migration of the settings. Setting records were used as an
+    This tests checks the correct migration of the settings. Setting records were used as an
     example from a typical settings table of Django EAV.
     """
     migrate_from = '0036_drop_computer_transport_params'
@@ -246,7 +246,7 @@ class TestSettingsToJSONMigration(TestMigrations):
     def tearDown(self):
         """
         Deletion of settings - this is needed because settings are not deleted by the
-        typical test cleanup methods.
+        typical tests cleanup methods.
         """
         db_setting_model = self.apps.get_model('db', 'DbSetting')
         db_setting_model.objects.filter(key__in=self.settings_info.keys()).delete()

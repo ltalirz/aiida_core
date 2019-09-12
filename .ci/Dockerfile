@@ -50,7 +50,7 @@ RUN apt-get update \
     && apt-get clean all
 
 # Disable password requests for requests coming from localhost
-# Of course insecure, but ok for testing
+# Of course insecure, but ok for tests
 RUN cp /etc/postgresql/9.5/main/pg_hba.conf /etc/postgresql/9.5/main/pg_hba.conf~ && \
     perl -npe 's/^([^#]*)md5$/$1trust/' /etc/postgresql/9.5/main/pg_hba.conf~ > /etc/postgresql/9.5/main/pg_hba.conf
 
@@ -83,7 +83,7 @@ RUN pip install pip==18.1 setuptools==40.6.2
 # Put the doubler script
 COPY doubler.sh /usr/local/bin/
 
-# Use messed-up filename to test quoting robustness
+# Use messed-up filename to tests quoting robustness
 RUN mv /usr/local/bin/doubler.sh /usr/local/bin/d\"o\'ub\ ler.sh
 
 # Put the add script

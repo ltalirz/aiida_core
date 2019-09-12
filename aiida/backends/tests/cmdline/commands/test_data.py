@@ -427,7 +427,7 @@ class TestVerdiDataRemote(AiidaTestCase):
         p = tempfile.mkdtemp()
         self.r.set_remote_path(p)
         with io.open(p + '/file.txt', 'w', encoding='utf8') as fhandle:
-            fhandle.write(u'test string')
+            fhandle.write(u'tests string')
         self.r.computer = comp
         self.r.store()
 
@@ -467,7 +467,7 @@ class TestVerdiDataRemote(AiidaTestCase):
         options = [str(self.r.id), 'file.txt']
         res = self.cli_runner.invoke(cmd_remote.remote_cat, options, catch_exceptions=False)
         self.assertEqual(res.exit_code, 0, 'The command verdi data remote cat did not finish correctly')
-        self.assertIn(b'test string', res.stdout_bytes, 'The string "test string" was not found in the output'
+        self.assertIn(b'tests string', res.stdout_bytes, 'The string "tests string" was not found in the output'
                                                         ' of verdi data remote cat file.txt')
 
 
@@ -856,11 +856,11 @@ class TestVerdiDataUpf(AiidaTestCase):
         super(TestVerdiDataUpf, cls).setUpClass()
 
     def setUp(self):
-        self.filepath_pseudos = os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'fixtures', 'pseudos')
+        self.filepath_pseudos = os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'tests', 'pseudos')
         self.cli_runner = CliRunner()
 
     def upload_family(self):
-        options = [self.filepath_pseudos, 'test_group', 'test description']
+        options = [self.filepath_pseudos, 'test_group', 'tests description']
         res = self.cli_runner.invoke(cmd_upf.upf_uploadfamily, options, catch_exceptions=False)
         self.assertIn(b'UPF files found: 3', res.stdout_bytes, 'The string "UPF files found: 3" was not found in the'
                                                                ' output of verdi data upf uploadfamily')
@@ -871,7 +871,7 @@ class TestVerdiDataUpf(AiidaTestCase):
 
     def test_uploadfamily(self):
         self.upload_family()
-        options = [self.filepath_pseudos, 'test_group', 'test description', '--stop-if-existing']
+        options = [self.filepath_pseudos, 'test_group', 'tests description', '--stop-if-existing']
         with self.assertRaises(ValueError):
             self.cli_runner.invoke(cmd_upf.upf_uploadfamily, options, catch_exceptions=False)
 
@@ -907,7 +907,7 @@ class TestVerdiDataUpf(AiidaTestCase):
         self.assertIn(b'test_group', res.stdout_bytes, 'The string "test_group" was not found in the'
                                                        ' output of verdi data upf listfamilies: {}'.format(res.output))
 
-        self.assertIn(b'test description', res.stdout_bytes, 'The string "test_group" was not found in the'
+        self.assertIn(b'tests description', res.stdout_bytes, 'The string "test_group" was not found in the'
                                                              ' output of verdi data upf listfamilies')
 
         options = ['-d', '-e', 'Fe']

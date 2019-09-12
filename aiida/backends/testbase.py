@@ -26,10 +26,10 @@ from aiida.manage.manager import get_manager, reset_manager
 
 
 def check_if_tests_can_run():
-    """Verify that the currently loaded profile is a test profile, otherwise raise `TestsNotAllowedError`."""
+    """Verify that the currently loaded profile is a tests profile, otherwise raise `TestsNotAllowedError`."""
     profile = configuration.PROFILE
     if not profile.is_test_profile:
-        raise TestsNotAllowedError('currently loaded profile {} is not a valid test profile'.format(profile.name))
+        raise TestsNotAllowedError('currently loaded profile {} is not a valid tests profile'.format(profile.name))
 
 
 class AiidaTestCase(unittest.TestCase):
@@ -63,7 +63,7 @@ class AiidaTestCase(unittest.TestCase):
             # Check that it is of the right class
             if not issubclass(cls.__impl_class, AiidaTestImplementation):
                 raise InternalError(
-                    'The AiiDA test implementation is not of type '
+                    'The AiiDA tests implementation is not of type '
                     '{}, that is not a subclass of AiidaTestImplementation'.format(
                         cls.__impl_class.__name__
                     )
@@ -73,7 +73,7 @@ class AiidaTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls, *args, **kwargs):
-        # Note: this will raise an exception, that will be seen as a test
+        # Note: this will raise an exception, that will be seen as a tests
         # failure. To be safe, you should do the same check also in the tearDownClass
         # to avoid that it is run
         check_if_tests_can_run()
@@ -135,7 +135,7 @@ class AiidaTestCase(unittest.TestCase):
         """
         from aiida.common.exceptions import InvalidOperation
 
-        # Note: this will raise an exception, that will be seen as a test
+        # Note: this will raise an exception, that will be seen as a tests
         # failure. To be safe, you should do the same check also in the tearDownClass
         # to avoid that it is run
         check_if_tests_can_run()
@@ -162,20 +162,20 @@ class AiidaTestCase(unittest.TestCase):
         base_repo_path = os.path.basename(os.path.normpath(dirpath_repository))
         if TEST_KEYWORD not in base_repo_path:
             raise InvalidOperation('Warning: The repository folder {} does not '
-                                   'seem to belong to a test profile and will therefore not be deleted.\n'
+                                   'seem to belong to a tests profile and will therefore not be deleted.\n'
                                    'Full repository path: '
                                    '{}'.format(base_repo_path, dirpath_repository))
 
-        # Clean the test repository
+        # Clean the tests repository
         shutil.rmtree(dirpath_repository, ignore_errors=True)
         os.makedirs(dirpath_repository)
 
     @classproperty
     def computer(cls):
         """
-        Get the default computer for this test
+        Get the default computer for this tests
 
-        :return: the test computer
+        :return: the tests computer
         :rtype: :class:`aiida.orm.Computer`
         """
         return cls.__backend_instance.get_computer()
@@ -187,7 +187,7 @@ class AiidaTestCase(unittest.TestCase):
     @classmethod
     def tearDownClass(cls, *args, **kwargs):
         # Double check for double security to avoid to run the tearDown
-        # if this is not a test profile
+        # if this is not a tests profile
         check_if_tests_can_run()
         cls.clean_db()
         cls.clean_repository()
@@ -205,14 +205,14 @@ class AiidaPostgresTestCase(AiidaTestCase):
 
     @classmethod
     def setUpClass(cls, *args, **kwargs):
-        """Setup the PGTest postgres test cluster."""
+        """Setup the PGTest postgres tests cluster."""
         from pgtest.pgtest import PGTest
         cls.pg_test = PGTest()
         super(AiidaPostgresTestCase, cls).setUpClass(*args, **kwargs)
 
     @classmethod
     def tearDownClass(cls, *args, **kwargs):
-        """Close the PGTest postgres test cluster."""
+        """Close the PGTest postgres tests cluster."""
         super(AiidaPostgresTestCase, cls).tearDownClass(*args, **kwargs)
         cls.pg_test.close()
 
@@ -220,15 +220,15 @@ class AiidaPostgresTestCase(AiidaTestCase):
 def run_aiida_db_tests(tests_to_run, verbose=False):
     """
     Run all tests specified in tests_to_run.
-    Return the list of test results.
+    Return the list of tests results.
     """
-    # Empty test suite that will be populated
+    # Empty tests suite that will be populated
     test_suite = unittest.TestSuite()
 
     actually_run_tests = []
     num_tests_expected = 0
 
-    # To avoid adding more than once the same test
+    # To avoid adding more than once the same tests
     # (e.g. if you type both db and db.xxx)
     found_modulenames = set()
 
@@ -237,7 +237,7 @@ def run_aiida_db_tests(tests_to_run, verbose=False):
             modulenames = get_db_test_list()[test]
         except KeyError:
             if verbose:
-                print('Unknown DB test {}... skipping'
+                print('Unknown DB tests {}... skipping'
                       .format(test), file=sys.stderr)
             continue
         actually_run_tests.append(test)

@@ -37,10 +37,10 @@ class TestMigrationsSQLA(AiidaTestCase):
     alembic. It checks if the migrations can be applied and removed correctly.
     """
     # The path to the folder that contains the migration configuration (the
-    # actual configuration - not the testing)
+    # actual configuration - not the tests)
     migr_method_dir_path = None
     # The path of the migration configuration (the actual configuration - not
-    # the testing)
+    # the tests)
     alembic_dpath = None
 
     migrate_from = None
@@ -49,7 +49,7 @@ class TestMigrationsSQLA(AiidaTestCase):
     @classmethod
     def setUpClass(cls, *args, **kwargs):
         """
-        Prepare the test class with the alembivc configuration
+        Prepare the tests class with the alembivc configuration
         """
         super(TestMigrationsSQLA, cls).setUpClass(*args, **kwargs)
         cls.migr_method_dir_path = os.path.dirname(os.path.realpath(sqlalchemy_utils.__file__))
@@ -105,7 +105,7 @@ class TestMigrationsSQLA(AiidaTestCase):
     def tearDown(self):
         """
         Resets both the database content and the schema to prepare for the
-        next test
+        next tests
         """
         from aiida.orm import autogroup
         self._reset_database_and_schema()
@@ -115,7 +115,7 @@ class TestMigrationsSQLA(AiidaTestCase):
     def setUpBeforeMigration(self):  # pylint: disable=invalid-name
         """
         Anything to do before running the migrations.
-        This is typically implemented in test subclasses.
+        This is typically implemented in tests subclasses.
         """
 
     def _reset_database_and_schema(self):
@@ -247,7 +247,7 @@ class TestBackwardMigrationsSQLA(TestMigrationsSQLA):
 
 class TestMigrationEngine(TestMigrationsSQLA):
     """
-    Just a simple test to verify that the TestMigrationsSQLA class indeed
+    Just a simple tests to verify that the TestMigrationsSQLA class indeed
     works and moves between the expected migration revisions
     """
     migrate_from = 'b8b23ddefad4'  # b8b23ddefad4_dbgroup_name_to_label_type_to_type_string.py
@@ -275,10 +275,10 @@ class TestMigrationSchemaVsModelsSchema(AiidaTestCase):
     that the final result is what is conceived in the SQLA models.
     """
     # The path to the folder that contains the migration configuration (the
-    # actual configuration - not the testing)
+    # actual configuration - not the tests)
     migr_method_dir_path = None
     # The path of the migration configuration (the actual configuration - not
-    # the testing)
+    # the tests)
     alembic_dpath = None
     # The alembic configuration needed for the migrations is stored here
     alembic_cfg_left = None
@@ -304,7 +304,7 @@ class TestMigrationSchemaVsModelsSchema(AiidaTestCase):
         self.alembic_cfg_left.set_main_option('script_location', self.alembic_dpath)
         # Setting dynamically the versions directory. These are the
         # migration scripts to pass from one version to the other. The
-        # default ones are overridden with test-specific migrations.
+        # default ones are overridden with tests-specific migrations.
         self.alembic_cfg_left.set_main_option('version_locations', versions_dpath)
 
         # The correction URL to the SQLA database of the current
@@ -381,7 +381,7 @@ class TestProvenanceRedesignMigration(TestMigrationsSQLA):
                 node_process = DbNode(type='calculation.process.ProcessCalculation.', user_id=user.id)
                 node_work_chain = DbNode(type='calculation.work.WorkCalculation.', user_id=user.id)
                 node_work_function = DbNode(
-                    type='calculation.work.WorkCalculation.', attributes={'function_name': 'test'}, user_id=user.id
+                    type='calculation.work.WorkCalculation.', attributes={'function_name': 'tests'}, user_id=user.id
                 )
                 node_inline = DbNode(type='calculation.inline.InlineCalculation.', user_id=user.id)
                 node_function = DbNode(type='calculation.function.FunctionCalculation.', user_id=user.id)
@@ -474,20 +474,20 @@ class TestGroupRenamingMigration(TestMigrationsSQLA):
                 session.add(default_user)
                 session.commit()
 
-                # test user group type_string: '' -> 'user'
+                # tests user group type_string: '' -> 'user'
                 group_user = DbGroup(label='test_user_group', user_id=default_user.id, type_string='')
                 session.add(group_user)
-                # test data.upf group type_string: 'data.upf.family' -> 'data.upf'
+                # tests data.upf group type_string: 'data.upf.family' -> 'data.upf'
                 group_data_upf = DbGroup(
                     label='test_data_upf_group', user_id=default_user.id, type_string='data.upf.family'
                 )
                 session.add(group_data_upf)
-                # test auto.import group type_string: 'aiida.import' -> 'auto.import'
+                # tests auto.import group type_string: 'aiida.import' -> 'auto.import'
                 group_autoimport = DbGroup(
                     label='test_import_group', user_id=default_user.id, type_string='aiida.import'
                 )
                 session.add(group_autoimport)
-                # test auto.run group type_string: 'autogroup.run' -> 'auto.run'
+                # tests auto.run group type_string: 'autogroup.run' -> 'auto.run'
                 group_autorun = DbGroup(
                     label='test_autorun_group', user_id=default_user.id, type_string='autogroup.run'
                 )
@@ -512,19 +512,19 @@ class TestGroupRenamingMigration(TestMigrationsSQLA):
 
         with self.get_session() as session:
             try:
-                # test user group type_string: '' -> 'user'
+                # tests user group type_string: '' -> 'user'
                 group_user = session.query(DbGroup).filter(DbGroup.id == self.group_user_pk).one()
                 self.assertEqual(group_user.type_string, 'user')
 
-                # test data.upf group type_string: 'data.upf.family' -> 'data.upf'
+                # tests data.upf group type_string: 'data.upf.family' -> 'data.upf'
                 group_data_upf = session.query(DbGroup).filter(DbGroup.id == self.group_data_upf_pk).one()
                 self.assertEqual(group_data_upf.type_string, 'data.upf')
 
-                # test auto.import group type_string: 'aiida.import' -> 'auto.import'
+                # tests auto.import group type_string: 'aiida.import' -> 'auto.import'
                 group_autoimport = session.query(DbGroup).filter(DbGroup.id == self.group_autoimport_pk).one()
                 self.assertEqual(group_autoimport.type_string, 'auto.import')
 
-                # test auto.run group type_string: 'autogroup.run' -> 'auto.run'
+                # tests auto.run group type_string: 'autogroup.run' -> 'auto.run'
                 group_autorun = session.query(DbGroup).filter(DbGroup.id == self.group_autorun_pk).one()
                 self.assertEqual(group_autorun.type_string, 'auto.run')
             finally:
@@ -641,9 +641,9 @@ class TestDbLogMigrationRecordCleaning(TestMigrationsSQLA):
     migrate_to = '041a79fc615f'  # 041a79fc615f_dblog_cleaning
 
     def tearDown(self):
-        """Need to manually delete all the workflows created for the test because the model does not exist any more.
+        """Need to manually delete all the workflows created for the tests because the model does not exist any more.
 
-        Because the model does not exist anymore, they are no longer being cleaned in the database reset of the test
+        Because the model does not exist anymore, they are no longer being cleaned in the database reset of the tests
         base class. To prevent foreign keys from other tables still referencing these tables, we have to make sure to
         clean them here manually, before we call the parent, which will call the standard reset database methods.
         """
@@ -777,7 +777,7 @@ class TestDbLogMigrationRecordCleaning(TestMigrationsSQLA):
 
                 session.commit()
 
-                # Storing temporarily information needed for the check at the test
+                # Storing temporarily information needed for the check at the tests
                 self.to_check = dict()
 
                 # Keeping calculation & calculation log ids
@@ -961,7 +961,7 @@ class TestDbLogMigrationBackward(TestBackwardMigrationsSQLA):
 
                 session.commit()
 
-                # Keeping what is needed to be verified at the test
+                # Keeping what is needed to be verified at the tests
                 self.to_check = dict()
                 self.to_check[log_1.id] = (log_1.dbnode_id, calc_1.type)
                 self.to_check[log_2.id] = (log_2.dbnode_id, calc_2.type)
@@ -973,7 +973,7 @@ class TestDbLogMigrationBackward(TestBackwardMigrationsSQLA):
 
     def test_objpk_objname(self):
         """
-        This test verifies that the objpk and objname have the right values
+        This tests verifies that the objpk and objname have the right values
         after a forward and a backward migration.
         """
         from sqlalchemy.orm import Session  # pylint: disable=import-error,no-name-in-module
@@ -1461,7 +1461,7 @@ class TestLegacyProcessAttributeMigration(TestMigrationsSQLA):
                     })
 
                 # Note that `Data` nodes should not have these attributes in real databases but the migration explicitly
-                # excludes data nodes, which is what this test is verifying, by checking they are not deleted
+                # excludes data nodes, which is what this tests is verifying, by checking they are not deleted
                 node_data = DbNode(
                     node_type='data.dict.Dict.',
                     user_id=user.id,

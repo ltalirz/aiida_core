@@ -25,7 +25,7 @@ class TestVerdiRun(AiidaTestCase):
         self.cli_runner = CliRunner()
 
     def test_run_workfunction(self):
-        """Regression test for #2165
+        """Regression tests for #2165
 
         If the script that is passed to `verdi run` is not compiled correctly, running workfunctions from the script
         that are defined within the script will fail, as the inspect module will not correctly be able to determin

@@ -2,7 +2,7 @@ from aiida.common.datastructures import CalcInfo, CodeInfo
 from aiida.engine import CalcJob
 
 class ArithmeticAddCalculation(CalcJob):
-    """Implementation of CalcJob to add two numbers for testing and demonstration purposes."""
+    """Implementation of CalcJob to add two numbers for tests and demonstration purposes."""
 
     @classmethod
     def define(cls, spec):

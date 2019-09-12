@@ -119,7 +119,7 @@ class FunctionCalculationMixin(object):
 
 class Sealable(object):
     """Mixin to mark a Node as `sealable`."""
-    # pylint: disable=no-member,unsupported-membership-test
+    # pylint: disable=no-member,unsupported-membership-tests
 
     SEALED_KEY = 'sealed'
 

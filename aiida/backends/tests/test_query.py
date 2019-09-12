@@ -158,7 +158,7 @@ class TestQueryBuilder(AiidaTestCase):
         class DummyWorkChain(WorkChain):
             pass
 
-        # Run a simple test WorkChain
+        # Run a simple tests WorkChain
         _result = run(PotentialFailureWorkChain, success=orm.Bool(True))
 
         # Query for nodes associated with this type of WorkChain
@@ -420,7 +420,7 @@ class TestQueryBuilder(AiidaTestCase):
             qb = orm.QueryBuilder().append(cls, filters={'attributes.cat': 'miau'}, subclassing=False)
             self.assertEqual(qb.count(), count)
 
-        # Now I am testing the subclassing with tuples:
+        # Now I am tests the subclassing with tuples:
         qb = orm.QueryBuilder().append(cls=(orm.StructureData, orm.Dict), filters={'attributes.cat': 'miau'})
         self.assertEqual(qb.count(), 2)
         qb = orm.QueryBuilder().append(
@@ -517,7 +517,7 @@ class TestQueryBuilder(AiidaTestCase):
         qb.append(orm.Computer, with_node='n3', tag='c1', edge_tag='nonsense')
         self.assertEqual(qb.get_used_tags(), ['n1', 'n2', 'e1', 'n3', 'e2', 'c1', 'nonsense'])
 
-        # Now I am testing the default tags,
+        # Now I am tests the default tags,
         qb = orm.QueryBuilder().append(orm.StructureData
                                       ).append(orm.ProcessNode).append(orm.StructureData
                                                                       ).append(orm.Dict, with_outgoing=orm.ProcessNode)
@@ -557,7 +557,7 @@ class TestQueryHelp(AiidaTestCase):
 
     def test_queryhelp(self):
         """
-        Here I test the queryhelp by seeing whether results are the same as using the append method.
+        Here I tests the queryhelp by seeing whether results are the same as using the append method.
         I also check passing of tuples.
         """
         g = orm.Group(label='helloworld').store()
@@ -607,7 +607,7 @@ class TestQueryBuilderCornerCases(AiidaTestCase):
 
     def test_computer_json(self):  # pylint: disable=no-self-use
         """
-        In this test we check the correct behavior of QueryBuilder when
+        In this tests we check the correct behavior of QueryBuilder when
         retrieving the _metadata with no content.
         Note that they are in JSON format in both backends. Forcing the
         decoding of a None value leads to an exception (this was the case
@@ -671,7 +671,7 @@ class TestAttributes(AiidaTestCase):
         for n in (n_str2, n_str, n_int, n_float, n_bool, n_arr):
             n.store()
 
-        # Here I am testing which values contain a number 1.
+        # Here I am tests which values contain a number 1.
         # Both 1 and 1.0 are legitimate values if ask for either 1 or 1.0
         for val in (1.0, 1):
             qb = orm.QueryBuilder().append(orm.Node, filters={'attributes.{}'.format(key): val}, project='uuid')
@@ -683,7 +683,7 @@ class TestAttributes(AiidaTestCase):
             qb = orm.QueryBuilder().append(orm.Node, filters={'attributes.{}'.format(key): {'<': 1.5}}, project='uuid')
             res = [str(_) for _, in qb.all()]
             self.assertEqual(set(res), set((n_float.uuid, n_int.uuid)))
-        # Now I am testing the boolean value:
+        # Now I am tests the boolean value:
         qb = orm.QueryBuilder().append(orm.Node, filters={'attributes.{}'.format(key): True}, project='uuid')
         res = [str(_) for _, in qb.all()]
         self.assertEqual(set(res), set((n_bool.uuid,)))
@@ -894,9 +894,9 @@ class QueryBuilderJoinsTests(AiidaTestCase):
 
     def test_joins_group_node(self):
         """
-        This test checks that the querying for the nodes that belong to a group works correctly (using QueryBuilder).
+        This tests checks that the querying for the nodes that belong to a group works correctly (using QueryBuilder).
         This is important for the Django backend with the use of aldjemy for the Django to SQLA schema translation.
-        Since this is not backend specific test (even if it is mainly used to test the querying of Django backend
+        Since this is not backend specific tests (even if it is mainly used to tests the querying of Django backend
         with QueryBuilder), we keep it at the general tests (ran by both backends).
         """
         new_email = 'newuser@new.n2'
@@ -1096,8 +1096,8 @@ class QueryBuilderPath(AiidaTestCase):
             frozenset([n1.pk, n2.pk, n4.pk, n5.pk, n6.pk, n7.pk, n8.pk])
         })
 
-        # This part of the test is no longer possible as the nodes have already been stored and the previous parts of
-        # the test rely on this, which means however, that here, no more links can be added as that will raise.
+        # This part of the tests is no longer possible as the nodes have already been stored and the previous parts of
+        # the tests rely on this, which means however, that here, no more links can be added as that will raise.
 
         # n7.add_incoming(n9, link_type=LinkType.INPUT_CALC, link_label='link0')
         # # Still two links...
@@ -1262,7 +1262,7 @@ class TestManager(AiidaTestCase):
 
 class TestDoubleStar(AiidaTestCase):
     """
-    In this test class we check if QueryBuilder returns the correct results
+    In this tests class we check if QueryBuilder returns the correct results
     when double star is provided as projection.
     """
 

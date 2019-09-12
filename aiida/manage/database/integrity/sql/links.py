@@ -7,7 +7,7 @@
 # For further information on the license, see the LICENSE.txt file        #
 # For further information please visit http://www.aiida.net               #
 ###########################################################################
-"""SQL statements that test the integrity of the database with respect to links."""
+"""SQL statements that tests the integrity of the database with respect to links."""
 from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import

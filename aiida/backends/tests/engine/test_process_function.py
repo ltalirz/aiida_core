@@ -27,7 +27,7 @@ CUSTOM_DESCRIPTION = 'Custom description'
 class TestProcessFunction(AiidaTestCase):
     """
     Note that here we use `@workfunctions` and `@calculations`, the concrete versions of the
-    `@process_function` decorator, even though we are testing only the shared functionality
+    `@process_function` decorator, even though we are tests only the shared functionality
     that is captured in the `@process_function` decorator, relating to the transformation
     of the wrapped function into a `FunctionProcess`.
     The reason we do not use the `@process_function` decorator itself, is because it

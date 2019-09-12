@@ -97,7 +97,7 @@ class TestBackendNode(AiidaTestCase):
         UUID(node.uuid)
 
         # Change a column, which should trigger the save, update the mtime but leave the ctime untouched
-        node.label = 'test'
+        node.label = 'tests'
         self.assertEqual(node.ctime, node_ctime)
         self.assertTrue(node.mtime > node_mtime)
 

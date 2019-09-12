@@ -33,7 +33,7 @@ class TestUsers(AiidaTestCase):
     @with_temp_dir
     def test_nodes_belonging_to_different_users(self, temp_dir):
         """
-        This test checks that nodes belonging to different users are correctly
+        This tests checks that nodes belonging to different users are correctly
         exported & imported.
         """
         from aiida.common.links import LinkType
@@ -101,7 +101,7 @@ class TestUsers(AiidaTestCase):
     @with_temp_dir
     def test_non_default_user_nodes(self, temp_dir):  # pylint: disable=too-many-statements
         """
-        This test checks that nodes belonging to user A (which is not the
+        This tests checks that nodes belonging to user A (which is not the
         default user) can be correctly exported, imported, enriched with nodes
         from the default user, re-exported & re-imported and that in the end
         all the nodes that have been finally imported belonging to the right

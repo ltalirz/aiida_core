@@ -73,7 +73,7 @@ class TestMigrateV05toV06(AiidaTestCase):
     def test_migrate_v5_to_v6_calc_states(self):
         """Test the data migration of legacy `JobCalcState` attributes.
 
-        This test has to use a local archive because the current archive from the `aiida-export-migration-tests`
+        This tests has to use a local archive because the current archive from the `aiida-export-migration-tests`
         module does not include a `CalcJobNode` with a legacy `state` attribute.
         """
         # Get metadata.json and data.json as dicts from v0.5 file archive
@@ -115,7 +115,7 @@ class TestMigrateV05toV06(AiidaTestCase):
 
         Datetime attributes were serialized into strings, by first converting to UTC and then printing with the format
         '%Y-%m-%dT%H:%M:%S.%f'. In the database migration, datetimes were serialized *including* timezone information.
-        Here we test that the archive migration correctly reattaches the timezone information. The archive that we are
+        Here we tests that the archive migration correctly reattaches the timezone information. The archive that we are
         using `export_v0.5_simple.aiida` contains a node with the attribute "scheduler_lastchecktime".
         """
         # Get metadata.json and data.json as dicts from v0.5 file archive
@@ -141,7 +141,7 @@ class TestMigrateV05toV06(AiidaTestCase):
         else:
             raise RuntimeError(
                 'the archive `export_v0.5_simple.aiida` did not contain a node with the attribute '
-                '`scheduler_lastchecktime` which is required for this test.'
+                '`scheduler_lastchecktime` which is required for this tests.'
             )
 
     def test_migrate_v5_to_v6_complete(self):

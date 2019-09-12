@@ -111,7 +111,7 @@ class TestNodeBasicSQLA(AiidaTestCase):
 
     def test_multiple_node_creation(self):
         """
-        This test checks that a node is not added automatically to the session
+        This tests checks that a node is not added automatically to the session
         (and subsequently committed) when a user is in the session.
         It tests the fix for the issue #234
         """

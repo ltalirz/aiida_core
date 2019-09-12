@@ -37,7 +37,7 @@ class TestPluginVersionProvider(AiidaTestCase):
 
         # Create a new module with a unique name and add the `plugin` and `plugin_version` as attributes
         module_name = 'TestModule{}'.format(str(uuid.uuid4())[:5])
-        dynamic_module = types.ModuleType(module_name, 'Dynamically created module for testing purposes')
+        dynamic_module = types.ModuleType(module_name, 'Dynamically created module for tests purposes')
         setattr(plugin, '__module__', dynamic_module.__name__)
         setattr(dynamic_module, plugin.__name__, plugin)
 
@@ -45,10 +45,10 @@ class TestPluginVersionProvider(AiidaTestCase):
         if add_version:
             setattr(dynamic_module, '__version__', plugin_version)
 
-        # Get the `DummyClass` plugin from the dynamically created test module
+        # Get the `DummyClass` plugin from the dynamically created tests module
         dynamic_plugin = getattr(dynamic_module, plugin.__name__)
 
-        # Make the dynamic module importable unless the test requests not to, to test an unimportable module
+        # Make the dynamic module importable unless the tests requests not to, to tests an unimportable module
         if add_module_to_sys:
             sys.modules[dynamic_module.__name__] = dynamic_module
 

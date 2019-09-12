@@ -92,7 +92,7 @@ class TestBackendComment(AiidaTestCase):
         UUID(comment.uuid)
 
         # Change a column, which should trigger the save, update the mtime but leave the ctime untouched
-        comment.set_content('test')
+        comment.set_content('tests')
         self.assertEqual(comment.ctime, comment_ctime)
         self.assertTrue(comment.mtime > comment_mtime)
 

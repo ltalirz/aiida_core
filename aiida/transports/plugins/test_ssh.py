@@ -50,7 +50,7 @@ class TestBasicConnection(unittest.TestCase):
             pass
 
     def test_no_host_key(self):
-        # Disable logging to avoid output during test
+        # Disable logging to avoid output during tests
         logging.disable(logging.ERROR)
 
         with self.assertRaises(paramiko.SSHException):

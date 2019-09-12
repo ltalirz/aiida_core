@@ -303,7 +303,7 @@ class TestCommand(unittest.TestCase):
 
         job_tmpl = JobTemplate()
         job_tmpl.job_resource = sge.create_job_resource(parallel_env='mpi8', tot_num_mpiprocs=16)
-        job_tmpl.working_directory = '/home/users/dorigm7s/test'
+        job_tmpl.working_directory = '/home/users/dorigm7s/tests'
         job_tmpl.submit_as_hold = None
         job_tmpl.rerunnable = None
         job_tmpl.email = None
@@ -319,7 +319,7 @@ class TestCommand(unittest.TestCase):
 
         submit_script_text = sge._get_submit_script_header(job_tmpl)
 
-        self.assertTrue('#$ -wd /home/users/dorigm7s/test' in submit_script_text)
+        self.assertTrue('#$ -wd /home/users/dorigm7s/tests' in submit_script_text)
         self.assertTrue('#$ -N BestJobEver' in submit_script_text)
         self.assertTrue('#$ -q FavQ.q' in submit_script_text)
         self.assertTrue('#$ -l h_rt=01:00:00' in submit_script_text)

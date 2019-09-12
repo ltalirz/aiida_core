@@ -203,7 +203,7 @@ class Computer(entities.Entity):
             raise exceptions.ValidationError('No workdir specified')
 
         try:
-            convertedwd = workdir.format(username='test')
+            convertedwd = workdir.format(username='tests')
         except KeyError as exc:
             raise exceptions.ValidationError('In workdir there is an unknown replacement field {}'.format(exc.args[0]))
         except ValueError as exc:

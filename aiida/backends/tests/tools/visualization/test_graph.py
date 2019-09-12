@@ -105,12 +105,12 @@ class TestVisGraph(AiidaTestCase):
         })
 
     def test_graph_init(self):
-        """ test initialisation of Graph"""
+        """ tests initialisation of Graph"""
         # pylint: disable=no-self-use
         graph_mod.Graph()
 
     def test_graph_add_node(self):
-        """ test adding a node to the graph """
+        """ tests adding a node to the graph """
         nodes = self.create_provenance()
 
         graph = graph_mod.Graph()
@@ -127,7 +127,7 @@ class TestVisGraph(AiidaTestCase):
         self.assertEqual(graph.nodes, set([nodes.pd0.pk, nodes.pd1.pk]))
 
     def test_graph_add_edge(self):
-        """ test adding an edge to the graph """
+        """ tests adding an edge to the graph """
         nodes = self.create_provenance()
 
         graph = graph_mod.Graph()
@@ -138,7 +138,7 @@ class TestVisGraph(AiidaTestCase):
         self.assertEqual(graph.edges, set([(nodes.pd0.pk, nodes.rd1.pk, None)]))
 
     def test_graph_add_incoming(self):
-        """ test adding a node and all its incoming nodes to a graph"""
+        """ tests adding a node and all its incoming nodes to a graph"""
         nodes = self.create_provenance()
 
         graph = graph_mod.Graph()
@@ -153,7 +153,7 @@ class TestVisGraph(AiidaTestCase):
         )
 
     def test_graph_add_outgoing(self):
-        """ test adding a node and all its outgoing nodes to a graph"""
+        """ tests adding a node and all its outgoing nodes to a graph"""
         nodes = self.create_provenance()
 
         graph = graph_mod.Graph()
@@ -167,7 +167,7 @@ class TestVisGraph(AiidaTestCase):
         )
 
     def test_graph_recurse_ancestors(self):
-        """ test adding nodes and all its (recursed) incoming nodes to a graph"""
+        """ tests adding nodes and all its (recursed) incoming nodes to a graph"""
         nodes = self.create_provenance()
 
         graph = graph_mod.Graph()
@@ -185,7 +185,7 @@ class TestVisGraph(AiidaTestCase):
         )
 
     def test_graph_recurse_ancestors_filter_links(self):
-        """ test adding nodes and all its (recursed) incoming nodes to a graph, but filter link types"""
+        """ tests adding nodes and all its (recursed) incoming nodes to a graph, but filter link types"""
         nodes = self.create_provenance()
 
         graph = graph_mod.Graph()
@@ -200,7 +200,7 @@ class TestVisGraph(AiidaTestCase):
         )
 
     def test_graph_recurse_descendants(self):
-        """ test adding nodes and all its (recursed) incoming nodes to a graph"""
+        """ tests adding nodes and all its (recursed) incoming nodes to a graph"""
         nodes = self.create_provenance()
 
         graph = graph_mod.Graph()
@@ -217,7 +217,7 @@ class TestVisGraph(AiidaTestCase):
         )
 
     def test_graph_graphviz_source(self):
-        """ test the output of graphviz source """
+        """ tests the output of graphviz source """
         nodes = self.create_provenance()
 
         graph = graph_mod.Graph()
@@ -261,7 +261,7 @@ class TestVisGraph(AiidaTestCase):
         )
 
     def test_graph_graphviz_source_pstate(self):
-        """ test the output of graphviz source, with the `pstate_node_styles` function """
+        """ tests the output of graphviz source, with the `pstate_node_styles` function """
         nodes = self.create_provenance()
 
         graph = graph_mod.Graph(node_style_fn=graph_mod.pstate_node_styles)

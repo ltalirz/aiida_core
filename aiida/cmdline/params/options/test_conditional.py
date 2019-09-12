@@ -41,7 +41,7 @@ class ConditionalOptionTest(unittest.TestCase):
         @click.option(pname, **kwargs)
         @click.option('--opt', required_fn=required_fn, cls=ConditionalOption)
         def cmd(on, opt):
-            """dummy command for testing"""
+            """dummy command for tests"""
             # pylint: disable=unused-argument, invalid-name
 
             click.echo(opt)
@@ -111,7 +111,7 @@ class ConditionalOptionTest(unittest.TestCase):
         @click.option('--opt-a', required_fn=lambda c: c.params.get('a_or_b'), cls=ConditionalOption)
         @click.option('--opt-b', required_fn=lambda c: not c.params.get('a_or_b'), cls=ConditionalOption)
         def cmd(a_or_b, opt_a, opt_b):
-            """test command for scenario a-or-b"""
+            """tests command for scenario a-or-b"""
             # pylint: disable=unused-argument
 
             click.echo('{} / {}'.format(opt_a, opt_b))

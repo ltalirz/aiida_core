@@ -174,7 +174,7 @@ DB_TEST_LIST = {
 
 def get_db_test_names():
     """
-    Return a sorted list of test names
+    Return a sorted list of tests names
     """
     retlist = []
     for backend in DB_TEST_LIST:

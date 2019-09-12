@@ -51,7 +51,7 @@ def generate_setup_options_dict(replace_args={}, non_interactive=True):
     valid_noninteractive_options['work-dir'] = '/scratch/{username}/aiida_run'
     valid_noninteractive_options['mpirun-command'] = 'mpirun -np {tot_num_mpiprocs}'
     valid_noninteractive_options['mpiprocs-per-machine'] = '2'
-    # Make them multiline to test also multiline options
+    # Make them multiline to tests also multiline options
     valid_noninteractive_options['prepend-text'] = "date\necho 'second line'"
     valid_noninteractive_options['append-text'] = "env\necho '444'\necho 'third line'"
 
@@ -186,7 +186,7 @@ class TestVerdiComputerSetup(AiidaTestCase):
 
     def test_noninteractive(self):
         """
-        Main test to check if the non-interactive command works
+        Main tests to check if the non-interactive command works
         """
         options_dict = generate_setup_options_dict()
         options = generate_setup_options(options_dict)
@@ -516,12 +516,12 @@ class TestVerdiComputerCommands(AiidaTestCase):
         # there should not be any options asked here
         self.comp.configure()
 
-        assert self.comp.is_user_configured(self.user), 'There was a problem configuring the test computer'
+        assert self.comp.is_user_configured(self.user), 'There was a problem configuring the tests computer'
         self.cli_runner = CliRunner()
 
     def test_computer_test(self):
         """
-        Test if the 'verdi computer test' command works
+        Test if the 'verdi computer tests' command works
 
         It should work as it is a local connection
         """
@@ -560,7 +560,7 @@ class TestVerdiComputerCommands(AiidaTestCase):
         """
         import traceback
 
-        # See if we can display info about the test computer.
+        # See if we can display info about the tests computer.
         result = self.cli_runner.invoke(computer_show, ['comp_cli_test_computer'])
 
         # No exceptions should arise
@@ -629,7 +629,7 @@ class TestVerdiComputerCommands(AiidaTestCase):
         """
         from aiida.common.exceptions import NotExistent
 
-        # Setup a computer to delete during the test
+        # Setup a computer to delete during the tests
         comp = orm.Computer(name='computer_for_test_delete', hostname='localhost',
                             transport_type='local', scheduler_type='direct', workdir='/tmp/aiida').store()
 

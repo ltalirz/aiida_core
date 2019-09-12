@@ -64,7 +64,7 @@ class InteractiveOptionTest(unittest.TestCase):
         @click.option('--opt', prompt='Opt', cls=InteractiveOption, **kwargs)
         @NON_INTERACTIVE()
         def cmd(opt, non_interactive):  # pylint: disable=unused-argument
-            """test command for InteractiveOption"""
+            """tests command for InteractiveOption"""
             click.echo(str(opt))
 
         return cmd
@@ -293,7 +293,7 @@ class InteractiveOptionTest(unittest.TestCase):
     @staticmethod
     def user_callback(_ctx, param, value):
         """
-        A fake user callback ued for testing.
+        A fake user callback ued for tests.
 
         :param _ctx: The click context
         :param param: The parameter name

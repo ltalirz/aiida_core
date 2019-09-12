@@ -33,7 +33,7 @@ class TestVerdiImport(AiidaTestCase):
 
         # Helper variables
         cls.url_path = 'https://raw.githubusercontent.com/aiidateam/aiida-core/' \
-            '0599dabf0887bee172a04f308307e99e3c3f3ff2/aiida/backends/tests/fixtures/export/migrate/'
+            '0599dabf0887bee172a04f308307e99e3c3f3ff2/aiida/backends/tests/tests/export/migrate/'
         cls.archive_path = 'export/migrate'
         cls.newest_archive = 'export_v{}_simple.aiida'.format(EXPORT_VERSION)
 

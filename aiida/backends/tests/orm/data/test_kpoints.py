@@ -48,7 +48,7 @@ class TestKpoints(AiidaTestCase):
         """
         Test the `reciprocal_cell` method.
 
-        This is a regression test for #2749.
+        This is a regression tests for #2749.
         """
         kpt = KpointsData()
         kpt.set_cell_from_structure(self.structure)

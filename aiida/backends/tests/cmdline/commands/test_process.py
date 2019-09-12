@@ -92,7 +92,7 @@ class TestVerdiProcessDaemon(AiidaTestCase):
 
         # We need to make sure that the process is picked up by the daemon and put in the Waiting state before we start
         # running the CLI commands, so we add a broadcast subscriber for the state change, which when hit will set the
-        # future to True. This will be our signal that we can start testing
+        # future to True. This will be our signal that we can start tests
         waiting_future = Future()
         filters = kiwipy.BroadcastFilter(
             lambda *args, **kwargs: waiting_future.set_result(True), sender=calc.pk, subject='state_changed.*.waiting'
@@ -108,7 +108,7 @@ class TestVerdiProcessDaemon(AiidaTestCase):
             self.runner.loop.run_sync(lambda: with_timeout(waiting_future))
 
         # Here we now that the process is with the daemon runner and in the waiting state so we can starting running
-        # the `verdi process` commands that we want to test
+        # the `verdi process` commands that we want to tests
         result = self.cli_runner.invoke(cmd_process.process_pause, ['--wait', str(calc.pk)])
         self.assertIsNone(result.exception, result.output)
         self.assertTrue(calc.paused)

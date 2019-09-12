@@ -35,7 +35,7 @@ class TestCode(AiidaTestCase):
     @with_temp_dir
     def test_that_solo_code_is_exported_correctly(self, temp_dir):
         """
-        This test checks that when a calculation is exported then the
+        This tests checks that when a calculation is exported then the
         corresponding code is also exported.
         """
         code_label = 'test_code1'
@@ -59,7 +59,7 @@ class TestCode(AiidaTestCase):
     @with_temp_dir
     def test_input_code(self, temp_dir):
         """
-        This test checks that when a calculation is exported then the
+        This tests checks that when a calculation is exported then the
         corresponding code is also exported. It also checks that the links
         are also in place after the import.
         """
@@ -108,7 +108,7 @@ class TestCode(AiidaTestCase):
     @with_temp_dir
     def test_solo_code(self, temp_dir):
         """
-        This test checks that when a calculation is exported then the
+        This tests checks that when a calculation is exported then the
         corresponding code is also exported.
         """
         code_label = 'test_code1'

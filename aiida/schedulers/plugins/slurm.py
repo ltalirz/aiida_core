@@ -591,7 +591,7 @@ class SlurmScheduler(aiida.schedulers.Scheduler):
                 self.logger.warning('Error parsing the time limit for job id {}'.format(this_job.job_id))
 
             # Only if it is RUNNING; otherwise it is not meaningful,
-            # and may be not set (in my test, it is set to zero)
+            # and may be not set (in my tests, it is set to zero)
             if this_job.job_state == JobState.RUNNING:
                 try:
                     this_job.wallclock_time_seconds = (self._convert_time(thisjob_dict['time_used']))

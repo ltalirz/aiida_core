@@ -72,7 +72,7 @@ LOGGING = {
         },
     },
     'filters': {
-        'testing': {
+        'tests': {
             '()': NotInTestingFilter
         }
     },
@@ -81,7 +81,7 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'halfverbose',
-            'filters': ['testing']
+            'filters': ['tests']
         },
     },
     'loggers': {

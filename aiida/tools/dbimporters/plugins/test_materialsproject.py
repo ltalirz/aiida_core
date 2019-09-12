@@ -36,7 +36,7 @@ class TestMaterialsProject(AiidaTestCase):
     def test_invalid_api_key(self):  # pylint: disable=no-self-use
         """
         Test if Materials Project rejects an invalid API key and that we catch the error.
-        Please enable the test in the profile configurator.
+        Please enable the tests in the profile configurator.
         """
         importer_class = DbImporterFactory('materialsproject')
         importer_parameters = {'api_key': 'thisisawrongkey'}

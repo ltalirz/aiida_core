@@ -6,5 +6,5 @@ CMD ["/sbin/my_init"]
 
 COPY doubler.sh /usr/local/bin/
 
-# Use messed-up filename to test quoting robustness
+# Use messed-up filename to tests quoting robustness
 RUN mv /usr/local/bin/doubler.sh /usr/local/bin/d\"o\'ub\ ler.sh

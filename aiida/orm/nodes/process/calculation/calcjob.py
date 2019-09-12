@@ -118,7 +118,7 @@ class CalcJobNode(CalculationNode):
             {
                 key: val
                 for key, val in self.attributes_items()
-                if key not in self._hash_ignored_attributes and key not in self._updatable_attributes  # pylint: disable=unsupported-membership-test
+                if key not in self._hash_ignored_attributes and key not in self._updatable_attributes  # pylint: disable=unsupported-membership-tests
             },
             self.computer.uuid if self.computer is not None else None,  # pylint: disable=no-member
             {

@@ -69,7 +69,7 @@ class TestBackupSetupScriptIntegration(AiidaTestCase):
 
     def test_full_backup_setup_script(self):
         """
-        This method is a full test of the backup setup script. It launches it,
+        This method is a full tests of the backup setup script. It launches it,
         replies to all the question as the user would do and in the end it
         checks that the correct files were created with the right content.
         """

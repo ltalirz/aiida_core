@@ -181,10 +181,10 @@ class TestVerdiGraph(AiidaTestCase):
 
         for option in ['-f', '--output-format']:
 
-            # Test different formats. Could exhaustively test the formats
+            # Test different formats. Could exhaustively tests the formats
             # supported on a given OS (printed by '$ dot -T?') but here
             # we just use the built-ins dot and canon as a minimal check that
-            # the option works. After all, this test is for the cmdline.
+            # the option works. After all, this tests is for the cmdline.
             for fileformat in ['pdf', 'png']:
                 filename = root_node + '.dot.' + fileformat
                 options = [option, fileformat, root_node]

@@ -204,7 +204,7 @@ class LicensingException(AiidaException):
 
 class TestsNotAllowedError(AiidaException):
     """
-    Raised when tests are required to be run/loaded, but we are not in a testing environment.
+    Raised when tests are required to be run/loaded, but we are not in a tests environment.
 
     This is to prevent data loss.
     """

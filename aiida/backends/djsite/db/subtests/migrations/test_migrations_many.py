@@ -83,8 +83,8 @@ class TestDuplicateNodeUuidMigration(TestMigrations):
 
     def setUpBeforeMigration(self):
         from aiida.common.utils import get_new_uuid
-        self.file_name = 'test.temp'
-        self.file_content = u'#!/bin/bash\n\necho test run\n'
+        self.file_name = 'tests.temp'
+        self.file_content = u'#!/bin/bash\n\necho tests run\n'
 
         self.nodes_boolean = []
         self.nodes_integer = []
@@ -140,7 +140,7 @@ class TestDuplicateNodeUuidMigration(TestMigrations):
 
 class TestUuidMigration(TestMigrations):
     """
-    This test class checks the migration 0018_django_1_11 which switches from the django_extensions
+    This tests class checks the migration 0018_django_1_11 which switches from the django_extensions
     UUID field to the native UUIDField of django 1.11. It also introduces unique constraints
     on all uuid columns (previously existed only on dbnode).
     """
@@ -163,7 +163,7 @@ class TestUuidMigration(TestMigrations):
 
 class TestGroupRenamingMigration(TestMigrations):
     """
-    This test class checks the migration 0022_dbgroup_type_string_change_content which updates the
+    This tests class checks the migration 0022_dbgroup_type_string_change_content which updates the
     type_string column of the groups.
     """
 
@@ -174,24 +174,24 @@ class TestGroupRenamingMigration(TestMigrations):
         # Create group
         DbGroup = self.apps.get_model('db', 'DbGroup')
 
-        # test user group type_string: '' -> 'user'
+        # tests user group type_string: '' -> 'user'
         group_user = DbGroup(label='test_user_group', user_id=self.default_user.id, type_string='')
         group_user.save()
         self.group_user_pk = group_user.pk
 
-        # test data.upf group type_string: 'data.upf.family' -> 'data.upf'
+        # tests data.upf group type_string: 'data.upf.family' -> 'data.upf'
         group_data_upf = DbGroup(
             label='test_data_upf_group', user_id=self.default_user.id, type_string='data.upf.family'
         )
         group_data_upf.save()
         self.group_data_upf_pk = group_data_upf.pk
 
-        # test auto.import group type_string: 'aiida.import' -> 'auto.import'
+        # tests auto.import group type_string: 'aiida.import' -> 'auto.import'
         group_autoimport = DbGroup(label='test_import_group', user_id=self.default_user.id, type_string='aiida.import')
         group_autoimport.save()
         self.group_autoimport_pk = group_autoimport.pk
 
-        # test auto.run group type_string: 'autogroup.run' -> 'auto.run'
+        # tests auto.run group type_string: 'autogroup.run' -> 'auto.run'
         group_autorun = DbGroup(label='test_autorun_group', user_id=self.default_user.id, type_string='autogroup.run')
         group_autorun.save()
         self.group_autorun_pk = group_autorun.pk
@@ -200,26 +200,26 @@ class TestGroupRenamingMigration(TestMigrations):
         """ Test that the type_string were updated correctly """
         DbGroup = self.apps.get_model('db', 'DbGroup')
 
-        # test user group type_string: '' -> 'user'
+        # tests user group type_string: '' -> 'user'
         group_user = DbGroup.objects.get(pk=self.group_user_pk)
         self.assertEqual(group_user.type_string, 'user')
 
-        # test data.upf group type_string: 'data.upf.family' -> 'data.upf'
+        # tests data.upf group type_string: 'data.upf.family' -> 'data.upf'
         group_data_upf = DbGroup.objects.get(pk=self.group_data_upf_pk)
         self.assertEqual(group_data_upf.type_string, 'data.upf')
 
-        # test auto.import group type_string: 'aiida.import' -> 'auto.import'
+        # tests auto.import group type_string: 'aiida.import' -> 'auto.import'
         group_autoimport = DbGroup.objects.get(pk=self.group_autoimport_pk)
         self.assertEqual(group_autoimport.type_string, 'auto.import')
 
-        # test auto.run group type_string: 'autogroup.run' -> 'auto.run'
+        # tests auto.run group type_string: 'autogroup.run' -> 'auto.run'
         group_autorun = DbGroup.objects.get(pk=self.group_autorun_pk)
         self.assertEqual(group_autorun.type_string, 'auto.run')
 
 
 class TestCalcAttributeKeysMigration(TestMigrationsModelModifierV0025):
     """
-    This test class checks that the migration 0023_calc_job_option_attribute_keys works as expected
+    This tests class checks that the migration 0023_calc_job_option_attribute_keys works as expected
     which migrates CalcJobNode attributes for metadata options whose key changed.
     """
 
@@ -298,7 +298,7 @@ class TestCalcAttributeKeysMigration(TestMigrationsModelModifierV0025):
 
 class TestDbLogMigrationRecordCleaning(TestMigrations):
     """
-    This test class checks that the migration 0024_dblog_update works as expected.
+    This tests class checks that the migration 0024_dblog_update works as expected.
     That migration updates of the DbLog table and adds uuids
     """
 
@@ -410,7 +410,7 @@ class TestDbLogMigrationRecordCleaning(TestMigrations):
         log_5.save()
         log_6.save()
 
-        # Storing temporarily information needed for the check at the test
+        # Storing temporarily information needed for the check at the tests
         self.to_check = dict()
 
         # Keeping calculation & calculation log ids
@@ -580,14 +580,14 @@ class TestDbLogMigrationBackward(TestMigrations):
         log_1.save()
         log_2.save()
 
-        # Keeping what is needed to be verified at the test
+        # Keeping what is needed to be verified at the tests
         self.to_check = dict()
         self.to_check[log_1.pk] = (log_1.dbnode_id, calc_1.type)
         self.to_check[log_2.pk] = (log_2.dbnode_id, calc_2.type)
 
     def test_objpk_objname(self):
         """
-        This test verifies that the objpk and objname have the right values
+        This tests verifies that the objpk and objname have the right values
         after a forward and a backward migration.
         """
         import json
@@ -651,7 +651,7 @@ class TestDataMoveWithinNodeMigration(TestMigrations):
 
 class TestTrajectoryDataMigration(TestMigrationsModelModifierV0025):
     """
-    This test class checks that the migrations 0026_trajectory_symbols_to_attribute and
+    This tests class checks that the migrations 0026_trajectory_symbols_to_attribute and
     0027_delete_trajectory_symbols_array work as expected.
     These are data migrations for `TrajectoryData` nodes where symbol lists are moved
     from repository array to attributes.
@@ -692,7 +692,7 @@ class TestTrajectoryDataMigration(TestMigrationsModelModifierV0025):
 
 class TestNodePrefixRemovalMigration(TestMigrations):
     """
-    This test class checks that the migration 0028_remove_node_prefix works as expected.
+    This tests class checks that the migration 0028_remove_node_prefix works as expected.
 
     That is the final data migration for `Nodes` after `aiida.orm.nodes` reorganization
     was finalized to remove the `node.` prefix
@@ -718,7 +718,7 @@ class TestNodePrefixRemovalMigration(TestMigrations):
 
 class TestParameterDataToDictMigration(TestMigrations):
     """
-    This test class checks that the migration 0029_rename_parameter_data_to_dict works as expected.
+    This tests class checks that the migration 0029_rename_parameter_data_to_dict works as expected.
 
     This is a data migration for the renaming of `ParameterData` to `Dict`.
     """
@@ -738,7 +738,7 @@ class TestParameterDataToDictMigration(TestMigrations):
 
 class TestTextFieldToJSONFieldMigration(TestMigrations):  # pylint: disable=too-many-instance-attributes
     """
-    This test class checks that the migration 0033_replace_text_field_with_json_field works as expected.
+    This tests class checks that the migration 0033_replace_text_field_with_json_field works as expected.
 
     That migration replaces the use of text fields to store JSON data with builtin JSONFields.
     """
@@ -820,7 +820,7 @@ class TestTextFieldToJSONFieldMigration(TestMigrations):  # pylint: disable=too-
 
 class TestResetHash(TestMigrations):
     """
-    This test class checks that only the hash extra is removed.
+    This tests class checks that only the hash extra is removed.
     """
 
     migrate_from = '0038_data_migration_legacy_job_calculations'

@@ -208,7 +208,7 @@ def create_calculation_process(code, inputval):
         # The following line adds a significant sleep time.
         # I set it to 1 second to speed up tests
         # I keep it to a non-zero value because I want
-        # To test the case when AiiDA finds some calcs
+        # To tests the case when AiiDA finds some calcs
         # in a queued state
         # 'cmdline_params': ["{}".format(counter % 3)], # Sleep time
         'cmdline_params': ['1'],
@@ -303,7 +303,7 @@ def main():
     expected_results_workchains[pk] = list_value
 
     print('Submitting a WorkChain which contains a workfunction.')
-    value = Str('workfunction test string')
+    value = Str('workfunction tests string')
     pk = submit(WorkFunctionRunnerWorkChain, input=value).pk
     expected_results_workchains[pk] = value
 
@@ -323,7 +323,7 @@ def main():
         time.sleep(15)  # Wait a few seconds
 
         # Print some debug info, both for debugging reasons and to avoid
-        # that the test machine is shut down because there is no output
+        # that the tests machine is shut down because there is no output
 
         print('#' * 78)
         print('####### TIME ELAPSED: {} s'.format(time.time() - start_time))

@@ -58,14 +58,14 @@ class TestProfile(AiidaTestCase):
         self.assertIn(self.profile.uuid, self.profile.rmq_prefix)
 
     def test_is_test_profile(self):
-        """Test that a profile whose name starts with `test_` is marked as a test profile."""
+        """Test that a profile whose name starts with `test_` is marked as a tests profile."""
         profile_name = 'not_a_test_profile'
         profile = create_mock_profile(name=profile_name)
 
-        # The one constructed in the setUpClass should be a test profile
+        # The one constructed in the setUpClass should be a tests profile
         self.assertTrue(self.profile.is_test_profile)
 
-        # The profile created here should *not* be a test profile
+        # The profile created here should *not* be a tests profile
         self.assertFalse(profile.is_test_profile)
 
     def test_set_option(self):

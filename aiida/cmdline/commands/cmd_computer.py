@@ -54,12 +54,12 @@ def prompt_for_computer_configuration(computer):  # pylint: disable=unused-argum
 
 def _computer_test_get_jobs(transport, scheduler, authinfo):  # pylint: disable=unused-argument
     """
-    Internal test to check if it is possible to check the queue state.
+    Internal tests to check if it is possible to check the queue state.
 
     :param transport: an open transport
     :param scheduler: the corresponding scheduler class
     :param authinfo: the AuthInfo object (from which one can get computer and aiidauser)
-    :return: True if the test succeeds, False if it fails.
+    :return: True if the tests succeeds, False if it fails.
     """
     echo.echo('> Getting job list...')
     found_jobs = scheduler.get_jobs(as_dict=True)
@@ -78,7 +78,7 @@ def _computer_test_no_unexpected_output(transport, scheduler, authinfo):  # pyli
     :param transport: an open transport
     :param scheduler: the corresponding scheduler class
     :param authinfo: the AuthInfo object (from which one can get computer and aiidauser)
-    :return: True if the test succeeds, False if it fails.
+    :return: True if the tests succeeds, False if it fails.
     """
     # Execute a command that should not return any error
     echo.echo('> Checking that no spurious output is present...')
@@ -125,7 +125,7 @@ https://github.com/aiidateam/aiida-core/issues/1890
 
 def _computer_create_temp_file(transport, scheduler, authinfo):  # pylint: disable=unused-argument
     """
-    Internal test to check if it is possible to create a temporary file
+    Internal tests to check if it is possible to create a temporary file
     and then delete it in the work directory
 
     :note: exceptions could be raised
@@ -133,13 +133,13 @@ def _computer_create_temp_file(transport, scheduler, authinfo):  # pylint: disab
     :param transport: an open transport
     :param scheduler: the corresponding scheduler class
     :param authinfo: the AuthInfo object (from which one can get computer and aiidauser)
-    :return: True if the test succeeds, False if it fails.
+    :return: True if the tests succeeds, False if it fails.
     """
     import tempfile
     import datetime
     import os
 
-    file_content = "Test from 'verdi computer test' on {}".format(datetime.datetime.now().isoformat())
+    file_content = "Test from 'verdi computer tests' on {}".format(datetime.datetime.now().isoformat())
     echo.echo('> Creating a temporary file in the work directory...')
     echo.echo('  `-> Getting the remote user name...')
     remote_user = transport.whoami()
@@ -454,7 +454,7 @@ def computer_rename(computer, new_name):
     echo.echo_success("Computer '{}' renamed to '{}'".format(old_name, new_name))
 
 
-@verdi_computer.command('test')
+@verdi_computer.command('tests')
 @options.USER(
     required=False,
     help='Test the connection for a given AiiDA user, specified by'
@@ -492,7 +492,7 @@ def computer_test(user, print_traceback, computer):
 
     if not authinfo.enabled:
         echo.echo_warning('Computer<{}> is disabled for user<{}>'.format(computer.name, user.email))
-        click.confirm('Do you really want to test it?', abort=True)
+        click.confirm('Do you really want to tests it?', abort=True)
 
     scheduler = authinfo.computer.get_scheduler()
     transport = authinfo.get_transport()
@@ -512,7 +512,7 @@ def computer_test(user, print_traceback, computer):
                     succeeded = test(transport=transport, scheduler=scheduler, authinfo=authinfo)
                 # pylint:disable=broad-except
                 except Exception as error:
-                    echo.echo_error('* The test raised an exception!')
+                    echo.echo_error('* The tests raised an exception!')
                     if print_traceback:
                         echo.echo('** Full traceback:')
                         # Indent

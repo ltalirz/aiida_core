@@ -26,9 +26,9 @@ class TestCodeParamType(AiidaTestCase):
     @classmethod
     def setUpClass(cls, *args, **kwargs):
         """
-        Create some code to test the CodeParamType parameter type for the command line infrastructure
+        Create some code to tests the CodeParamType parameter type for the command line infrastructure
         We create an initial code with a random name and then on purpose create two code with a name
-        that matches exactly the ID and UUID, respectively, of the first one. This allows us to test
+        that matches exactly the ID and UUID, respectively, of the first one. This allows us to tests
         the rules implemented to solve ambiguities that arise when determing the identifier type
         """
         super(TestCodeParamType, cls).setUpClass(*args, **kwargs)

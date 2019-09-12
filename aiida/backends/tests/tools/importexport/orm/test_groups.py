@@ -33,7 +33,7 @@ class TestGroups(AiidaTestCase):
     @with_temp_dir
     def test_nodes_in_group(self, temp_dir):
         """
-        This test checks that nodes that belong to a specific group are
+        This tests checks that nodes that belong to a specific group are
         correctly imported and exported.
         """
         from aiida.common.links import LinkType

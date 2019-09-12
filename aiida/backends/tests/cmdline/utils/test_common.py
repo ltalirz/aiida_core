@@ -44,7 +44,7 @@ class TestCommonUtilities(AiidaTestCase):
     def test_get_node_info_multiple_call_links(self):
         """Test the `get_node_info` utility.
 
-        Regression test for #2868:
+        Regression tests for #2868:
             Verify that all `CALL` links are included in the formatted string even if link labels are identical.
         """
         from aiida.cmdline.utils.common import get_node_info

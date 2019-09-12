@@ -52,9 +52,9 @@ class FoldersTest(unittest.TestCase):
         tmpsource = tempfile.mkdtemp()
         tmpdest = tempfile.mkdtemp()
         with io.open(os.path.join(tmpsource, 'sąžininga'), 'w', encoding='utf8') as fhandle:
-            fhandle.write(u'test')
+            fhandle.write(u'tests')
         with io.open(os.path.join(tmpsource, 'žąsis'), 'w', encoding='utf8') as fhandle:
-            fhandle.write(u'test')
+            fhandle.write(u'tests')
         folder = Folder(tmpdest)
         folder.insert_path(tmpsource, 'destination')
         folder.insert_path(tmpsource, u'šaltinis')
@@ -72,7 +72,7 @@ class FoldersTest(unittest.TestCase):
         self.assertEqual(folder.get_abs_path('test_file.txt'), '/tmp/test_file.txt')
 
     @staticmethod
-    @unittest.skipUnless(six.PY2, 'test is only for python2')
+    @unittest.skipUnless(six.PY2, 'tests is only for python2')
     def test_create_file_from_filelike_py2():
         """Test `aiida.common.folders.Folder.create_file_from_filelike` for python 2."""
         unicode_string = u'unicode_string'
@@ -94,7 +94,7 @@ class FoldersTest(unittest.TestCase):
         finally:
             shutil.rmtree(tempdir)
 
-    @unittest.skipUnless(six.PY3, 'test is only for python3')
+    @unittest.skipUnless(six.PY3, 'tests is only for python3')
     def test_create_file_from_filelike_py3(self):
         """Test `aiida.common.folders.Folder.create_file_from_filelike` for python 3."""
         unicode_string = 'unicode_string'

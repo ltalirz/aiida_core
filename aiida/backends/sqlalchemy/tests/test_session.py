@@ -172,7 +172,7 @@ class TestSessionSqla(AiidaTestCase):
         Session = sessionmaker(bind=sa.ENGINE)
         custom_session = Session()
 
-        user = self.backend.users.create(email='test@localhost').store()
+        user = self.backend.users.create(email='tests@localhost').store()
         node = self.backend.nodes.create(node_type='', user=user).store()
         master_session = node.dbmodel.session
         self.assertIsNot(master_session, custom_session)

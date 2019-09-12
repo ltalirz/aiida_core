@@ -59,7 +59,7 @@ class SerializeWorkChain(WorkChain):
         super(SerializeWorkChain, cls).define(spec)
 
         spec.input(
-            'test',
+            'tests',
             valid_type=Str,
             serializer=lambda x: Str(ObjectLoader().identify_object(x))
         )

@@ -7,7 +7,7 @@
 # For further information on the license, see the LICENSE.txt file        #
 # For further information please visit http://www.aiida.net               #
 ###########################################################################
-"""Implementation of CalcJobNode to add two numbers for testing and demonstration purposes."""
+"""Implementation of CalcJobNode to add two numbers for tests and demonstration purposes."""
 from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
@@ -20,7 +20,7 @@ from aiida.engine import CalcJob
 
 
 class ArithmeticAddCalculation(CalcJob):
-    """Implementation of CalcJob to add two numbers for testing and demonstration purposes."""
+    """Implementation of CalcJob to add two numbers for tests and demonstration purposes."""
 
     @classmethod
     def define(cls, spec):

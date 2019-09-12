@@ -152,7 +152,7 @@ class MakeHashTest(unittest.TestCase):
         self.assertNotEqual(make_hash(some_uuid), make_hash(str(some_uuid)))
 
     def test_datetime(self):
-        # test for timezone-naive datetime:
+        # tests for timezone-naive datetime:
         self.assertEqual(
             make_hash(datetime(2018, 8, 18, 8, 18)), '714138f1114daa5fdc74c3483260742952b71b568d634c6093bb838afad76646'
         )
@@ -160,7 +160,7 @@ class MakeHashTest(unittest.TestCase):
             make_hash(datetime.utcfromtimestamp(0)), 'b4d97d9d486937775bcc25a5cba073f048348c3cd93d4460174a4f72a6feb285'
         )
 
-        # test with timezone-aware datetime:
+        # tests with timezone-aware datetime:
         self.assertEqual(
             make_hash(datetime(2018, 8, 18, 8, 18).replace(tzinfo=pytz.timezone('US/Eastern'))),
             '194478834b3b8bd0518cf6ca6fefacc13bea15f9c0b8f5d585a0adf2ebbd562f'
@@ -185,7 +185,7 @@ class MakeHashTest(unittest.TestCase):
             make_hash(MadeupClass())
 
     def test_folder(self):
-        # create directories for the Folder test
+        # create directories for the Folder tests
         with SandboxFolder(sandbox_in_repo=False) as folder:
             folder.open('file1', 'a').close()
             fhandle = folder.open('file2', 'w')
@@ -223,7 +223,7 @@ class CheckDBRoundTrip(AiidaTestCase):
 
     def test_attribute_storing(self):
         """
-        I test that when storing different types of data as attributes (using a dict), the hash is the
+        I tests that when storing different types of data as attributes (using a dict), the hash is the
         same before and after storing.
         """
         test_data = [

@@ -29,7 +29,7 @@ class PostgresTest(unittest.TestCase):
     """Test the public API provided by the `Postgres` class"""
 
     def setUp(self):
-        """Set up a temporary database cluster for testing potentially destructive operations"""
+        """Set up a temporary database cluster for tests potentially destructive operations"""
         self.pg_test = PGTest()
         self.dbuser = 'aiida'
         self.dbpass = 'password'

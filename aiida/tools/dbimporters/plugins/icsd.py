@@ -60,7 +60,7 @@ class IcsdDbImporter(DbImporter):
     :param dl_db: icsd comes with a full (default: ``icsd``) and a demo
         database (``icsdd``).
         This parameter allows the user to switch to the demo database
-        for testing purposes, if the access rights to the full database
+        for tests purposes, if the access rights to the full database
         are not granted.
     :param host: MySQL database host. If the MySQL database is hosted on
         a different machine, use  "127.0.0.1" as host, and open

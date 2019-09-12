@@ -25,7 +25,7 @@ class TestCalcJobResultManager(AiidaTestCase):
 
     @classmethod
     def setUpClass(cls, *args, **kwargs):
-        """Define a useful CalcJobNode to test the CalcJobResultManager.
+        """Define a useful CalcJobNode to tests the CalcJobResultManager.
 
         We emulate a node for the `TemplateReplacer` calculation job class. To do this we have to make sure the
         process type is set correctly and an output parameter node is created.

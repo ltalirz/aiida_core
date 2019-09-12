@@ -112,7 +112,7 @@ def submit(process, **inputs):
     process = instantiate_process(runner, process, **inputs)
 
     # If a dry run is requested, simply forward to `run`, because it is not compatible with `submit`. We choose for this
-    # instead of raising, because in this way the user does not have to change the launcher when testing.
+    # instead of raising, because in this way the user does not have to change the launcher when tests.
     if process.metadata.get('dry_run', False):
         _, node = run_get_node(process)
         return node

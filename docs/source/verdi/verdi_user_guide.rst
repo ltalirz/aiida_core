@@ -277,7 +277,7 @@ Below is a list with all available subcommands.
       rename     Rename a computer.
       setup      Create a new computer.
       show       Show detailed information for a computer.
-      test       Test the connection to a computer.
+      tests      Test the connection to a computer.
 
 
 .. _verdi_config:

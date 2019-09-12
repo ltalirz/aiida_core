@@ -66,7 +66,7 @@ def upload_calculation(node, transport, calc_info, script_filename, dry_run=Fals
     logger = LoggerAdapter(logger=execlogger, extra=logger_extra)
 
     if not dry_run and node.has_cached_links():
-        raise ValueError('Cannot submit calculation {} because it has cached input links! If you just want to test the '
+        raise ValueError('Cannot submit calculation {} because it has cached input links! If you just want to tests the '
                          'submission, set `metadata.dry_run` to True in the inputs.'.format(node.pk))
 
     folder = node._raw_input_folder
@@ -77,7 +77,7 @@ def upload_calculation(node, transport, calc_info, script_filename, dry_run=Fals
     else:
         remote_user = transport.whoami()
         # TODO Doc: {username} field
-        # TODO: if something is changed here, fix also 'verdi computer test'
+        # TODO: if something is changed here, fix also 'verdi computer tests'
         remote_working_directory = computer.get_workdir().format(username=remote_user)
         if not remote_working_directory.strip():
             raise exceptions.ConfigurationError(

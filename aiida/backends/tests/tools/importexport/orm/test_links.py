@@ -83,7 +83,7 @@ class TestLinks(AiidaTestCase):
     @with_temp_dir
     def test_input_and_create_links(self, temp_dir):
         """
-        Simple test that will verify that INPUT and CREATE links are properly exported and
+        Simple tests that will verify that INPUT and CREATE links are properly exported and
         correctly recreated upon import.
         """
         node_work = orm.CalculationNode()
@@ -260,7 +260,7 @@ class TestLinks(AiidaTestCase):
     @with_temp_dir
     def test_complex_workflow_graph_links(self, temp_dir):
         """
-        This test checks that all the needed links are correctly exported and
+        This tests checks that all the needed links are correctly exported and
         imported. More precisely, it checks that INPUT, CREATE, RETURN and CALL
         links connecting Data nodes, CalcJobNodes and WorkCalculations are
         exported and imported correctly.
@@ -329,7 +329,7 @@ class TestLinks(AiidaTestCase):
     @with_temp_dir
     def test_high_level_workflow_links(self, temp_dir):
         """
-        This test checks that all the needed links are correctly exported and imported.
+        This tests checks that all the needed links are correctly exported and imported.
         INPUT_CALC, INPUT_WORK, CALL_CALC, CALL_WORK, CREATE, and RETURN
         links connecting Data nodes and high-level Calculation and Workflow nodes:
         CalcJobNode, CalcFunctionNode, WorkChainNode, WorkFunctionNode
@@ -449,7 +449,7 @@ class TestLinks(AiidaTestCase):
     @with_temp_dir
     def test_double_return_links_for_workflows(self, temp_dir):
         """
-        This test checks that double return links to a node can be exported
+        This tests checks that double return links to a node can be exported
         and imported without problems,
         """
         work1 = orm.WorkflowNode()

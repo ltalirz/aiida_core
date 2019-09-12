@@ -24,9 +24,9 @@ class TestComputerParamType(AiidaTestCase):
     @classmethod
     def setUpClass(cls, *args, **kwargs):
         """
-        Create some computers to test the ComputerParamType parameter type for the command line infrastructure
+        Create some computers to tests the ComputerParamType parameter type for the command line infrastructure
         We create an initial computer with a random name and then on purpose create two computers with a name
-        that matches exactly the ID and UUID, respectively, of the first one. This allows us to test
+        that matches exactly the ID and UUID, respectively, of the first one. This allows us to tests
         the rules implemented to solve ambiguities that arise when determing the identifier type
         """
         super(TestComputerParamType, cls).setUpClass(*args, **kwargs)

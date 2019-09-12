@@ -18,8 +18,8 @@ from aiida.backends.testimplbase import AiidaTestImplementation
 from aiida.orm.implementation.django.backend import DjangoBackend
 
 # Add a new entry here if you add a file with tests under aiida.backends.djsite.db.subtests
-# The key is the name to use in the 'verdi test' command (e.g., a key 'generic'
-# can be run using 'verdi test db.generic')
+# The key is the name to use in the 'verdi tests' command (e.g., a key 'generic'
+# can be run using 'verdi tests db.generic')
 # The value must be the module name containing the subclasses of unittest.TestCase
 
 
@@ -55,5 +55,5 @@ class DjangoTests(AiidaTestImplementation):
 
     def tearDownClass_method(self):
         """
-        Backend-specific tasks for tearing down the test environment.
+        Backend-specific tasks for tearing down the tests environment.
         """

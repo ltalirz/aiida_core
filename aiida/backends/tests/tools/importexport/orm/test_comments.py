@@ -417,7 +417,7 @@ class TestComments(AiidaTestCase):
     def test_reimport_of_comments_for_single_node(self, temp_dir):
         """
         When a node with comments already exist in the DB, and more comments are
-        imported for the same node (same UUID), test that only new comment-entries
+        imported for the same node (same UUID), tests that only new comment-entries
         are added.
 
         Part I:

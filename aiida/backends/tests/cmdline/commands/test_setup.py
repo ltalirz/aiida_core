@@ -40,8 +40,8 @@ class TestVerdiSetup(AiidaPostgresTestCase):
     def test_help(self):
         """Check that the `--help` option is eager, is not overruled and will properly display the help message.
 
-        If this test hangs, most likely the `--help` eagerness is overruled by another option that has started the
-        prompt cycle, which by waiting for input, will block the test from continuing.
+        If this tests hangs, most likely the `--help` eagerness is overruled by another option that has started the
+        prompt cycle, which by waiting for input, will block the tests from continuing.
         """
         self.cli_runner.invoke(cmd_setup.setup, ['--help'], catch_exceptions=False)
         self.cli_runner.invoke(cmd_setup.quicksetup, ['--help'], catch_exceptions=False)
@@ -51,7 +51,7 @@ class TestVerdiSetup(AiidaPostgresTestCase):
         """Test `verdi quicksetup`."""
         configuration.reset_profile()
 
-        profile_name = 'testing'
+        profile_name = 'tests'
         user_email = 'some@email.com'
         user_first_name = 'John'
         user_last_name = 'Smith'
@@ -73,7 +73,7 @@ class TestVerdiSetup(AiidaPostgresTestCase):
         profile = config.get_profile(profile_name)
         profile.default_user = user_email
 
-        # Verify that the backend type of the created profile matches that of the profile for the current test session
+        # Verify that the backend type of the created profile matches that of the profile for the current tests session
         self.assertEqual(self.backend, profile.database_backend)
 
         user = orm.User.objects.get(email=user_email)
@@ -90,7 +90,7 @@ class TestVerdiSetup(AiidaPostgresTestCase):
         with tempfile.NamedTemporaryFile('w') as handle:
             handle.write(
                 """---
-profile: testing
+profile: tests
 first_name: Leopold
 last_name: Talirz
 institution: EPFL
@@ -106,7 +106,7 @@ email: 123@234.de""".format(self.backend)
         """Test `verdi quicksetup` exits if port is wrong."""
         configuration.reset_profile()
 
-        profile_name = 'testing'
+        profile_name = 'tests'
         user_email = 'some@email.com'
         user_first_name = 'John'
         user_last_name = 'Smith'
@@ -133,13 +133,13 @@ email: 123@234.de""".format(self.backend)
         postgres.create_db(db_user, db_name)
         configuration.reset_profile()
 
-        profile_name = 'testing'
+        profile_name = 'tests'
         user_email = 'some@email.com'
         user_first_name = 'John'
         user_last_name = 'Smith'
         user_institution = 'ECMA'
 
-        # Keep the `--profile` option last as a regression test for #2897 and #2907. Some of the other options have
+        # Keep the `--profile` option last as a regression tests for #2897 and #2907. Some of the other options have
         # defaults, callbacks and or contextual defaults that might depend on it, but should not fail if they are parsed
         # before the profile option is parsed.
         options = [
@@ -158,7 +158,7 @@ email: 123@234.de""".format(self.backend)
         profile = config.get_profile(profile_name)
         profile.default_user = user_email
 
-        # Verify that the backend type of the created profile matches that of the profile for the current test session
+        # Verify that the backend type of the created profile matches that of the profile for the current tests session
         self.assertEqual(self.backend, profile.database_backend)
 
         user = orm.User.objects.get(email=user_email)

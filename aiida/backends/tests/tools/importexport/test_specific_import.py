@@ -40,13 +40,13 @@ class TestSpecificImport(AiidaTestCase):
 
     def test_simple_import(self):
         """
-        This is a very simple test which checks that an export file with nodes
+        This is a very simple tests which checks that an export file with nodes
         that are not associated to a computer is imported correctly. In Django
         when such nodes are exported, there is an empty set for computers
         in the export file. In SQLA there is such a set only when a computer is
         associated with the exported nodes. When an empty computer set is
         found at the export file (when imported to an SQLA profile), the SQLA
-        import code used to crash. This test demonstrates this problem.
+        import code used to crash. This tests demonstrates this problem.
         """
         parameters = orm.Dict(
             dict={

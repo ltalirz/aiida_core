@@ -236,7 +236,7 @@ class TestLogs(AiidaTestCase):
     def test_reimport_of_logs_for_single_node(self, temp_dir):
         """
         When a node with logs already exist in the DB, and more logs are imported
-        for the same node (same UUID), test that only new log-entries are added.
+        for the same node (same UUID), tests that only new log-entries are added.
 
         Part I:
         Create CalculationNode and 1 Log for it.

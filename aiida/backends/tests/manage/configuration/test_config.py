@@ -265,7 +265,7 @@ class TestConfig(AiidaTestCase):
         with self.assertRaises(exceptions.ProfileConfigurationError):
             config.remove_profile('non_existing_profile')
 
-        # Removing an existing should work and in this test case none should remain
+        # Removing an existing should work and in this tests case none should remain
         config.remove_profile(self.profile_name)
         self.assertEqual(config.profiles, [])
         self.assertEqual(config.profile_names, [])

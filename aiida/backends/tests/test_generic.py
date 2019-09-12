@@ -27,19 +27,19 @@ class TestCode(AiidaTestCase):
         from aiida.orm import Code
         from aiida.common.exceptions import ValidationError
 
-        code = Code(local_executable='test.sh')
+        code = Code(local_executable='tests.sh')
         with self.assertRaises(ValidationError):
-            # No file with name test.sh
+            # No file with name tests.sh
             code.store()
 
         with tempfile.NamedTemporaryFile(mode='w+') as fhandle:
-            fhandle.write('#/bin/bash\n\necho test run\n')
+            fhandle.write('#/bin/bash\n\necho tests run\n')
             fhandle.flush()
-            code.put_object_from_filelike(fhandle, 'test.sh')
+            code.put_object_from_filelike(fhandle, 'tests.sh')
 
         code.store()
         self.assertTrue(code.can_run_on(self.computer))
-        self.assertTrue(code.get_local_executable(), 'test.sh')
+        self.assertTrue(code.get_local_executable(), 'tests.sh')
         self.assertTrue(code.get_execname(), 'stest.sh')
 
     def test_remote(self):
@@ -66,16 +66,16 @@ class TestCode(AiidaTestCase):
 
         code = Code(remote_computer_exec=(self.computer, '/bin/ls'))
         with tempfile.NamedTemporaryFile(mode='w+') as fhandle:
-            fhandle.write('#/bin/bash\n\necho test run\n')
+            fhandle.write('#/bin/bash\n\necho tests run\n')
             fhandle.flush()
-            code.put_object_from_filelike(fhandle, 'test.sh')
+            code.put_object_from_filelike(fhandle, 'tests.sh')
 
         with self.assertRaises(ValidationError):
             # There are files inside
             code.store()
 
         # If there are no files, I can store
-        code.delete_object('test.sh')
+        code.delete_object('tests.sh')
         code.store()
 
         self.assertEquals(code.get_remote_computer().pk, self.computer.pk)

@@ -392,7 +392,7 @@ Job Id: 555716
     Account_Name = dias01
     Checkpoint = u
     ctime = Fri Jun 26 14:04:56 2015
-    Error_Path = host:/down/the/path/test
+    Error_Path = host:/down/the/path/tests
 \t_valg.out
     exec_host = r2i4n13/0-23+r1i2n12/0-23+r1i2n11/0-23+r1i1n15/0-23
     Hold_Types = n

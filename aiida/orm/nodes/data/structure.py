@@ -1610,7 +1610,7 @@ class StructureData(Data):
             raise NotImplementedError
         else:
 
-            # test consistency of th enew input
+            # tests consistency of th enew input
             n_sites = len(self.sites)
             if n_sites != len(new_positions) and conserve_particle:
                 raise ValueError('the new positions should be as many as the previous structure.')

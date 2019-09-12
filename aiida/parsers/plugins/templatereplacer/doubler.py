@@ -68,7 +68,7 @@ class TemplatereplacerDoublerParser(Parser):
                 with io.open(file_path, 'r', encoding='utf8') as handle:
                     parsed_value = handle.read().strip()
 
-                # We always strip the content of the file from whitespace to simplify testing for expected output
+                # We always strip the content of the file from whitespace to simplify tests for expected output
                 output_dict['retrieved_temporary_files'].append((retrieved_file, parsed_value))
 
         self.out(self.node.process_class.spec().default_output_node, Dict(dict=output_dict))

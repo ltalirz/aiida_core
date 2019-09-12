@@ -26,7 +26,7 @@ if __name__ == '__main__':
     with open(path.join(THIS_FOLDER, 'setup.json'), 'r') as info:
         SETUP_JSON = json.load(info)
 
-    SETUP_JSON['extras_require']['testing'] \
+    SETUP_JSON['extras_require']['tests'] \
         += SETUP_JSON['extras_require']['rest'] \
         + SETUP_JSON['extras_require']['atomic_tools']
 

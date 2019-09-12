@@ -8,15 +8,15 @@
 # For further information please visit http://www.aiida.net               #
 ###########################################################################
 """
-This module contains a set of unittest test classes that can be loaded from
+This module contains a set of unittest tests classes that can be loaded from
 the plugin.
 Every transport plugin should be able to pass all of these common tests.
 Plugin specific tests will be written in the plugin itself.
 """
 
-# TODO : test for copy with pattern
-# TODO : test for copy with/without patterns, overwriting folder
-# TODO : test for exotic cases of copy with source = destination
+# TODO : tests for copy with pattern
+# TODO : tests for copy with/without patterns, overwriting folder
+# TODO : tests for exotic cases of copy with source = destination
 # TODO : silly cases of copy/put/get from self to self
 
 from __future__ import division
@@ -101,7 +101,7 @@ def run_for_all_plugins(actual_test_method):
             else:
                 exception_to_raise = CollectiveException
 
-            messages = ['*** At least one test for a subplugin failed. See below ***', '']
+            messages = ['*** At least one tests for a subplugin failed. See below ***', '']
             for exc in exceptions:
                 messages.append("*** [For plugin {}]: Exception '{}': {}"
                                 .format(exc[2], type(exc[0]).__name__, exc[0]))
@@ -421,13 +421,13 @@ class TestDirectoryManipulation(unittest.TestCase):
             # change permissions
             t.chmod(directory, 0o777)
 
-            # test if the security bits have changed
+            # tests if the security bits have changed
             self.assertEquals(t.get_mode(directory), 0o777)
 
             # change permissions
             t.chmod(directory, 0o511)
 
-            # test if the security bits have changed
+            # tests if the security bits have changed
             self.assertEquals(t.get_mode(directory), 0o511)
 
             # TODO : bug in paramiko. When changing the directory to very low \
@@ -478,7 +478,7 @@ class TestDirectoryManipulation(unittest.TestCase):
             # change permissions to low ones
             t.chmod(directory, 0)
 
-            # test if the security bits have changed
+            # tests if the security bits have changed
             self.assertEquals(t.get_mode(directory), 0)
 
             old_cwd = t.getcwd()
@@ -490,7 +490,7 @@ class TestDirectoryManipulation(unittest.TestCase):
 
             self.assertEquals(old_cwd, new_cwd)
 
-            # TODO : the test leaves a directory even if it is successful
+            # TODO : the tests leaves a directory even if it is successful
             #        The bug is in paramiko. After lowering the permissions,
             #        I cannot restore them to higher values
             #t.rmdir(directory)
@@ -600,7 +600,7 @@ class TestPutGetFile(unittest.TestCase):
     @run_for_all_plugins
     def test_put_get_abs_path(self, custom_transport):
         """
-        test of exception for non existing files and abs path
+        tests of exception for non existing files and abs path
         """
         import os
         import random
@@ -663,7 +663,7 @@ class TestPutGetFile(unittest.TestCase):
     @run_for_all_plugins
     def test_put_get_empty_string(self, custom_transport):
         """
-        test of exception put/get of empty strings
+        tests of exception put/get of empty strings
         """
         # TODO : verify the correctness of \n at the end of a file
         import os
@@ -891,7 +891,7 @@ class TestPutGetTree(unittest.TestCase):
             local_base_dir = os.path.join(local_dir, directory, 'local')
             os.mkdir(local_base_dir)
 
-            # first test put: I create three files in local
+            # first tests put: I create three files in local
             file_1 = os.path.join(local_base_dir, 'a.txt')
             file_2 = os.path.join(local_base_dir, 'b.tmp')
             file_3 = os.path.join(local_base_dir, 'c.txt')
@@ -900,30 +900,30 @@ class TestPutGetTree(unittest.TestCase):
                 with io.open(filename, 'w', encoding='utf8') as fhandle:
                     fhandle.write(text)
 
-            # first test the copy. Copy of two files matching patterns, into a folder
+            # first tests the copy. Copy of two files matching patterns, into a folder
             t.copy(os.path.join('local', '*.txt'), '.')
             self.assertEquals(set(['a.txt', 'c.txt', 'local']), set(t.listdir('.')))
             t.remove('a.txt')
             t.remove('c.txt')
-            # second test copy. Copy of two folders
+            # second tests copy. Copy of two folders
             t.copy('local', 'prova')
             self.assertEquals(set(['prova', 'local']), set(t.listdir('.')))
             self.assertEquals(set(['a.txt', 'b.tmp', 'c.txt']), set(t.listdir('prova')))
             t.rmtree('prova')
-            # third test copy. Can copy one file into a new file
+            # third tests copy. Can copy one file into a new file
             t.copy(os.path.join('local', '*.tmp'), 'prova')
             self.assertEquals(set(['prova', 'local']), set(t.listdir('.')))
             t.remove('prova')
-            # fourth test copy: can't copy more than one file on the same file,
+            # fourth tests copy: can't copy more than one file on the same file,
             # i.e., the destination should be a folder
             with self.assertRaises(OSError):
                 t.copy(os.path.join('local', '*.txt'), 'prova')
-            # fifth test, copying one file into a folder
+            # fifth tests, copying one file into a folder
             t.mkdir('prova')
             t.copy(os.path.join('local', 'a.txt'), 'prova')
             self.assertEquals(set(t.listdir('prova')), set(['a.txt']))
             t.rmtree('prova')
-            # sixth test, copying one file into a file
+            # sixth tests, copying one file into a file
             t.copy(os.path.join('local', 'a.txt'), 'prova')
             self.assertTrue(t.isfile('prova'))
             t.remove('prova')
@@ -964,7 +964,7 @@ class TestPutGetTree(unittest.TestCase):
             local_base_dir = os.path.join(local_dir, directory, 'local')
             os.mkdir(local_base_dir)
 
-            # first test put: I create three files in local
+            # first tests put: I create three files in local
             file_1 = os.path.join(local_base_dir, 'a.txt')
             file_2 = os.path.join(local_base_dir, 'b.tmp')
             file_3 = os.path.join(local_base_dir, 'c.txt')
@@ -973,7 +973,7 @@ class TestPutGetTree(unittest.TestCase):
                 with io.open(filename, 'w', encoding='utf8') as fhandle:
                     fhandle.write(text)
 
-            # first test put. Copy of two files matching patterns, into a folder
+            # first tests put. Copy of two files matching patterns, into a folder
             t.put(os.path.join(local_base_dir, '*.txt'), '.')
             self.assertEquals(set(['a.txt', 'c.txt', 'local']), set(t.listdir('.')))
             t.remove('a.txt')
@@ -990,11 +990,11 @@ class TestPutGetTree(unittest.TestCase):
             self.assertEquals(set(['local']), set(t.listdir('prova')))
             self.assertEquals(set(['a.txt', 'b.tmp', 'c.txt']), set(t.listdir(os.path.join('prova', 'local'))))
             t.rmtree('prova')
-            # third test copy. Can copy one file into a new file
+            # third tests copy. Can copy one file into a new file
             t.put(os.path.join(local_base_dir, '*.tmp'), 'prova')
             self.assertEquals(set(['prova', 'local']), set(t.listdir('.')))
             t.remove('prova')
-            # fourth test copy: can't copy more than one file on the same file,
+            # fourth tests copy: can't copy more than one file on the same file,
             # i.e., the destination should be a folder
             with self.assertRaises(OSError):
                 t.put(os.path.join(local_base_dir, '*.txt'), 'prova')
@@ -1004,12 +1004,12 @@ class TestPutGetTree(unittest.TestCase):
             with self.assertRaises(OSError):
                 t.put(os.path.join(local_base_dir), 'existing.txt')
             t.remove('existing.txt')
-            # fifth test, copying one file into a folder
+            # fifth tests, copying one file into a folder
             t.mkdir('prova')
             t.put(os.path.join(local_base_dir, 'a.txt'), 'prova')
             self.assertEquals(set(t.listdir('prova')), set(['a.txt']))
             t.rmtree('prova')
-            # sixth test, copying one file into a file
+            # sixth tests, copying one file into a file
             t.put(os.path.join(local_base_dir, 'a.txt'), 'prova')
             self.assertTrue(t.isfile('prova'))
             t.remove('prova')
@@ -1044,7 +1044,7 @@ class TestPutGetTree(unittest.TestCase):
             local_destination = os.path.join(local_dir, directory)
             os.mkdir(local_base_dir)
 
-            # first test put: I create three files in local
+            # first tests put: I create three files in local
             file_1 = os.path.join(local_base_dir, 'a.txt')
             file_2 = os.path.join(local_base_dir, 'b.tmp')
             file_3 = os.path.join(local_base_dir, 'c.txt')
@@ -1053,7 +1053,7 @@ class TestPutGetTree(unittest.TestCase):
                 with io.open(filename, 'w', encoding='utf8') as fhandle:
                     fhandle.write(text)
 
-            # first test put. Copy of two files matching patterns, into a folder
+            # first tests put. Copy of two files matching patterns, into a folder
             t.get(os.path.join('local', '*.txt'), local_destination)
             self.assertEquals(set(['a.txt', 'c.txt', 'local']), set(os.listdir(local_destination)))
             os.remove(os.path.join(local_destination, 'a.txt'))
@@ -1072,11 +1072,11 @@ class TestPutGetTree(unittest.TestCase):
             self.assertEquals(
                 set(['a.txt', 'b.tmp', 'c.txt']), set(os.listdir(os.path.join(local_destination, 'prova', 'local'))))
             shutil.rmtree(os.path.join(local_destination, 'prova'))
-            # third test copy. Can copy one file into a new file
+            # third tests copy. Can copy one file into a new file
             t.get(os.path.join('local', '*.tmp'), os.path.join(local_destination, 'prova'))
             self.assertEquals(set(['prova', 'local']), set(os.listdir(local_destination)))
             os.remove(os.path.join(local_destination, 'prova'))
-            # fourth test copy: can't copy more than one file on the same file,
+            # fourth tests copy: can't copy more than one file on the same file,
             # i.e., the destination should be a folder
             with self.assertRaises(OSError):
                 t.get(os.path.join('local', '*.txt'), os.path.join(local_destination, 'prova'))
@@ -1086,12 +1086,12 @@ class TestPutGetTree(unittest.TestCase):
             with self.assertRaises(OSError):
                 t.get('local', os.path.join(local_destination, 'existing.txt'))
             os.remove(os.path.join(local_destination, 'existing.txt'))
-            # fifth test, copying one file into a folder
+            # fifth tests, copying one file into a folder
             os.mkdir(os.path.join(local_destination, 'prova'))
             t.get(os.path.join('local', 'a.txt'), os.path.join(local_destination, 'prova'))
             self.assertEquals(set(os.listdir(os.path.join(local_destination, 'prova'))), set(['a.txt']))
             shutil.rmtree(os.path.join(local_destination, 'prova'))
-            # sixth test, copying one file into a file
+            # sixth tests, copying one file into a file
             t.get(os.path.join('local', 'a.txt'), os.path.join(local_destination, 'prova'))
             self.assertTrue(os.path.isfile(os.path.join(local_destination, 'prova')))
             os.remove(os.path.join(local_destination, 'prova'))
@@ -1103,7 +1103,7 @@ class TestPutGetTree(unittest.TestCase):
     @run_for_all_plugins
     def test_put_get_abs_path(self, custom_transport):
         """
-        test of exception for non existing files and abs path
+        tests of exception for non existing files and abs path
         """
         import os
         import random
@@ -1177,7 +1177,7 @@ class TestPutGetTree(unittest.TestCase):
     @run_for_all_plugins
     def test_put_get_empty_string(self, custom_transport):
         """
-        test of exception put/get of empty strings
+        tests of exception put/get of empty strings
         """
         # TODO : verify the correctness of \n at the end of a file
         import os
@@ -1278,7 +1278,7 @@ class TestExecuteCommandWait(unittest.TestCase):
             t.chdir(location)
             if not t.isdir(subfolder):
                 # Since I created the folder, I will remember to
-                # delete it at the end of this test
+                # delete it at the end of this tests
                 delete_at_end = True
                 t.mkdir(subfolder)
 

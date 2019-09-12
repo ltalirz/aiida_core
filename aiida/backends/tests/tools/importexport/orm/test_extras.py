@@ -47,7 +47,7 @@ class TestExtras(AiidaTestCase):
         shutil.rmtree(cls.tmp_folder, ignore_errors=True)
 
     def setUp(self):
-        """This function runs before every test execution"""
+        """This function runs before every tests execution"""
         self.clean_db()
         self.insert_data()
 

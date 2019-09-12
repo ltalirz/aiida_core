@@ -36,7 +36,7 @@ class TestVerdiProfileSetup(AiidaPostgresTestCase):
         """Create mock profiles and a runner object to invoke the CLI commands.
 
         Note: this cannot be done in the `setUp` or `setUpClass` methods, because the temporary configuration instance
-        is not generated until the test function is entered, which calls the `with_temporary_config_instance`
+        is not generated until the tests function is entered, which calls the `with_temporary_config_instance`
         decorator.
         """
         self.config = configuration.get_config()

@@ -23,7 +23,7 @@ from aiida.common.utils import Capturing
 
 class TestMigrations(AiidaTestCase):
     """
-    This is the common test class that is used by all migration tests. It migrates to a given
+    This is the common tests class that is used by all migration tests. It migrates to a given
     migration point, allows you to set up the database & AiiDA at that point with the necessary
     data and migrates then to the final migration point.
     In the end it forwards the database at the final migration (as it should be and found before
@@ -68,7 +68,7 @@ class TestMigrations(AiidaTestCase):
 
         try:
             self.setUpBeforeMigration()
-            # Run the migration to test
+            # Run the migration to tests
             executor = MigrationExecutor(connection)
             executor.loader.build_graph()
 
@@ -94,7 +94,7 @@ class TestMigrations(AiidaTestCase):
         autogroup.current_autogroup = self.current_autogroup
 
     def setUpBeforeMigration(self):
-        """Anything to do before running the migrations, which should be implemented in test subclasses."""
+        """Anything to do before running the migrations, which should be implemented in tests subclasses."""
 
     def _revert_database_schema(self):
         """Bring back the DB to the correct state."""
