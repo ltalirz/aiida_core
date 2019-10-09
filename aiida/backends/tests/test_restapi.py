@@ -156,7 +156,7 @@ class RESTApiTestCase(AiidaTestCase):
         computer_projections = ['id', 'uuid', 'name', 'hostname', 'transport_type', 'scheduler_type']
         computers = orm.QueryBuilder().append(orm.Computer, tag='comp', project=computer_projections).order_by({
             'comp': [{
-                'name': {
+                'id': {
                     'order': 'asc'
                 }
             }]
@@ -663,7 +663,7 @@ class RESTApiTestSuite(RESTApiTestCase):
         """
         node_pk = self.get_dummy_data()['computers'][0]['id']
         RESTApiTestCase.process_test(
-            self, 'computers', '/computers?id>' + str(node_pk) + '&limit=2&offset=3', expected_list_ids=[4]
+            self, 'computers', '/computers?id>' + str(node_pk) + '&limit=2&offset=3&orderby=+id', expected_list_ids=[4]
         )
 
     def test_computers_mixed2(self):
@@ -1002,3 +1002,22 @@ class RESTApiTestSuite(RESTApiTestCase):
                 available_properties = response['data']['fields'].keys()
                 for prop in response['data']['ordering']:
                     self.assertIn(prop, available_properties)
+
+    def test_node_types(self):
+        """
+        Test the rest api call to get list of available node types
+        """
+        url = self.get_url_prefix() + '/nodes/types'
+        with self.app.test_client() as client:
+            rv_obj = client.get(url)
+            response = json.loads(rv_obj.data)
+            self.assertEqual(
+                response['data']['process'],
+                ['process.calculation.calcfunction.CalcFunctionNode.', 'process.calculation.calcjob.CalcJobNode.']
+            )
+            expected_data_types = [
+                'data.array.kpoints.KpointsData.', 'data.cif.CifData.', 'data.dict.Dict.', 'data.folder.FolderData.',
+                'data.structure.StructureData.'
+            ]
+            self.assertEqual(response['data']['data'], expected_data_types)
+            RESTApiTestCase.compare_extra_response_data(self, 'nodes', url, response)

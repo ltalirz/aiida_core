@@ -26,7 +26,7 @@ from .settings import DEFAULT_UMASK, DEFAULT_CONFIG_INDENT_SIZE
 __all__ = ('Config',)
 
 
-class Config(object):  # pylint: disable=useless-object-inheritance,too-many-public-methods
+class Config(object):  # pylint: disable=too-many-public-methods
     """Object that represents the configuration file of an AiiDA instance."""
 
     KEY_VERSION = 'CONFIG_VERSION'
@@ -200,7 +200,9 @@ class Config(object):  # pylint: disable=useless-object-inheritance,too-many-pub
         from aiida.common import exceptions
 
         if not name and not self.default_profile_name:
-            raise exceptions.ProfileConfigurationError('no default profile defined')
+            raise exceptions.ProfileConfigurationError(
+                'no default profile defined: {}\n{}'.format(self._default_profile, self.dictionary)
+            )
 
         if not name:
             name = self.default_profile_name

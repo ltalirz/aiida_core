@@ -39,8 +39,6 @@ import shutil
 from os import path
 from contextlib import contextmanager
 
-from pgtest.pgtest import PGTest
-
 from aiida.backends import BACKEND_DJANGO, BACKEND_SQLA
 from aiida.common import exceptions
 from aiida.manage import configuration
@@ -60,7 +58,7 @@ class FixtureError(Exception):
         return repr(self.msg)
 
 
-class FixtureManager(object):  # pylint: disable=too-many-public-methods,useless-object-inheritance
+class FixtureManager(object):  # pylint: disable=too-many-public-methods
     """
     Manage the life cycle of a completely separated and temporary AiiDA environment
 
@@ -152,6 +150,8 @@ class FixtureManager(object):  # pylint: disable=too-many-public-methods,useless
 
         :param pgtest: a dictionary containing input to PGTest()
         """
+        from pgtest.pgtest import PGTest
+
         if pgtest is None:
             pgtest = {}
         if not self.pg_cluster:

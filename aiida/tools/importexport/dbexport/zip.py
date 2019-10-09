@@ -8,7 +8,7 @@
 # For further information please visit http://www.aiida.net               #
 ###########################################################################
 """Export a zip-file."""
-# pylint: disable=useless-object-inheritance,missing-docstring,redefined-builtin
+# pylint: disable=missing-docstring,redefined-builtin
 from __future__ import division
 from __future__ import absolute_import
 from __future__ import print_function
@@ -140,9 +140,14 @@ class ZipFolder(object):
         if os.path.isdir(src):
             for dirpath, dirnames, filenames in os.walk(src):
                 relpath = os.path.relpath(dirpath, src)
-                for fname in dirnames + filenames:
-                    real_src = os.path.join(dirpath, fname)
-                    real_dest = os.path.join(base_filename, relpath, fname)
+                if not dirnames and not filenames:
+                    real_src = dirpath
+                    real_dest = os.path.join(base_filename, relpath)
                     self._zipfile.write(real_src, real_dest)
+                else:
+                    for fname in dirnames + filenames:
+                        real_src = os.path.join(dirpath, fname)
+                        real_dest = os.path.join(base_filename, relpath, fname)
+                        self._zipfile.write(real_src, real_dest)
         else:
             self._zipfile.write(src, base_filename)

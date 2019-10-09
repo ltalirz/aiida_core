@@ -4,7 +4,7 @@ AiiDA stores information in
 
  * the ``.aiida`` folder, typically located at ``~/.aiida`` (see also :ref:`configure_aiida`).
    This contains the configuration of the profiles as well as their associated file repositories.
- * the PostgreSQL database (one database per profile). 
+ * the PostgreSQL database (one database per profile).
 
 Both are required for the operation of AiiDA and below we explain how to back up and restore both of them.
 
@@ -18,7 +18,7 @@ For small repositories you can simply back up the ``.aiida``, either by making a
 For large repositories with 100k nodes or more, incremental backups can take a significant amount of time, and AiiDA provides a helper script that takes advantage of the AiiDA database in order to figure out which files have been added since your last backup. The instructions below explain how to use it.
 
 
- 1. Configure your backup: 
+ 1. Configure your backup:
 	verdi -p PROFILENAME run MY_AIIDA_FOLDER/aiida/manage/backup/backup_setup.py
 
     | where PROFILENAME is the name of the profile that should be backed up.
@@ -26,14 +26,14 @@ For large repositories with 100k nodes or more, incremental backups can take a s
 
       * The "backup folder", where the backup *configuration file* will be placed.
         This defaults to a folder named ``backup_PROFILENAME`` in your ``.aiida`` directory.
-      
+
       * The "destination folder", where the files of the backup will be stored.
         This defaults to the same folder as above but we **strongly suggest to back up to a different drive** (see note below).
 
     A template backup configuration file (``backup_info.json.tmpl``) will be created in the backup folder.
     You can set the backup variables by yourself after renaming the template file to ``backup_info.json``, or you can answer the questions asked by the script, and then ``backup_info.json`` will be created based on your answers.
 
-.. note:: 
+.. note::
 
   Using the same disk for your backup forgoes protection against the most common cause of data loss: disk failure.
   One simple option is to use a destination folder mounted over ssh.
@@ -49,7 +49,6 @@ For large repositories with 100k nodes or more, incremental backups can take a s
 
   Use ``gnome-session-properties`` in the terminal to add this line to the actions performed at start-up.
   Do **not** add it to your shell's startup file (e.g. ``.bashrc``) or your computer will complain that the mount point is not empty whenever you open a new terminal...
-
 
 The main script will backup the AiiDA repository that is referenced by the current AiiDA database.
 The script will start from the ``oldest_object_backedup`` date, or the date of the oldest Node object found, and it will periodically backup (in periods of ``periodicity`` days) until the end date of the backup specified by ``end_date_of_backup`` or ``days_to_backup``.
@@ -122,7 +121,7 @@ Create database backup
 | In the following, we assume your database is called ``aiidadb``, and the database user and owner is ``aiida``.
 
 The database information is typically stored in system directories and spread over multiple files that, if backed up as they are at any given time, cannot be used to restore the database.
-It is therefore strongly recommended to periodically (typically once a day) dump the database contents to a file that will be backed up, 
+It is therefore strongly recommended to periodically (typically once a day) dump the database contents to a file that will be backed up,
 using a bash script similar to :download:`backup_postgresql.sh <backup_postgresql.sh>`:
 
 .. _backup_script:
@@ -140,7 +139,7 @@ where ``YOUR_DATABASE_PASSWORD`` is the password you set up for the database.
 
   This file needs read and write permissions: ``chmod u=rw .pgpass``.
 
-In order to automatically dump the database to a file ``i~/.aiida/${AIIDADB}-backup.psql.gz`` once per day, 
+In order to automatically dump the database to a file ``i~/.aiida/${AIIDADB}-backup.psql.gz`` once per day,
 add the following script :download:`backup-aiidadb-USERNAME <backup-aiidadb-USERNAME>` to the folder ``/etc/cron.daily/``:
 
 .. literalinclude:: backup-aiidadb-USERNAME
@@ -158,7 +157,6 @@ Finally make sure your database folder (``/home/USERNAME/.aiida/``) containing t
 
   If your database is very large (more than a few hundreds of thousands of nodes), a standard backup of your repository folder will be very slow (up to days), thus slowing down your computer dramatically.
   To fix this problem you can set up an incremental backup of your repository by following the instructions :ref:`here <repository_backup>`.
-
 
 .. _restore_postgresql:
 
@@ -257,4 +255,3 @@ Finally, you can check that the data directory has indeed changed::
 
 Before definitively removing the previous location of the database files, first rename it and test AiiDA with the new database location (e.g. do simple queries like ``verdi code list`` or create a node and store it).
 If everything went fine, you can delete the old database location.
-

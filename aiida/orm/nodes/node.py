@@ -15,6 +15,7 @@ from __future__ import absolute_import
 
 import copy
 import importlib
+import warnings
 import six
 
 from aiida.common import exceptions
@@ -22,6 +23,7 @@ from aiida.common.escaping import sql_string_match
 from aiida.common.hashing import make_hash, _HASH_EXTRA_KEY
 from aiida.common.lang import classproperty, type_check
 from aiida.common.links import LinkType
+from aiida.common.warnings import AiidaDeprecationWarning
 from aiida.manage.manager import get_manager
 from aiida.orm.utils.links import LinkManager, LinkTriple
 from aiida.orm.utils.repository import Repository
@@ -665,7 +667,7 @@ class Node(Entity):
         """
         self._repository.put_object_from_tree(path, key, contents_only, force)
 
-    def put_object_from_file(self, path, key, mode='w', encoding='utf8', force=False):
+    def put_object_from_file(self, path, key, mode=None, encoding=None, force=False):
         """Store a new object under `key` with contents of the file located at `path` on this file system.
 
         .. warning:: If the repository belongs to a stored node, a `ModificationNotAllowed` exception will be raised.
@@ -674,10 +676,24 @@ class Node(Entity):
         :param path: absolute path of file whose contents to copy to the repository
         :param key: fully qualified identifier for the object within the repository
         :param mode: the file mode with which the object will be written
+            Deprecated: will be removed in `v2.0.0`
         :param encoding: the file encoding with which the object will be written
+            Deprecated: will be removed in `v2.0.0`
         :param force: boolean, if True, will skip the mutability check
         :raises aiida.common.ModificationNotAllowed: if repository is immutable and `force=False`
         """
+        # Note that the defaults of `mode` and `encoding` had to be change to `None` from `w` and `utf-8` resptively, in
+        # order to detect when they were being passed such that the deprecation warning can be emitted. The defaults did
+        # not make sense and so ignoring them is justified, since the side-effect of this function, a file being copied,
+        # will continue working the same.
+        if mode is not None:
+            warnings.warn('the `mode` argument is deprecated and will be removed in `v2.0.0`', AiidaDeprecationWarning)  # pylint: disable=no-member
+
+        if encoding is not None:
+            warnings.warn(  # pylint: disable=no-member
+                'the `encoding` argument is deprecated and will be removed in `v2.0.0`', AiidaDeprecationWarning
+            )
+
         self._repository.put_object_from_file(path, key, mode, encoding, force)
 
     def put_object_from_filelike(self, handle, key, mode='w', encoding='utf8', force=False):
@@ -952,6 +968,11 @@ class Node(Entity):
 
         :parameter with_transaction: if False, do not use a transaction because the caller will already have opened one.
         """
+        if use_cache is not None:
+            warnings.warn(  # pylint: disable=no-member
+                'the `use_cache` argument is deprecated and will be removed in `v2.0.0`', AiidaDeprecationWarning
+            )
+
         if self.is_stored:
             raise exceptions.ModificationNotAllowed('Node<{}> is already stored'.format(self.id))
 
@@ -961,9 +982,9 @@ class Node(Entity):
 
         for link_triple in self._incoming_cache:
             if not link_triple.node.is_stored:
-                link_triple.node.store(with_transaction=with_transaction, use_cache=use_cache)
+                link_triple.node.store(with_transaction=with_transaction)
 
-        return self.store(with_transaction, use_cache=use_cache)
+        return self.store(with_transaction)
 
     def store(self, with_transaction=True, use_cache=None):
         """Store the node in the database while saving its attributes and repository directory.
@@ -979,6 +1000,11 @@ class Node(Entity):
         # pylint: disable=arguments-differ
         from aiida.manage.caching import get_use_cache
 
+        if use_cache is not None:
+            warnings.warn(  # pylint: disable=no-member
+                'the `use_cache` argument is deprecated and will be removed in `v2.0.0`', AiidaDeprecationWarning
+            )
+
         if not self._storable:
             raise exceptions.StoringNotAllowed(self._unstorable_message)
 
@@ -989,9 +1015,8 @@ class Node(Entity):
             # Verify that parents are already stored. Raises if this is not the case.
             self.verify_are_parents_stored()
 
-            # Get default for use_cache if it's not set explicitly.
-            if use_cache is None:
-                use_cache = get_use_cache(type(self))
+            # Determine whether the cache should be used for the process type of this node.
+            use_cache = get_use_cache(identifier=self.process_type)
 
             # Clean the values on the backend node *before* computing the hash in `_get_same_node`. This will allow
             # us to set `clean=False` if we are storing normally, since the values will already have been cleaned

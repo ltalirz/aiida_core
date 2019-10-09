@@ -170,11 +170,7 @@ def process_status(processes):
 @verdi_process.command('kill')
 @arguments.PROCESSES()
 @options.TIMEOUT()
-@click.option(
-    '--wait/--no-wait',
-    default=False,
-    help="Wait for the action to be completed otherwise return as soon as it's scheduled."
-)
+@options.WAIT()
 @decorators.with_dbenv()
 @decorators.only_if_daemon_running(echo.echo_warning, 'daemon is not running, so process may not be reachable')
 def process_kill(processes, timeout, wait):
@@ -201,18 +197,24 @@ def process_kill(processes, timeout, wait):
 
 @verdi_process.command('pause')
 @arguments.PROCESSES()
+@options.ALL(help='Pause all active processes if no specific processes are specified.')
 @options.TIMEOUT()
-@click.option(
-    '--wait/--no-wait',
-    default=False,
-    help="Wait for the action to be completed otherwise return as soon as it's scheduled."
-)
+@options.WAIT()
 @decorators.with_dbenv()
 @decorators.only_if_daemon_running(echo.echo_warning, 'daemon is not running, so process may not be reachable')
-def process_pause(processes, timeout, wait):
+def process_pause(processes, all_entries, timeout, wait):
     """Pause running processes."""
+    from aiida.orm import ProcessNode, QueryBuilder
 
     controller = get_manager().get_process_controller()
+
+    if processes and all_entries:
+        raise click.BadOptionUsage('all', 'cannot specify individual processes and the `--all` flag at the same time.')
+
+    if not processes and all_entries:
+        active_states = options.active_process_states()
+        builder = QueryBuilder().append(ProcessNode, filters={'attributes.process_state': {'in': active_states}})
+        processes = [entry[0] for entry in builder.all()]
 
     futures = {}
     for process in processes:
@@ -233,18 +235,23 @@ def process_pause(processes, timeout, wait):
 
 @verdi_process.command('play')
 @arguments.PROCESSES()
+@options.ALL(help='Play all paused processes if no specific processes are specified.')
 @options.TIMEOUT()
-@click.option(
-    '--wait/--no-wait',
-    default=False,
-    help="Wait for the action to be completed otherwise return as soon as it's scheduled."
-)
+@options.WAIT()
 @decorators.with_dbenv()
 @decorators.only_if_daemon_running(echo.echo_warning, 'daemon is not running, so process may not be reachable')
-def process_play(processes, timeout, wait):
+def process_play(processes, all_entries, timeout, wait):
     """Play (unpause) paused processes."""
+    from aiida.orm import ProcessNode, QueryBuilder
 
     controller = get_manager().get_process_controller()
+
+    if processes and all_entries:
+        raise click.BadOptionUsage('all', 'cannot specify individual processes and the `--all` flag at the same time.')
+
+    if not processes and all_entries:
+        builder = QueryBuilder().append(ProcessNode, filters={'attributes.paused': True})
+        processes = [entry[0] for entry in builder.all()]
 
     futures = {}
     for process in processes:
@@ -269,13 +276,21 @@ def process_play(processes, timeout, wait):
 @decorators.only_if_daemon_running(echo.echo_warning, 'daemon is not running, so process may not be reachable')
 def process_watch(processes):
     """Watch the state transitions for a process."""
+    from time import sleep
     from kiwipy import BroadcastFilter
-    import concurrent.futures
 
-    def _print(body, sender, subject, correlation_id):
-        echo.echo('pk={}, subject={}, body={}, correlation_id={}'.format(sender, subject, body, correlation_id))
+    def _print(communicator, body, sender, subject, correlation_id):  # pylint: disable=unused-argument
+        """Format the incoming broadcast data into a message and echo it to stdout."""
+        if body is None:
+            body = 'No message specified'
+
+        if correlation_id is None:
+            correlation_id = '--'
+
+        echo.echo('Process<{}> [{}|{}]: {}'.format(sender, subject, correlation_id, body))
 
     communicator = get_manager().get_communicator()
+    echo.echo_info('watching for broadcasted messages, press CTRL+C to stop...')
 
     for process in processes:
 
@@ -286,9 +301,12 @@ def process_watch(processes):
         communicator.add_broadcast_subscriber(BroadcastFilter(_print, sender=process.pk))
 
     try:
-        # Block this thread indefinitely
-        concurrent.futures.Future().result()
+        # Block this thread indefinitely until interrupt
+        while True:
+            sleep(2)
     except (SystemExit, KeyboardInterrupt):
+        echo.echo('')  # add a new line after the interrupt character
+        echo.echo_info('received interrupt, exiting...')
         try:
             communicator.stop()
         except RuntimeError:

@@ -70,11 +70,11 @@ class Process(plumpy.Process):
         spec.input_namespace(spec.metadata_key, required=False, non_db=True)
         spec.input('{}.store_provenance'.format(spec.metadata_key), valid_type=bool, default=True,
             help='If set to `False` provenance will not be stored in the database.')
-        spec.input('{}.description'.format(spec.metadata_key), valid_type=six.string_types[0], required=False,
+        spec.input('{}.description'.format(spec.metadata_key), valid_type=six.string_types, required=False,
             help='Description to set on the process node.')
-        spec.input('{}.label'.format(spec.metadata_key), valid_type=six.string_types[0], required=False,
+        spec.input('{}.label'.format(spec.metadata_key), valid_type=six.string_types, required=False,
             help='Label to set on the process node.')
-        spec.input('{}.call_link_label'.format(spec.metadata_key), valid_type=six.string_types[0], default='CALL',
+        spec.input('{}.call_link_label'.format(spec.metadata_key), valid_type=six.string_types, default='CALL',
             help='The label to use for the `CALL` link if the process is called by another process.')
         spec.exit_code(1, 'ERROR_UNSPECIFIED', message='The process has failed with an unspecified error.')
         spec.exit_code(2, 'ERROR_LEGACY_FAILURE', message='The process failed with legacy failure mode.')
@@ -828,14 +828,11 @@ class Process(plumpy.Process):
 
         return AttributeDict(exposed_inputs)
 
-    def exposed_outputs(self, process_instance, process_class, namespace=None, agglomerate=True):
-        """
-        Gather the outputs which were exposed from the ``process_class`` and emitted by the specific
-        ``process_instance`` in a dictionary.
+    def exposed_outputs(self, node, process_class, namespace=None, agglomerate=True):
+        """Return the outputs which were exposed from the ``process_class`` and emitted by the specific ``node``
 
-        :param process_instance: Instance of Process class whose outputs to try and retrieve
-        :type process_instance: :class:`aiida.engine.Process`
-
+        :param node: process node whose outputs to try and retrieve
+        :type node: :class:`aiida.orm.nodes.process.ProcessNode`
 
         :param namespace: Namespace in which to search for exposed outputs.
         :type namespace: str
@@ -853,8 +850,9 @@ class Process(plumpy.Process):
         output_key_map = {}
         # maps the exposed name to all outputs that belong to it
         top_namespace_map = collections.defaultdict(list)
+        link_types = (LinkType.CREATE, LinkType.RETURN)
         process_outputs_dict = {
-            entry.link_label: entry.node for entry in process_instance.get_outgoing(link_type=LinkType.RETURN)
+            entry.link_label: entry.node for entry in node.get_outgoing(link_type=link_types)
         }
 
         for port_name in process_outputs_dict:

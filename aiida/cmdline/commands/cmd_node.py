@@ -11,15 +11,18 @@
 from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
+
 import click
 import tabulate
 
-from aiida.common import exceptions
 from aiida.cmdline.commands.cmd_verdi import verdi
 from aiida.cmdline.params import options, arguments
 from aiida.cmdline.params.types.plugin import PluginParamType
 from aiida.cmdline.utils import decorators, echo, multi_line_input
 from aiida.cmdline.utils.decorators import with_dbenv
+from aiida.common import exceptions
+from aiida.common import timezone
+from aiida.common.links import GraphTraversalRules
 
 
 @verdi.group('node')
@@ -233,7 +236,7 @@ def tree(nodes, depth):
             echo.echo('')
 
 
-class NodeTreePrinter(object):  # pylint: disable=useless-object-inheritance
+class NodeTreePrinter(object):
     """Utility functions for printing node trees."""
 
     @classmethod
@@ -287,13 +290,15 @@ class NodeTreePrinter(object):  # pylint: disable=useless-object-inheritance
 @arguments.NODES('nodes', required=True)
 @options.VERBOSE()
 @options.DRY_RUN()
-@click.option('-c', '--follow-calls', is_flag=True, help='Follow call links forwards when deleting.')
-# Commenting also the option for follow returns. This is dangerous for the inexperienced user.
-# @click.option('-r', '--follow-returns', is_flag=True, help='follow return links forwards when deleting')
-@click.option('--force', is_flag=True, default=False, help='Do not ask for confirmation.')
+@options.FORCE()
+@options.graph_traversal_rules(GraphTraversalRules.DELETE.value)
 @with_dbenv()
-def node_delete(nodes, follow_calls, dry_run, verbose, force):
-    """Delete nodes and everything that originates from them."""
+def node_delete(nodes, dry_run, verbose, force, **kwargs):
+    """Delete nodes from the database.
+
+    Please note that this will not only delete the nodes explicitly provided via the command line, but will also include
+    the nodes necessary to keep a consistent graph, according to the rules outlined in the documentation.
+    """
     from aiida.manage.database.delete.nodes import delete_nodes
 
     verbosity = 1
@@ -304,7 +309,7 @@ def node_delete(nodes, follow_calls, dry_run, verbose, force):
 
     node_pks_to_delete = [node.pk for node in nodes]
 
-    delete_nodes(node_pks_to_delete, follow_calls=follow_calls, dry_run=dry_run, verbosity=verbosity, force=force)
+    delete_nodes(node_pks_to_delete, dry_run=dry_run, verbosity=verbosity, force=force, **kwargs)
 
 
 @verdi_node.command('rehash')
@@ -519,8 +524,8 @@ def comment_show(user, nodes):
         for comment in comments:
             comment_msg = [
                 'Comment<{}> for Node<{}> by {}'.format(comment.id, node.pk, comment.user.email),
-                'Created on {}'.format(comment.ctime.strftime('%Y-%m-%d %H:%M')),
-                'Last modified on {}'.format(comment.mtime.strftime('%Y-%m-%d %H:%M')),
+                'Created on {}'.format(timezone.localtime(comment.ctime).strftime('%Y-%m-%d %H:%M')),
+                'Last modified on {}'.format(timezone.localtime(comment.mtime).strftime('%Y-%m-%d %H:%M')),
                 '\n{}\n'.format(comment.content),
             ]
             echo.echo('\n'.join(comment_msg))
