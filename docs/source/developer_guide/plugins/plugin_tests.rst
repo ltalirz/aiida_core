@@ -14,7 +14,7 @@ Special profiles also have to be set mannually by the user and in automated test
 
 AiiDA ships with tools to simplify tests for plugins.
 The recommended way is to use the `pytest`_ framework, while the `unittest`_ package is also supported.
-Internally, test environments are created and managed by the :py:func:`aiida.manage.fixtures.test_manager` defined in :py:mod:`aiida.manage.fixtures`.
+Internally, test environments are created and managed by the :py:func:`aiida.manage.tests.test_manager`.
 
 .. _pytest: https://pytest.org
 .. _unittest: https://docs.python.org/library/unittest.html
