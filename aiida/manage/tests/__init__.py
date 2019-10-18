@@ -19,8 +19,6 @@ import shutil
 from os import path
 from contextlib import contextmanager
 
-from pgtest.pgtest import PGTest
-
 from aiida.backends import BACKEND_DJANGO, BACKEND_SQLA
 from aiida.common import exceptions
 from aiida.manage import configuration
@@ -65,8 +63,8 @@ class TestManager(object):  # pylint: disable=too-many-public-methods
         * configured to use the temporary configuration
         * sets up a temporary profile for tests
 
-    All of this happens automatically when using the corresponding tests classes & tests runners (unittest) or the fixture
-    manager (pytest).
+    All of this happens automatically when using the corresponding test
+    classes & test runners (unittest) or the fixture manager (pytest).
 
     Example::
 
@@ -133,6 +131,8 @@ class TestManager(object):  # pylint: disable=too-many-public-methods
 
         :param pgtest: a dictionary containing input to PGTest()
         """
+        from pgtest.pgtest import PGTest
+
         if pgtest is None:
             pgtest = {}
         if not self.pg_cluster:

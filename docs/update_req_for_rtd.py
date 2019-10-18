@@ -32,9 +32,8 @@ def update_req_for_rtd(pre_commit):
         setup_json = json.load(info)
 
     extras = setup_json['extras_require']
-    reqs = set(extras['tests'] + extras['docs'] + extras['rest'] + extras['atomic_tools'] +
-               # To avoid that it requires also the postgres libraries
-               [p for p in setup_json['install_requires'] if not p.startswith('psycopg2')])
+    reqs = set(extras['testing'] + extras['docs'] + extras['rest'] + extras['atomic_tools'] +
+        setup_json['install_requires'])
     reqs_str = '\n'.join(sorted(reqs))
 
     basename = 'requirements_for_rtd.txt'

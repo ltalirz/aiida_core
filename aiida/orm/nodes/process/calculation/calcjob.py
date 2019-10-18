@@ -118,7 +118,7 @@ class CalcJobNode(CalculationNode):
             {
                 key: val
                 for key, val in self.attributes_items()
-                if key not in self._hash_ignored_attributes and key not in self._updatable_attributes  # pylint: disable=unsupported-membership-tests
+                if key not in self._hash_ignored_attributes and key not in self._updatable_attributes  # pylint: disable=unsupported-membership-test
             },
             self.computer.uuid if self.computer is not None else None,  # pylint: disable=no-member
             {
@@ -128,10 +128,6 @@ class CalcJobNode(CalculationNode):
             }
         ]
         return objects
-
-    def get_hash(self, ignore_errors=True, ignored_folder_content=('raw_input',), **kwargs):  # pylint: disable=arguments-differ
-        return super(CalcJobNode, self
-                    ).get_hash(ignore_errors=ignore_errors, ignored_folder_content=ignored_folder_content, **kwargs)
 
     def get_builder_restart(self):
         """Return a `ProcessBuilder` that is ready to relaunch the same `CalcJob` that created this node.
@@ -149,43 +145,6 @@ class CalcJobNode(CalculationNode):
         builder.metadata.options = self.get_options()
 
         return builder
-
-    def _validate(self):
-        """
-        Verify if all the input nodes are present and valid.
-
-        :raise: ValidationError: if invalid parameters are found.
-        """
-        super(CalcJobNode, self)._validate()
-
-        if self.computer is None:
-            raise exceptions.ValidationError('no computer was specified')
-
-        try:
-            parser_class = self.get_parser_class()
-        except exceptions.EntryPointError as exception:
-            raise exceptions.ValidationError('invalid parser specified: {}'.format(exception))
-
-        try:
-            # Since a parser is not required to be set, so `get_parser_class` will return `None` in that case
-            if parser_class is not None:
-                parser_class(self)
-        except TypeError as exception:
-            raise exceptions.ValidationError('invalid parser specified: {}'.format(exception))
-
-        resources = self.get_option('resources')
-        scheduler = self.computer.get_scheduler()  # pylint: disable=no-member
-        def_cpus_machine = self.computer.get_default_mpiprocs_per_machine()  # pylint: disable=no-member
-
-        if def_cpus_machine is not None:
-            resources['default_mpiprocs_per_machine'] = def_cpus_machine
-
-        try:
-            scheduler.create_job_resource(**resources)
-        except (TypeError, ValueError) as exc:
-            raise exceptions.ValidationError(
-                'Invalid resources for the scheduler of the specified computer: {}'.format(exc)
-            )
 
     @property
     def _raw_input_folder(self):
