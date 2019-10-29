@@ -239,6 +239,12 @@
       - --fix=xrange_six
       - --fix=zip
 
+# need to use fork until PR is merged https://github.com/travis-ci/travis.rb/pull/307
+- repo: https://github.com/ssbarnea/travis.rb
+  rev: '731bb6640781d07ae81eb883d0a8878a083678e4'
+  hooks:
+  - id: travis
+
 # local hooks: aiida-specific checks
 - repo: local
   hooks:
@@ -289,13 +295,6 @@
         utils/validate_consistency.py|
       )$
     pass_filenames: false
-
-  - id: travis-linter
-    name: travis
-    entry: travis lint
-    files: .travis.yml
-    language: ruby
-    additional_dependencies: ['travis']
 
   - id: version-number
     name: Check version numbers
