@@ -92,6 +92,21 @@ def devel_run_daemon():
     start_daemon()
 
 
+@verdi_devel.command('validate-plugins')
+@decorators.with_dbenv()
+def devel_validate_plugins():
+    """Validate all plugins by checking they can be loaded."""
+    from aiida.common.exceptions import EntryPointError
+    from aiida.plugins.entry_point import validate_registered_entry_points
+
+    try:
+        validate_registered_entry_points()
+    except EntryPointError as exception:
+        echo.echo_critical(str(exception))
+
+    echo.echo_success('all registered plugins could successfully loaded.')
+
+
 @verdi_devel.command('tests')
 @click.argument('paths', nargs=-1, type=TestModuleParamType(), required=False)
 @options.VERBOSE(help='Print the class and function name for each test.')
@@ -100,11 +115,14 @@ def devel_tests(paths, verbose):  # pylint: disable=too-many-locals,too-many-sta
     """Run the unittest suite or parts of it."""
     import os
     import unittest
+    import warnings
 
     import aiida
     from aiida.backends.testbase import run_aiida_db_tests
     from aiida.backends.testbase import check_if_tests_can_run
     from aiida.manage import configuration
+    from aiida.manage import tests
+    from aiida.common.warnings import AiidaTestWarning
 
     test_failures = []
     test_errors = []
@@ -113,6 +131,13 @@ def devel_tests(paths, verbose):  # pylint: disable=too-many-locals,too-many-sta
     db_test_list = []
     test_folders = []
     do_db = False
+
+    if tests.get_test_profile_name():
+        warnings.warn(   # pylint: disable=no-member
+            'Ignoring `AIIDA_TEST_PROFILE` environment variable.'
+            ' Use `verdi -p test_profile devel tests` to select the test profile for aiida-core tests.',
+            AiidaTestWarning
+        )
 
     if paths:
         for path in paths:
