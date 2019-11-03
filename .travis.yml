@@ -50,7 +50,7 @@ before_install:
 
 install:
     # Upgrade pip setuptools and wheel to be able to run the next command
-    - pip install --upgrade pip wheel setuptools coveralls
+    - pip install --upgrade pip wheel setuptools coveralls codecov
     - pip install "numpy==1.16.4"  # see https://github.com/materialsproject/pymatgen/issues/1520
     - pip install "monty==2.0.4"  # see https://github.com/materialsvirtuallab/monty/issues/49
     # Install AiiDA with some optional dependencies
@@ -76,7 +76,7 @@ script: .ci/test_script.sh
 
 after_success:
   # upload coverage report to coveralls.io
-  - if [ "$TEST_TYPE" == "tests" ]; then coveralls; fi
+  - if [ "$TEST_TYPE" == "tests" ]; then coveralls && codecov; fi
 
 git:
   depth: 3
