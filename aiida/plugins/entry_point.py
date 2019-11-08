@@ -15,21 +15,37 @@ import enum
 import six
 import traceback
 
-try:
-    from reentry.default_manager import PluginManager
-    # I don't use the default manager as it has scan_for_not_found=True
-    # by default, which re-runs scan if no entrypoints are found
-    ENTRYPOINT_MANAGER = PluginManager(scan_for_not_found=False)
-except ImportError:
-    import pkg_resources as ENTRYPOINT_MANAGER
+import importlib_metadata
+from importlib_metadata import EntryPoint
+
+# try:
+#     from reentry.default_manager import PluginManager
+#     # I don't use the default manager as it has scan_for_not_found=True
+#     # by default, which re-runs scan if no entrypoints are found
+#     ENTRYPOINT_MANAGER = PluginManager(scan_for_not_found=False)
+# except ImportError:
+#     import pkg_resources as ENTRYPOINT_MANAGER
 
 from aiida.common.exceptions import MissingEntryPointError, MultipleEntryPointError, LoadingEntryPointError
 
-__all__ = ('load_entry_point', 'load_entry_point_from_string')
+__all__ = ('load_entry_point', 'load_entry_point_from_string', 'EntryPoint')
 
 
 ENTRY_POINT_GROUP_PREFIX = 'aiida.'
 ENTRY_POINT_STRING_SEPARATOR = ':'
+
+class EPManager(object):
+    def __init__(self):
+        self._map = None
+
+    def get_entry_point_map(self):
+        if self._map is None:
+            self._map = importlib_metadata.entry_points()
+
+        return self._map
+
+ENTRYPOINT_MANAGER = EPManager()
+
 
 
 class EntryPointFormat(enum.Enum):
@@ -93,7 +109,10 @@ def validate_registered_entry_points():
     for entry_point_group, factory in factory_mapping.items():
         entry_points = get_entry_points(entry_point_group)
         for entry_point in entry_points:
-            factory(entry_point.name)
+            try:
+                factory(entry_point.name)
+            except:
+                raise ValueError(entry_point.name)
 
 
 def format_entry_point_string(group, name, fmt=EntryPointFormat.FULL):
@@ -213,13 +232,13 @@ def load_entry_point(group, name):
     return loaded_entry_point
 
 
-def get_entry_point_groups():
+def get_registered_entry_point_groups():
     """
     Return a list of all the recognized entry point groups
 
     :return: a list of valid entry point groups
     """
-    return entry_point_group_to_module_path_map.keys()
+    return list(entry_point_group_to_module_path_map.keys())
 
 
 def get_entry_point_names(group, sort=True):
@@ -238,6 +257,15 @@ def get_entry_point_names(group, sort=True):
     return entry_point_names
 
 
+def get_entry_point_map():
+    """
+    Return a dictionary of all entry point groups (=key) and entry points (=values).
+
+    :return: dictionary of all entry points
+    """
+    return ENTRYPOINT_MANAGER.get_entry_point_map()
+
+
 def get_entry_points(group):
     """
     Return a list of all the entry points within a specific group
@@ -245,7 +273,10 @@ def get_entry_points(group):
     :param group: the entry point group
     :return: a list of entry points
     """
-    return [ep for ep in ENTRYPOINT_MANAGER.iter_entry_points(group=group)]
+    try:
+        return get_entry_point_map()[group]
+    except KeyError:
+        return []
 
 
 def get_entry_point(group, name):
@@ -277,10 +308,11 @@ def get_entry_point_from_class(class_module, class_name):
     :param class_name: name of the class
     :return: a tuple of the corresponding group and entry point or None if not found
     """
-    for group in ENTRYPOINT_MANAGER.get_entry_map().keys():
-        for entry_point in ENTRYPOINT_MANAGER.iter_entry_points(group):
+    entry_points = get_entry_point_map()
+    for group in entry_points:
+        for entry_point in entry_points[group]:
 
-            if entry_point.module_name != class_module:
+            if entry_point.value != class_module:
                 continue
 
             for entry_point_class_name in entry_point.attrs:

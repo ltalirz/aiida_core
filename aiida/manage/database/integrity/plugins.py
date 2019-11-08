@@ -99,8 +99,8 @@ def infer_calculation_entry_point(type_strings):
     :param type_strings: a set of type strings whose entry point is to be inferred
     :return: a mapping of current node type string to the inferred entry point name
     """
-    from reentry.entrypoint import EntryPoint
     from aiida.plugins.entry_point import get_entry_points
+    from pkg_resources import EntryPoint
 
     prefix_calc_job = 'calculation.job.'
     entry_point_group = 'aiida.calculations'

@@ -17,6 +17,7 @@ dependencies:
 - ete3==3.1.1
 - python-graphviz==0.13
 - ipython>=4.0,<6.0
+- importlib-metadata
 - kiwipy[rmq]==0.5.1
 - mock==3.0.5
 - numpy==1.16.4
@@ -29,7 +30,6 @@ dependencies:
 - python-dateutil==2.8.0
 - pytz==2019.3
 - pyyaml==3.13
-- reentry>=1.3.0
 - simplejson==3.16.0
 - six==1.12.0
 - sqlalchemy-utils==0.34.2

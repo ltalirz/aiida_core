@@ -186,17 +186,6 @@
       )$
     pass_filenames: false
 
-  - id: pyproject
-    name: Validating pyproject.toml
-    entry: python ./utils/validate_consistency.py toml
-    language: system
-    files: >-
-      (?x)^(
-        setup.json|
-        setup.py|
-        utils/validate_consistency.py|
-      )$
-    pass_filenames: false
   - id: conda
     name: Validating environment.yml
     entry: python ./utils/validate_consistency.py conda

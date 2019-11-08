@@ -19,7 +19,7 @@ from aiida.cmdline.utils import decorators
 from aiida.common import exceptions
 from aiida.plugins.entry_point import ENTRY_POINT_STRING_SEPARATOR, ENTRY_POINT_GROUP_PREFIX, EntryPointFormat
 from aiida.plugins.entry_point import format_entry_point_string, get_entry_point_string_format
-from aiida.plugins.entry_point import get_entry_point, get_entry_points, get_entry_point_groups
+from aiida.plugins.entry_point import get_entry_point, get_entry_points, get_registered_entry_point_groups
 
 
 class PluginParamType(click.ParamType):
@@ -47,7 +47,7 @@ class PluginParamType(click.ParamType):
         is not specified use the tuple of all recognized entry point groups.
         """
         # pylint: disable=keyword-arg-before-vararg
-        valid_entry_point_groups = get_entry_point_groups()
+        valid_entry_point_groups = get_registered_entry_point_groups()
 
         if group is None:
             self._groups = tuple(valid_entry_point_groups)
@@ -73,19 +73,14 @@ class PluginParamType(click.ParamType):
 
             self._groups = tuple(groups)
 
-        self._init_entry_points()
+        self._entry_point_groups_names = [
+            (group, entry_point.name) for group in self.groups for entry_point in get_entry_points(group)
+        ]
+        self._entry_point_names = [v[1] for v in self._entry_point_groups_names]
+
         self.load = load
 
         super(PluginParamType, self).__init__(*args, **kwargs)
-
-    def _init_entry_points(self):
-        """
-        Populate entry point information that will be used later on.  This should only be called
-        once in the constructor after setting self.groups because the groups should not be changed
-        after instantiation
-        """
-        self._entry_points = [(group, entry_point) for group in self.groups for entry_point in get_entry_points(group)]
-        self._entry_point_names = [entry_point.name for group in self.groups for entry_point in get_entry_points(group)]
 
     @property
     def groups(self):
@@ -109,7 +104,9 @@ class PluginParamType(click.ParamType):
         """
         if self.has_potential_ambiguity:
             fmt = EntryPointFormat.FULL
-            return sorted([format_entry_point_string(group, ep.name, fmt=fmt) for group, ep in self._entry_points])
+            return sorted([
+                format_entry_point_string(group, ep, fmt=fmt) for group, ep in self._entry_point_groups_names
+            ])
 
         return sorted(self._entry_point_names)
 
@@ -126,17 +123,17 @@ class PluginParamType(click.ParamType):
         # format, even though they would also be the valid beginnings of a FULL or PARTIAL format, except that we
         # cannot know that for sure at this time
         if self.has_potential_ambiguity:
-            possibilites = [eps for eps in self.get_valid_arguments() if eps.startswith(incomplete)]
+            possibilities = [eps for eps in self.get_valid_arguments() if eps.startswith(incomplete)]
         else:
-            possibilites = []
+            possibilities = []
             fmt = get_entry_point_string_format(incomplete)
 
-            for group, entry_point in self._entry_points:
-                entry_point_string = format_entry_point_string(group, entry_point.name, fmt=fmt)
+            for group, entry_point in self._entry_point_groups_names:
+                entry_point_string = format_entry_point_string(group, entry_point, fmt=fmt)
                 if entry_point_string.startswith(incomplete):
-                    possibilites.append(entry_point_string)
+                    possibilities.append(entry_point_string)
 
-        return possibilites
+        return possibilities
 
     def complete(self, ctx, incomplete):  # pylint: disable=unused-argument
         """
@@ -176,7 +173,7 @@ class PluginParamType(click.ParamType):
         elif entry_point_format == EntryPointFormat.MINIMAL:
 
             name = entry_point_string
-            matching_groups = [group for group, entry_point in self._entry_points if entry_point.name == name]
+            matching_groups = [group for group, entry_point in self._entry_point_groups_names if entry_point == name]
 
             if len(matching_groups) > 1:
                 raise ValueError(
