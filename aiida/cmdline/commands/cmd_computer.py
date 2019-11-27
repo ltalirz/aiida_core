@@ -61,10 +61,10 @@ def _computer_test_get_jobs(transport, scheduler, authinfo):  # pylint: disable=
     :param authinfo: the AuthInfo object (from which one can get computer and aiidauser)
     :return: True if the test succeeds, False if it fails.
     """
-    echo.echo('> Getting job list...')
+    echo.echo('> Getting job list... ', nl=False)
     found_jobs = scheduler.get_jobs(as_dict=True)
-    echo.echo('  [{} jobs found in the queue]'.format(len(found_jobs)))
-    click.secho('  [OK]', fg=echo.COLORS['success'], bold=echo.BOLD)
+    echo.echo('[{} jobs found in the queue]'.format(len(found_jobs)), nl=False)
+    echo.echo_highlight('[OK]', color='success')
     return True
 
 
@@ -82,7 +82,7 @@ def _computer_test_no_unexpected_output(transport, scheduler, authinfo):  # pyli
     :return: True if the test succeeds, False if it fails.
     """
     # Execute a command that should not return any error
-    echo.echo('> Checking that no spurious output is present...')
+    echo.echo('> Checking that no spurious output is present... ', nl=False)
     retval, stdout, stderr = transport.exec_command_wait('echo -n')
     if retval != 0:
         echo.echo_error("* ERROR! The command 'echo -n' returned a non-zero return code ({})!".format(retval))
@@ -120,7 +120,7 @@ https://github.com/aiidateam/aiida-core/issues/1890
         )
         return False
 
-    click.secho('  [OK]', fg=echo.COLORS['success'], bold=echo.BOLD)
+    echo.echo_highlight('[OK]', color='success')
     return True
 
 
@@ -142,9 +142,9 @@ def _computer_create_temp_file(transport, scheduler, authinfo):  # pylint: disab
 
     file_content = "Test from 'verdi computer test' on {}".format(datetime.datetime.now().isoformat())
     echo.echo('> Creating a temporary file in the work directory...')
-    echo.echo('  -> Getting the remote user name...')
+    echo.echo('  -> Getting the remote user name... ', nl=False)
     remote_user = transport.whoami()
-    echo.echo('     [remote username: {}]'.format(remote_user))
+    echo.echo('[remote username: {}]'.format(remote_user))
     workdir = authinfo.get_workdir().format(username=remote_user)
     echo.echo('  -> Checking/creating work directory: {}'.format(workdir))
 
@@ -161,13 +161,13 @@ def _computer_create_temp_file(transport, scheduler, authinfo):  # pylint: disab
         tempf.write(file_content)
         tempf.flush()
         transport.putfile(tempf.name, remote_file_path)
-    echo.echo('  -> Checking if the file has been created...')
+    echo.echo('  -> Checking if the file has been created... ', nl=False)
     if not transport.path_exists(remote_file_path):
-        echo.echo_error('* ERROR! The file was not found!')
+        echo.echo_highlight('ERROR! The file was not found!', color='warning')
         return False
 
-    echo.echo('     [OK]')
-    echo.echo('  -> Retrieving the file and checking its content...')
+    echo.echo_highlight('[OK]', color='success')
+    echo.echo('  -> Retrieving the file and checking its content...', nl=False)
 
     handle, destfile = tempfile.mkstemp()
     os.close(handle)
@@ -175,7 +175,7 @@ def _computer_create_temp_file(transport, scheduler, authinfo):  # pylint: disab
         transport.getfile(remote_file_path, destfile)
         with io.open(destfile, encoding='utf8') as dfile:
             read_string = dfile.read()
-        echo.echo('     [Retrieved]')
+        echo.echo('[Retrieved]', nl=False)
         if read_string != file_content:
             echo.echo_error('* ERROR! The file content is different from what was expected!')
             echo.echo('** Expected:')
@@ -184,13 +184,13 @@ def _computer_create_temp_file(transport, scheduler, authinfo):  # pylint: disab
             echo.echo(read_string)
             return False
 
-        echo.echo('     [Content OK]')
+        echo.echo_highlight('[Content OK]', color='success')
     finally:
         os.remove(destfile)
 
-    echo.echo('  -> Removing the file...')
+    echo.echo('  -> Removing the file... ', nl=False)
     transport.remove(remote_file_path)
-    echo.echo('     [Deleted successfully]')
+    echo.echo_highlight('[Deleted successfully]', color='success')
     click.secho('  [OK]', fg=echo.COLORS['success'], bold=echo.BOLD)
     return True
 
@@ -504,9 +504,9 @@ def computer_test(user, print_traceback, computer):
     num_tests = 0
 
     try:
-        echo.echo('> Testing connection')
+        echo.echo('> Testing connection... ', nl=False)
         with transport:
-            click.secho('  [OK]', fg=echo.COLORS['success'], bold=echo.BOLD)
+            echo.echo_highlight('[OK]', color='success')
             num_tests += 1
 
             scheduler.set_transport(transport)
@@ -516,7 +516,7 @@ def computer_test(user, print_traceback, computer):
                     succeeded = test(transport=transport, scheduler=scheduler, authinfo=authinfo)
                 # pylint:disable=broad-except
                 except Exception as error:
-                    echo.echo_error('* The test raised an exception!')
+                    echo.echo_highlight('[ERROR]', color='error')
                     if print_traceback:
                         echo.echo('** Full traceback:')
                         # Indent
@@ -530,11 +530,11 @@ def computer_test(user, print_traceback, computer):
                     num_failures += 1
 
         if num_failures:
-            echo.echo_warning('Some tests failed! ({} out of {} failed)'.format(num_failures, num_tests))
+            echo.echo_warning('{} out of {} tests failed.'.format(num_failures, num_tests))
         else:
             echo.echo_success('All {} tests succeeded)'.format(num_tests))
     except Exception as error:  # pylint:disable=broad-except
-        echo.echo_error('** Error while trying to connect to the computer! Cannot perform following tests, stopping.')
+        echo.echo_error('** Unable to connect to the computer! Cannot continue with tests, stopping.')
         if print_traceback:
             echo.echo('** Full traceback:')
             echo.echo('\n'.join(['   {}'.format(l) for l in traceback.format_exc().splitlines()]))

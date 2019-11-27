@@ -19,7 +19,10 @@ import yaml
 
 import click
 
-__all__ = ('echo', 'echo_info', 'echo_success', 'echo_warning', 'echo_error', 'echo_critical', 'echo_dictionary')
+__all__ = (
+    'echo', 'echo_info', 'echo_success', 'echo_warning', 'echo_error', 'echo_critical', 'echo_dictionary',
+    'echo_highlight'
+)
 
 
 # pylint: disable=too-few-public-methods
@@ -224,3 +227,16 @@ def is_stdout_redirected():
     """
     # pylint: disable=no-member
     return not sys.stdout.isatty()
+
+
+# pylint: disable=invalid-name
+def echo_highlight(message, nl=True, bold=True, color='highlight'):
+    """
+    Print a highlighted message to stdout
+
+    :param message: the string representing the message to print
+    :param bold: whether to print the message in bold
+    :param nl: whether to print a newline at the end of the message
+    :param color: a color from COLORS
+    """
+    click.secho(message, bold=bold, nl=nl, fg=COLORS[color])
