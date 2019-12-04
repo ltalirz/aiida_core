@@ -46,18 +46,6 @@ __paper__ = (
 )
 __paper_short__ = 'G. Pizzi et al., Comp. Mat. Sci 111, 218 (2016).'
 
-# Configure the default logging
-configure_logging()
-
-if get_config_option('warnings.showdeprecations'):
-    # If the user does not want to get AiiDA deprecation warnings, we disable them - this can be achieved with::
-    #   verdi config warnings.showdeprecations False
-    # Note that the AiidaDeprecationWarning does NOT inherit from DeprecationWarning
-    warnings.simplefilter('default', AiidaDeprecationWarning)  # pylint: disable=no-member
-    # This should default to 'once', i.e. once per different message
-else:
-    warnings.simplefilter('ignore', AiidaDeprecationWarning)  # pylint: disable=no-member
-
 if six.PY2:
     warnings.warn('python 2 will be deprecated in `aiida-core v2.0.0`', DeprecationWarning)  # pylint: disable=no-member
 
