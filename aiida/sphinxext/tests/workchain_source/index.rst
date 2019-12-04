@@ -10,6 +10,8 @@ This is a demo documentation to show off the features of the ``sphinx-aiida`` ex
 .. aiida-workchain:: DemoWorkChain
     :module: demo_workchain
 
+.. aiida-workchain:: ExposeWorkChain
+    :module: demo_workchain
 
 If you want to hide the inputs that are not stored as nodes in the database, use the ``:hide-unstored-inputs:`` option.
 

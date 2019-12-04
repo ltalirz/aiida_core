@@ -150,3 +150,36 @@ texinfo_documents = [
         'One line description of project.', 'Miscellaneous'
     ),
 ]
+
+
+import os
+import sys
+import time
+from aiida.manage import configuration
+from aiida.manage.manager import get_manager
+
+
+# Enable rtd mode via `export READTHEDOCS=True`
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+
+if not on_rtd:  # only import and set the theme if we're building docs locally
+    try:
+        import sphinx_rtd_theme
+        html_theme = 'sphinx_rtd_theme'
+        html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+    except ImportError:
+        # No sphinx_rtd_theme installed
+        pass
+    # Load the database environment by first loading the profile and then loading the backend through the manager
+    config = configuration.get_config()
+    configuration.load_profile(config.default_profile_name)
+    get_manager().get_backend()
+else:
+    # Back-end settings for readthedocs online documentation.
+    configuration.IN_RT_DOC_MODE = True
+    configuration.BACKEND = 'django'
+
+    configuration.reset_config()  # empty config was created when importing aiida
+    configuration.load_profile()  # load dummy config for RTD
+    # load DB backend (no schema check since no DB)
+    get_manager()._load_backend(schema_check=False)  # pylint: disable=protected-access

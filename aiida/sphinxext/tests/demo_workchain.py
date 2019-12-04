@@ -15,7 +15,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
 
-from aiida.engine import WorkChain
+from aiida.engine import WorkChain, CalcJob
 from aiida.orm import Bool, Float, Int
 
 
@@ -35,6 +35,19 @@ class DemoWorkChain(WorkChain):  # pylint: disable=abstract-method
         spec.input_namespace('nsp', help='A separate namespace, ``nsp``.')
         spec.input_namespace('nsp2',)
         spec.output('z', valid_type=Bool, help='Output of the demoworkchain.')
+
+
+class ExposeWorkChain(WorkChain):  # pylint: disable=abstract-method
+    """
+    A demo workchain to test exposing inputs/outputs of other classes.
+    """
+
+    @classmethod
+    def define(cls, spec):
+        super(ExposeWorkChain, cls).define(spec)
+
+        spec.expose_inputs(CalcJob)
+        spec.expose_outputs(DemoWorkChain)
 
 
 class NormalClass(object):  # pylint: disable=too-few-public-methods
