@@ -13,8 +13,7 @@ import click
 import tabulate
 
 from aiida.cmdline.commands.cmd_verdi import verdi
-from aiida.cmdline.params import options, arguments
-from aiida.cmdline.params.types.plugin import PluginParamType
+from aiida.cmdline.params import options, arguments, types
 from aiida.cmdline.utils import decorators, echo, multi_line_input
 from aiida.cmdline.utils.decorators import with_dbenv
 from aiida.common import exceptions
@@ -269,7 +268,7 @@ def node_delete(nodes, dry_run, verbose, force, **kwargs):
 @click.option(
     '-e',
     '--entry-point',
-    type=PluginParamType(group=('aiida.calculations', 'aiida.data', 'aiida.workflows'), load=True),
+    type=types.PluginParamType(group=('aiida.calculations', 'aiida.data', 'aiida.workflows'), load=True),
     default=None,
     help='Only include nodes that are class or sub class of the class identified by this entry point.'
 )
@@ -367,10 +366,18 @@ def verdi_graph():
 )
 @click.option('-f', '--output-format', help="The output format used for rendering ('pdf', 'png', etc.).", default='pdf')
 @click.option('-s', '--show', is_flag=True, help='Open the rendered result with the default application.')
+@click.option(
+    '-c',
+    '--collapse',
+    'collapse',
+    type=types.WorkflowParamType(),
+    cls=options.MultipleValueOption,
+    help='Identifier(s) of workflow nodes to collapse.'
+)
 @decorators.with_dbenv()
 def graph_generate(
     root_node, link_types, identifier, ancestor_depth, descendant_depth, process_out, process_in, engine, verbose,
-    output_format, show
+    output_format, show, collapse
 ):
     """
     Generate a graph from a ROOT_NODE (specified by pk or uuid).
@@ -398,7 +405,8 @@ def graph_generate(
         link_types=link_types,
         annotate_links='both',
         include_process_inputs=process_in,
-        print_func=print_func
+        print_func=print_func,
+        collapse=collapse,
     )
     output_file_name = graph.graphviz.render(
         filename='{}.{}'.format(root_node.pk, engine), format=output_format, view=show, cleanup=True

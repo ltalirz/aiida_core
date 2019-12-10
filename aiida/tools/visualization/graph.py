@@ -13,8 +13,7 @@
 
 import os
 from graphviz import Digraph
-from aiida.orm import load_node, Data, ProcessNode
-from aiida.orm.querybuilder import QueryBuilder
+from aiida import orm
 from aiida.common import LinkType
 from aiida.orm.utils.links import LinkPair
 
@@ -172,7 +171,7 @@ def pstate_node_styles(node):
 
     node_style = process_map.get(class_node_type, default)
 
-    if isinstance(node, ProcessNode):
+    if isinstance(node, orm.ProcessNode):
         # style process node, based on success/failure of process
         if node.is_failed or node.is_excepted or node.is_killed:
             node_style['fillcolor'] = '#de707fff'  # red
@@ -224,7 +223,7 @@ def default_node_sublabels(node):
         sublabel = '; '.join(sublabel_lines)
     elif class_node_type == 'data.upf.UpfData.':
         sublabel = '{}'.format(node.get_attribute('element', ''))
-    elif isinstance(node, ProcessNode):
+    elif isinstance(node, orm.ProcessNode):
         sublabel = []
         if node.process_state is not None:
             sublabel.append('State: {}'.format(node.process_state.value))
@@ -280,12 +279,12 @@ def _add_graphviz_node(
     """
     # pylint: disable=too-many-arguments
     node_style = {}
-    if isinstance(node, Data):
+    if isinstance(node, orm.Data):
 
         node_style = node_style_func(node)
         label = ['{} ({})'.format(node.__class__.__name__, get_node_id_label(node, id_type))]
 
-    elif isinstance(node, ProcessNode):
+    elif isinstance(node, orm.ProcessNode):
 
         node_style = node_style_func(node)
 
@@ -409,7 +408,7 @@ class Graph:
 
         """
         if isinstance(node, (int, str)):
-            return load_node(node)
+            return orm.load_node(node)
         return node
 
     def add_node(self, node, style_override=None, overwrite=False):
@@ -551,7 +550,8 @@ class Graph:
         annotate_links=False,
         origin_style=(),
         include_process_inputs=False,
-        print_func=None
+        print_func=None,
+        collapse=None,
     ):
         """add nodes and edges from an origin recursively,
         following outgoing links
@@ -569,6 +569,7 @@ class Graph:
         :param include_calculation_inputs: include incoming links for all processes (Default value = False)
         :type include_calculation_inputs: bool
         :param print_func: a function to stream information to, i.e. print_func(str)
+        :param collapse: list of workflow nodes to collapse
 
         """
         # pylint: disable=too-many-arguments
@@ -579,6 +580,9 @@ class Graph:
         leaf_nodes = [origin_node]
         traversed_pks = [origin_node.pk]
         cur_depth = 0
+
+        collapse_uuids = [] if collapse is None else [n.uuid for n in collapse]
+
         while leaf_nodes:
             cur_depth += 1
             # checking of maximum descendant depth is set and applies.
@@ -588,14 +592,20 @@ class Graph:
                 print_func('- Depth: {}'.format(cur_depth))
             new_nodes = []
             for node in leaf_nodes:
+
+                is_collapse = isinstance(node, orm.WorkChainNode) and node.uuid in collapse_uuids
+
                 outgoing_nodes = self.add_outgoing(
-                    node, link_types=link_types, annotate_links=annotate_links, return_pks=False
+                    node,
+                    link_types=('return',) if is_collapse else link_types,
+                    annotate_links=annotate_links,
+                    return_pks=False
                 )
                 if outgoing_nodes and print_func:
                     print_func('  {} -> {}'.format(node.pk, [on.pk for on in outgoing_nodes]))
                 new_nodes.extend(outgoing_nodes)
 
-                if include_process_inputs and isinstance(node, ProcessNode):
+                if include_process_inputs and isinstance(node, orm.ProcessNode):
                     self.add_incoming(node, link_types=link_types, annotate_links=annotate_links)
 
             # ensure the same path isn't traversed multiple times
@@ -658,7 +668,7 @@ class Graph:
                     print_func('  {} -> {}'.format(node.pk, [n.pk for n in incoming_nodes]))
                 new_nodes.extend(incoming_nodes)
 
-                if include_process_outputs and isinstance(node, ProcessNode):
+                if include_process_outputs and isinstance(node, orm.ProcessNode):
                     self.add_outgoing(node, link_types=link_types, annotate_links=annotate_links)
 
             # ensure the same path isn't traversed multiple times
@@ -704,7 +714,7 @@ class Graph:
 
         self.add_node(origin_node, style_override=dict(origin_style))
 
-        query = QueryBuilder(
+        query = orm.QueryBuilder(
             **{
                 'path': [{
                     'cls': origin_node.__class__,
@@ -765,7 +775,7 @@ class Graph:
         if origin_filters is None:
             origin_filters = {}
 
-        query = QueryBuilder(
+        query = orm.QueryBuilder(
             **{'path': [{
                 'cls': origin_cls,
                 'filters': origin_filters,
