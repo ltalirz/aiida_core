@@ -9,6 +9,8 @@
 ###########################################################################
 """Configuration file for pytest tests."""
 
-import pytest  # pylint: disable=unused-import
+from aiida.backends import BACKEND_SQLA
+from aiida.manage.tests import get_test_backend_name
 
-pytest_plugins = ['aiida.manage.tests.pytest_fixtures']  # pylint: disable=invalid-name
+if get_test_backend_name() != BACKEND_SQLA:
+    collect_ignore_glob = ['*']  # pylint: disable=invalid-name
