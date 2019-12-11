@@ -19,6 +19,7 @@ from dateutil.parser import parse
 
 from aiida.backends.testbase import AiidaTestCase
 from aiida.common import utils, json
+from aiida.common.lang import classproperty
 from aiida.manage.backup import backup_setup, backup_utils
 from aiida.manage.backup.backup_general import Backup
 
@@ -276,7 +277,13 @@ class TestBackupScriptIntegration(AiidaTestCase):
     _backup_rel_path = 'backup'
     _repo_rel_path = 'repository'
 
-    _bs_instance = backup_setup.BackupSetup()
+    @classproperty
+    def _bs_instance(cls):
+        try:
+            return cls._bs_instance_cache
+        except AttributeError:
+            cls._bs_instance_cache = backup_setup.BackupSetup()
+        return cls._bs_instance_cache
 
     def test_integration(self):
         """Test integration"""
