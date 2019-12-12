@@ -10,10 +10,8 @@
 """Tests for `verdi profile`."""
 
 import traceback
-
-import pytest
-
 from click.testing import CliRunner
+import pytest
 
 from aiida import orm
 from aiida.backends import BACKEND_DJANGO
