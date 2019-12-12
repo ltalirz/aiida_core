@@ -278,7 +278,7 @@ class TestBackupScriptIntegration(AiidaTestCase):
 
     @classmethod
     def setUpClass(cls, *args, **kwargs):
-        super().setUpClass(cls, *args, **kwargs)
+        super().setUpClass(*args, **kwargs)
         cls._bs_instance = backup_setup.BackupSetup()
 
     def test_integration(self):
