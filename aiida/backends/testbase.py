@@ -90,10 +90,8 @@ class AiidaTestCase(unittest.TestCase):
         # to subsequent tests.
         # This call should come before the backend instance setup call just in case it uses the loop
         ioloop.IOLoop().make_current()
-        self.__backend_instance.setUp_method()
 
     def tearDown(self):
-        self.__backend_instance.tearDown_method()
         # Clean up the loop we created in set up.
         # Call this after the instance tear down just in case it uses the loop
         reset_manager()
