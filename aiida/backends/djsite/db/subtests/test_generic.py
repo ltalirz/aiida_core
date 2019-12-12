@@ -11,6 +11,8 @@
 Generic tests that need the use of the DB
 """
 
+import pytest
+
 from aiida import orm
 from aiida.backends.testbase import AiidaTestCase
 from aiida.orm import Data
@@ -21,6 +23,7 @@ class TestComputer(AiidaTestCase):
     Test the Computer class.
     """
 
+    @pytest.mark.skip(reason='checking if the test suite still fails..')
     def test_deletion(self):
         from aiida.orm import CalcJobNode
         from aiida.common.exceptions import InvalidOperation
