@@ -22,7 +22,7 @@ from aiida.orm.utils.repository import Repository
 from aiida.tools.importexport.common import exceptions
 from aiida.tools.importexport.common.config import EXPORT_VERSION, NODES_EXPORT_SUBFOLDER
 from aiida.tools.importexport.common.config import (
-    NODE_ENTITY_NAME, GROUP_ENTITY_NAME, COMPUTER_ENTITY_NAME, LOG_ENTITY_NAME, COMMENT_ENTITY_NAME
+    NODE_ENTITY_NAME, GROUP_ENTITY_NAME, COMPUTER_ENTITY_NAME, LOG_ENTITY_NAME, COMMENT_ENTITY_NAME, entity_names_to_entities, entities_to_entity_names
 )
 from aiida.tools.importexport.common.config import (
     get_all_fields_info, file_fields_to_model_fields, entity_names_to_entities, model_fields_to_file_fields
@@ -155,13 +155,14 @@ def export_tree(
     given_log_entry_ids = set()
     given_comment_entry_ids = set()
 
-    # I store a list of the actual dbnodes
+    starting_set_uuids = { k: set() for k in entity_names_to_entities }
+    starting_set_pks = {k: set() for k in entity_names_to_entities}
+
+    # Sort given set of nodes by type
     for entry in what:
-        # This returns the class name (as in imports). E.g. for a model node:
-        # aiida.backends.djsite.db.models.DbNode
-        # entry_class_string = get_class_string(entry)
-        # Now a load the backend-independent name into entry_entity_name, e.g. Node!
-        # entry_entity_name = schema_to_entity_names(entry_class_string)
+        starting_set_uuids[ entities_to_entity_names[entry.__class__]].add(entry.uuid)
+        starting_set_pks[ entities_to_entity_names[entry.__class__]].add(entry.id)
+
         if issubclass(entry.__class__, orm.Group):
             entities_starting_set[GROUP_ENTITY_NAME].add(entry.uuid)
             given_group_entry_ids.add(entry.id)
@@ -221,31 +222,30 @@ def export_tree(
     # At the same time, we will create the links_uuid list of dicts to be exported
 
     if not silent:
-        print('RETRIEVING LINKED NODES AND STORING LINKS...')
+        print('RETRIEVING EXPANDED PROVENANCE GRAPH...')
 
     to_be_exported, links_uuid, graph_traversal_rules = retrieve_linked_nodes(
         given_calculation_entry_ids, given_data_entry_ids, **kwargs
     )
 
-    ## Universal "entities" attributed to all types of nodes
-    # Logs
+    # Universal "entities" connected to all nodes
     if include_logs and to_be_exported:
-        # Get related log(s) - universal for all nodes
+        if not silent:
+            print('RETRIEVING LOGS...')
         builder = orm.QueryBuilder()
         builder.append(orm.Log, filters={'dbnode_id': {'in': to_be_exported}}, project='id')
         res = {_[0] for _ in builder.all()}
         given_log_entry_ids.update(res)
 
-    # Comments
     if include_comments and to_be_exported:
-        # Get related log(s) - universal for all nodes
+        if not silent:
+            print('RETRIEVING COMMENTS...')
         builder = orm.QueryBuilder()
         builder.append(orm.Comment, filters={'dbnode_id': {'in': to_be_exported}}, project='id')
         res = {_[0] for _ in builder.all()}
         given_comment_entry_ids.update(res)
 
-    # Here we get all the columns that we plan to project per entity that we
-    # would like to extract
+    # Get columns to be projected for each entity type to be exported
     given_entities = list()
     if given_group_entry_ids:
         given_entities.append(GROUP_ENTITY_NAME)
@@ -301,6 +301,9 @@ def export_tree(
     # TODO (Spyros) To see better! Especially for functional licenses
     # Check the licenses of exported data.
     if allowed_licenses is not None or forbidden_licenses is not None:
+        if not silent:
+            print('RETRIEVING LICENSES...')
+
         builder = orm.QueryBuilder()
         builder.append(orm.Node, project=['id', 'attributes.source.license'], filters={'id': {'in': to_be_exported}})
         # Skip those nodes where the license is not set (this is the standard behavior with Django)
@@ -416,7 +419,7 @@ def export_tree(
     check_process_nodes_sealed(process_nodes)
 
     ######################################
-    # Now I store
+    # Store data
     ######################################
     # subfolder inside the export package
     nodesubfolder = folder.get_subfolder(NODES_EXPORT_SUBFOLDER, create=True, reset_limit=True)

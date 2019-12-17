@@ -71,6 +71,16 @@ entity_names_to_entities = {
     COMMENT_ENTITY_NAME: Comment
 }
 
+# Mapping from entity names to AiiDA classes (used by the SQLA import/export)
+entities_to_entity_names = {
+    Node: NODE_ENTITY_NAME,
+    Group: GROUP_ENTITY_NAME,
+    COMPUTER_ENTITY_NAME,
+    User: USER_ENTITY_NAME,
+    Log: LOG_ENTITY_NAME,
+    Comment: COMMENT_ENTITY_NAME,
+}
+
 # Mapping of entity names to SQLA class paths
 entity_names_to_sqla_schema = {
     NODE_ENTITY_NAME: 'aiida.backends.sqlalchemy.models.node.DbNode',
