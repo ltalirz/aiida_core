@@ -212,7 +212,7 @@ def export_tree(
         group_qb.append(orm.Node, with_group='groups', project='*')
 
         if not silent:
-            progress_bar.set_description_str('Querying for Nodes in Groups')
+            progress_bar.set_description_str('Querying for Nodes in {} Groups'.format(len(given_group_entry_ids)))
             progress_bar.reset(total=1)
 
         rows = group_qb.all()
@@ -220,10 +220,10 @@ def export_tree(
         if not silent:
             progress_bar.update()
 
-            progress_bar.set_description_str('Loading Nodes from Groups')
+            progress_bar.set_description_str('Loading Nodes from {} Groups'.format(len(given_group_entry_ids)))
             progress_bar.reset(total=len(rows))
 
-        for row in group_qb.all():
+        for row in rows:
             entry = row[0]
             if not silent:
                 progress_bar.update()
