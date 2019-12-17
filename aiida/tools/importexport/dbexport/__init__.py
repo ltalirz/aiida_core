@@ -175,13 +175,12 @@ def export_tree(
         # Instantiate progress bar - go through list of "what"
         pbar_total = len(what) if what else 1
         progress_bar = tqdm(total=pbar_total, bar_format=BAR_FORMAT, leave=True)
-        progress_bar.set_description_str('Initializing ...', refresh=False)
+        progress_bar.set_description_str('Cataloging nodes ...')
 
     # I store a list of the actual dbnodes
     for entry in what:
         if not silent:
             progress_bar.update()
-            progress_bar.refresh()
 
         # This returns the class name (as in imports). E.g. for a model node:
         # aiida.backends.djsite.db.models.DbNode
@@ -207,17 +206,27 @@ def export_tree(
             )
 
     # Add all the nodes contained within the specified groups
-    for group in given_groups:
-        if not silent:
-            group_count = group.count()
-            if group_count:
-                progress_bar.reset(total=group_count)
-                progress_bar.set_description_str('Loading Group - LABEL={}'.format(group.label))
+    if given_group_entry_ids:
 
-        for entry in group.nodes:
+        group_qb = orm.QueryBuilder().append(orm.Group, filters={'id': {'in': given_group_entry_ids}}, tag='groups')
+        group_qb.append(orm.Node, with_group='groups', project='*')
+
+        if not silent:
+            progress_bar.set_description_str('Querying for Nodes in {} Groups'.format(len(given_group_entry_ids)))
+            progress_bar.reset(total=1)
+
+        rows = group_qb.all()
+
+        if not silent:
+            progress_bar.update()
+
+            progress_bar.set_description_str('Loading Nodes from {} Groups'.format(len(given_group_entry_ids)))
+            progress_bar.reset(total=len(rows))
+
+        for row in rows:
+            entry = row[0]
             if not silent:
                 progress_bar.update()
-                progress_bar.refresh()
 
             entities_starting_set[NODE_ENTITY_NAME].add(entry.uuid)
             if issubclass(entry.__class__, orm.Data):
@@ -426,7 +435,6 @@ def export_tree(
         for res_pk, res_attributes, res_extras in all_nodes_query.iterall():
             if not silent:
                 progress_bar.update()
-                progress_bar.refresh()
 
             node_attributes[str(res_pk)] = res_attributes
             node_extras[str(res_pk)] = res_extras
@@ -457,7 +465,6 @@ def export_tree(
             for res in group_uuid_qb.iterall():
                 if not silent:
                     progress_bar.update()
-                    progress_bar.refresh()
 
                 if str(res[0]) in groups_uuid:
                     groups_uuid[str(res[0])].append(str(res[1]))
