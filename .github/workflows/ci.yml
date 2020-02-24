@@ -46,7 +46,7 @@ jobs:
     - name: Install python dependencies
       run: |
         pip install numpy==1.17.4
-        pip install -e .[docs,testing]
+        pip install .[docs,testing]
 
     - name: Build documentation
       env:
@@ -76,7 +76,7 @@ jobs:
     - name: Install python dependencies
       run: |
         pip install numpy==1.17.4
-        pip install -e .[all]
+        pip install .[all]
         pip freeze
 
     - name: Run pre-commit
@@ -123,7 +123,7 @@ jobs:
       run: |
         pip install --upgrade pip
         pip install numpy==1.17.4
-        pip install -e .[atomic_tools,docs,notebook,rest,testing]
+        pip install .[atomic_tools,docs,notebook,rest,testing]
         reentry scan
 
     - name: Setup environment
@@ -154,7 +154,7 @@ jobs:
     - name: Install python dependencies
       run: |
         pip install numpy==1.17.4
-        pip install -e .
+        pip install .
 
     - name: Run verdi
       run: |
