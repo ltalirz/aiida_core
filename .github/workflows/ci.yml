@@ -1,27 +1,8 @@
-name: aiida-core
+name: continuous-integration
 
 on: [push, pull_request]
 
 jobs:
-
-  conda:
-
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-
-    steps:
-    - uses: actions/checkout@v1
-
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.7
-
-    - name: Conda install
-      env:
-        PYTHON_VERSION: 3.7
-      run:
-        .github/workflows/conda.sh
 
   docs:
 
@@ -29,7 +10,7 @@ jobs:
     timeout-minutes: 30
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@master
 
     - name: Set up Python 3.7
       uses: actions/setup-python@v1
@@ -60,7 +41,7 @@ jobs:
     timeout-minutes: 30
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@master
 
     - name: Set up Python 3.7
       uses: actions/setup-python@v1
@@ -91,11 +72,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.5, 3.8]
         backend: ['django', 'sqlalchemy']
+        python-version: [3.5, 3.8]
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@master
     - uses: CasperWA/postgresql-action@v1.2
       with:
         postgresql version: '10'
@@ -119,12 +100,21 @@ jobs:
         sudo apt install postgresql-10 rabbitmq-server graphviz
         sudo systemctl status rabbitmq-server.service
 
-    - name: Install python dependencies
+    - name: Upgrade pip
       run: |
         pip install --upgrade pip
-        pip install numpy==1.17.4
-        pip install -e .[atomic_tools,docs,notebook,rest,testing]
+        pip --version
+
+    - name: upgrade setuptools [py35]
+      if: matrix.python-version == 3.5
+      run: pip install -I setuptools==38.2.0  # Minimally required version for Python 3.5.
+
+    - name: Install aiida-core
+      run: |
+        pip install -r requirements/requirements-py-${{ matrix.python-version }}.txt
+        pip install --no-deps -e .
         reentry scan
+        pip freeze
 
     - name: Setup environment
       env:
@@ -138,13 +128,22 @@ jobs:
       run:
         .github/workflows/tests.sh
 
+    - name: Upload coverage report
+      if: matrix.python-version == 3.5 && github.repository == 'aiidateam/aiida-core'
+      uses: codecov/codecov-action@v1
+      with:
+        name: aiida-pytests-py3.5-${{ matrix.backend }}
+        flags: ${{ matrix.backend }}
+        file: ./coverage.xml
+        fail_ci_if_error: true
+
   verdi:
 
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@master
 
     - name: Set up Python 3.7
       uses: actions/setup-python@v1
@@ -166,7 +165,7 @@ jobs:
     timeout-minutes: 30
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@master
 
     - name: Install docker
       run: |
