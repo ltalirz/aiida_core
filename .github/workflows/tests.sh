@@ -5,13 +5,8 @@ set -ev
 export PYTHONPATH="${PYTHONPATH}:${GITHUB_WORKSPACE}/.ci"
 
 # pytest options:
-# - report timings of tests
-# - pytest-cov configuration taken from top-level .coveragerc
-# - coverage is reported as XML and in terminal,
-#   including the numbers/ranges of lines which are not covered
-# - coverage results of multiple tests are collected
-# - coverage is reported on files in aiida/
-export PYTEST_ADDOPTS="${PYTEST_ADDOPTS} --durations=0 --cov-config=.coveragerc --cov-report xml --cov-report term-missing --cov-append --cov=aiida"
+# - coverage results of multiple tests are collected together
+export PYTEST_ADDOPTS="${PYTEST_ADDOPTS} --cov-append"
 
 # daemon tests
 verdi daemon start 4
