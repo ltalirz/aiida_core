@@ -18,10 +18,11 @@ import yaml
 from .overridable import OverridableOption
 
 
-def yaml_config_file_provider(file_path, cmd_name):  # pylint: disable=unused-argument
+def yaml_config_file_provider(handle, cmd_name):  # pylint: disable=unused-argument
     """Read yaml config file."""
-    with open(file_path, 'r') as handle:
-        return yaml.safe_load(handle)
+    #with open(file_path, 'r') as handle:
+    #import pdb; pdb.set_trace()
+    return yaml.safe_load(handle)
 
 
 class ConfigFileOption(OverridableOption):
@@ -67,5 +68,6 @@ class ConfigFileOption(OverridableOption):
         """
         kw_copy = self.kwargs.copy()
         kw_copy.update(kwargs)
+        #print(kw_copy)
 
         return click_config_file.configuration_option(*self.args, **kw_copy)
