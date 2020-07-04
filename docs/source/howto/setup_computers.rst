@@ -4,18 +4,21 @@
 How to setup a computer
 ***********************
 
-A computer in AiiDA denotes any computational resource (with a batch job scheduler) on which you will run your calculations.
-For example, a computer may be your local machine, a virtual machine on a cloud computing service or a High Performance Computer (HPC) cluster.
+A computer in AiiDA denotes any computational resource on which you will run your calculations.
+For example, a computer may be your local machine, a virtual machine on a cloud computing service or a High Performance Compute (HPC) cluster.
 
-Remote computer requirements
-============================
+Computer requirements
+=====================
 
-Requirements for a computer are:
+Requirements for configuring a compute resource in AiiDA are:
 
-* It must run a Unix-like operating system
-* It must have ``bash`` installed
-* It should have a batch scheduler installed (read the :ref:`schedulers topic <topics:schedulers>` for a list of supported batch schedulers)
-* It must be accessible from the machine that runs AiiDA using one of the available transports (see below).
+* It runs a Unix-like operating system
+* It has ``bash`` installed
+* It is accessible from the machine that runs AiiDA using one of the available transports (see below).
+* (optional) It has batch scheduler installed (see the :ref:`schedulers topic <topics:schedulers>` for a list of batch schedulers supported out of the box)
+
+Note in particular that AiiDA does *not* need to be installed on the compute resource where the calculations are executed.
+It is needed only on the machine you use to manage the calculations.
 
 .. note::
 
@@ -28,7 +31,6 @@ In this case, you can install AiiDA directly on the remote cluster, and use the 
 
 If you plan to use an ``ssh`` transport, you have to configure a password-less login from your user to the cluster, see :ref:`this how-to on setting up SSH connections <how-to:ssh>`.
 
-.. _how-to:setup_computer:config:
 
 Computer setup and configuration
 ================================
@@ -40,6 +42,8 @@ The configuration of computers happens in two steps.
   The commands use some ``readline`` extensions to provide default answers, that require an advanced terminal. Therefore, run the commands from a standard terminal, and not from embedded terminals as the ones included in
   text editors, unless you know what you are doing.
   For instance, the terminal embedded in ``emacs`` is known to give problems.
+
+.. _how-to:setup_computer:setup:
 
 Setup of the computer
 ---------------------
@@ -161,6 +165,8 @@ This file contains the information in a series of key:value pairs:
       $ verdi computer setup --help
 
    Note the syntax differences: remove the ``--`` prefix and replace ``-`` within the keys by the underscore ``_``.
+
+.. _how-to:setup_computer:configuration:
 
 Configuration of the computer
 ------------------------------
