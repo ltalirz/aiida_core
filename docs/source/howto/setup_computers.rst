@@ -106,7 +106,7 @@ The computer has now been created in the database but you still need to *configu
           module load mymodule
           export NEWVAR=1
 
-   The list of the keys for the ``yaml`` file is given by the options flags of the command:
+   The list of the keys for the ``yaml`` file is given by the options of the ``computer setup`` command:
 
    .. code-block:: console
 
