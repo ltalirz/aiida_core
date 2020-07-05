@@ -175,30 +175,41 @@ Doing so will prevent AiiDA from connecting to the given computer to check the s
 
    The above commands will disable the computer for **all** AiiDA users on your profile.
 
+.. _how-to:setup_computer:overloads:
 
-Limiting requests to remote computers
-=====================================
+Avoiding overloads
+==================
 
-Some compute resources, particularly large supercomputing centres, may not tolerate opening SSH connections and executing scheduler commands too frequently.
+Some compute resources, particularly large supercomputing centres, may not tolerate submitting too many jobs at once, executing scheduler commands too frequently or opening too many SSH connections.
 
-There are two settings to control this in AiiDA:
+  * Limit the number of jobs in the queue.
 
-  * The connection cooldown time (in seconds).
+    Set yourself a limit for the maximum number of workflows to submit, and submit new ones only once previous workflows start to complete (in the future `this might be dealt with by AiiDA automatically <https://github.com/aiidateam/aiida-core/issues/88>`_).
+    The supported number of jobs depends on your supercomputer - discuss this with your supercomputer administrators (`this page<https://github.com/aiidateam/aiida-core/wiki/Optimising-the-SLURM-scheduler-configuration-(for-cluster-administrators)>`_ may contain useful information for them).
 
-    This is the minimum time to wait between opening a new connection,
-    and is an input to the ``verdi computer configure`` command.
+  * Increase the time interval between polling the job queue.
 
-  * The minimum time interval between polling the job queue (in seconds).
-
-    This can be set through the python API by loading the corresponding |Computer| node, e.g. in the ``verdi shell``:
+    The time interval (in seconds) can be set through the python API by loading the corresponding |Computer| node, e.g. in the ``verdi shell``:
 
     .. code-block:: python
 
         load_computer('fidis').set_minimum_job_poll_interval(30.0)
 
+
+  * Increase the connection cooldown time.
+
+    This is the minimum time (in seconds) to wait between opening a new connection.
+    Modify it for an existing computer using:
+
+    .. code-block:: bash
+
+      verdi computer configure ssh --non-interactive --safe-interval <SECONDS> <COMPUTER_NAME>
+
+
 .. important::
 
-    Both intervals apply *per daemon worker*, i.e. doubling the number of workers may end up putting twice the load on the remote computer.
+    The two intervals apply *per daemon worker*, i.e. doubling the number of workers may end up putting twice the load on the remote computer.
+
 
 .. |Code| replace:: :py:class:`~aiida.orm.nodes.data.Code`
 .. |Computer| replace:: :py:class:`~aiida.orm.Computer`
