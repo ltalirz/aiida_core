@@ -343,7 +343,7 @@ Updating from 0.x.* to 1.*
 --------------------------
 - `Additional instructions on how to migrate from 0.12.x versions <https://aiida.readthedocs.io/projects/aiida-core/en/v1.2.1/install/updating_installation.html#updating-from-0-12-to-1>`_.
 - `Additional instructions on how to migrate from versions 0.4 -- 0.11 <https://aiida.readthedocs.io/projects/aiida-core/en/v1.2.1/install/updating_installation.html#older-versions>`_.
-- For a list of breaking changes between the 0.x and the 1.x series of AiiDA, check `this page <https://aiida.readthedocs.io/projects/aiida-core/en/v1.2.1/install/updating_installation.html#breaking-changes-from-0-12-to-1>`_.
+- For a list of breaking changes between the 0.x and the 1.x series of AiiDA, `see here <https://aiida.readthedocs.io/projects/aiida-core/en/v1.2.1/install/updating_installation.html#breaking-changes-from-0-12-to-1>`_.
 
 
 .. _how-to:installation:backup:
