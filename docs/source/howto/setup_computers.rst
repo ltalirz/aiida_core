@@ -4,122 +4,71 @@
 How to setup a computer
 ***********************
 
-A computer in AiiDA denotes any computational resource on which you will run your calculations.
-For example, a computer may be your local machine, a virtual machine on a cloud computing service or a High Performance Compute (HPC) cluster.
+A |Computer| in AiiDA denotes a computational resource on which you will run your calculations.
+It can either be
+
+ 1. the machine where AiiDA is installed or
+ 2. any machine that is accessible via `SSH <https://en.wikipedia.org/wiki/Secure_Shell>`_ from the machine where AiiDA is installed.
+
+The second option allows managing multiple remote compute resources (including HPC clusters and cloud services) from the same AiiDA installation and moving computational jobs between them.
+
+.. tip::
+
+    The second option requires access through a SSH keypair.
+    If your compute resource demands two-factor authentication, you may need to install AiiDA directly on the compute resource instead.
 
 Computer requirements
 =====================
 
 Requirements for configuring a compute resource in AiiDA are:
 
-* It runs a Unix-like operating system
+* It runs a Unix-like operating system (Linux distros and MacOS will work fine)
 * It has ``bash`` installed
-* It is accessible from the machine that runs AiiDA using one of the available transports (see below).
-* (optional) It has batch scheduler installed (see the :ref:`schedulers topic <topics:schedulers>` for a list of batch schedulers supported out of the box)
+* (option 2.) It is accessible via SSH from the machine that runs AiiDA (possibly :ref:`via a proxy server<how-to:ssh:proxy>`)
+* (optional) It has batch scheduler installed (see the :ref:`list of supported schedulers <topics:schedulers>`)
 
-Note in particular that AiiDA does *not* need to be installed on the compute resource where the calculations are executed.
-It is needed only on the machine you use to manage the calculations.
+If you are configuring a remote computer, start by :ref:`configuring passwordless SSH access <how-to:ssh>` to it.
 
 .. note::
 
     AiiDA will use ``bash`` on the remote computer, regardless of the default shell.
     Please ensure that your remote ``bash`` configuration does not load a different shell.
 
-The first step is to choose the transport to connect to the computer.
-Typically, you will want to use the `Secure Shell (SSH) <https://en.wikipedia.org/wiki/Secure_Shell>`__ transport, apart from a few special cases where SSH connection is not possible (e.g., because you cannot setup a password-less connection to the computer).
-In this case, you can install AiiDA directly on the remote cluster, and use the ``local`` transport (in this way, commands to submit the jobs are simply executed on the AiiDA machine, and files are simply copied on the disk instead of opening an `SFTP <https://en.wikipedia.org/wiki/Secure_file_transfer_program>`__ connection).
-
-If you plan to use an ``ssh`` transport, you have to configure a password-less login from your user to the cluster, see :ref:`this how-to on setting up SSH connections <how-to:ssh>`.
-
-
 Computer setup and configuration
 ================================
 
-The configuration of computers happens in two steps.
+The configuration of computers happens in two steps: first, setting up the public metadata asociated with the |Computer| in AiiDA provenance graphs, and second, configuring private connection details.
+
+Throughout the process you will be prompted for information on the computer and on how to access it.
+
+.. tip::
+
+   Type ``?`` followed by ``<enter>`` to get help on what is being asked at any prompt.
+
+.. tip::
+
+   Press ``<CTRL>+C`` at any moment to abort the setup process.
+   Your AiiDA database will remain unmodified.
 
 .. note::
 
-  The commands use some ``readline`` extensions to provide default answers, that require an advanced terminal. Therefore, run the commands from a standard terminal, and not from embedded terminals as the ones included in
-  text editors, unless you know what you are doing.
-  For instance, the terminal embedded in ``emacs`` is known to give problems.
+  The ``verdi computer`` command uses ``readline`` extensions to provide default answers, that require an advanced terminal.
+  Use a standard terminal -- terminals embedded in some text editors (such as ``emacs``) have been known to cause problems.
 
 .. _how-to:setup_computer:setup:
 
 Setup of the computer
 ---------------------
 
-Use the command:
+Start by creating a new computer instance in the database:
 
 .. code-block:: console
 
    $ verdi computer setup
 
-This command allows to create a new computer instance in the database.
-
-.. tip::
-
-   The code will ask you a few pieces of information.
-   At every prompt, you can type the ``?`` character and press ``<enter>`` to get a more detailed explanation of what is being asked.
-
-.. tip::
-
-   You can press ``<CTRL>+C`` at any moment to abort the setup process.
-   Nothing will be stored in the database.
-
-Here is a list of what is asked, together with an explanation.
-
-Computer label
-   The (user-friendly) label of the new computer instance which is about to be created in the database (the label is used for instance when you have to pick a computer to launch a calculation on it).
-   Labels must be unique.
-   This command should be thought as a AiiDA-wise configuration of computer, independent of the AiiDA user that will actually use it.
-
-Fully-qualified hostname
-   The fully-qualified hostname of the computer to which you want to connect (i.e., with all the dots: ``bellatrix.epfl.ch``, and not just ``bellatrix``). Type ``localhost`` for the local transport.
-
-Description
-   A human-readable description of this computer; this is useful if you have a lot of computers and you want to add some text to distinguish them (e.g.: "cluster of computers at EPFL, installed in 2012, 2 GB of RAM per CPU")
-
-Enabled
-   Either ``True`` or ``False``; if ``False``, the computer is disabled and calculations associated with it will not be submitted.
-   This allows to disable temporarily a computer if it is giving problems or it is down for maintenance, without the need to delete it from the database.
-
-Transport plugin
-   The type of the transport to be used. A list of valid transport types can be obtained typing ``?``
-
-Scheduler plugin
-   The name of the plugin to be used to manage the job scheduler on the computer.
-   A list of valid scheduler plugins can be obtained typing ``?``.
-   See :ref:`the scheduler topic <topics:schedulers>` for a documentation of available scheduler plugins in AiiDA.
-
-shebang line
-   This is the first line in the beginning of the submission script.
-   The default is ``#!/bin/bash``.
-   You can change this in order, for example, to add options, such as the ``-l`` flag. Note that AiiDA only supports bash at this point!
-
-Work directory on the computer
-   The absolute path of the directory on the remote computer where AiiDA will run the calculations (often, it is the scratch of the computer).
-   You can (should) use the ``{username}`` replacement, that will be replaced by your username on the remote computer automatically: this allows the same computer to be used by different users, without the need to setup a different computer for each one, e.g.
-
-   .. code-block:: bash
-
-      scratch/{username}/aiida_work/
-
-Mpirun command
-   The ``mpirun`` command needed on the cluster to run parallel MPI programs.
-   You can (should) use the ``{tot_num_mpiprocs}`` replacement, that will be replaced by the total number of cpus, or the other scheduler-dependent fields (see the :ref:`scheduler topic <topics:schedulers>` for more information).
-   Some examples:
-
-   .. code-block:: bash
-
-      mpirun -np {tot_num_mpiprocs}
-      aprun -n {tot_num_mpiprocs}
-      poe
-
-Default number of CPUs per machine
-   The number of MPI processes per machine that should be executed if it is not otherwise specified. Use ``0`` to specify no default value.
-
-At the end, the command will open your default editor on a file containing a summary of the configuration up to this point, and the possibility to add ``bash`` commands that will be executed either *before* the actual execution of the job (under 'pre-execution script') or *after* the script submission (under 'Post execution script').
-These additional lines need may set up the environment on the computer, for example loading modules or exporting environment variables, for example:
+At the end, the command will open your default editor on a file containing a summary of the configuration up to this point.
+You can add ``bash`` commands that will be executed either *before* the actual execution of the job (under 'Pre-execution script') or *after* the script submission (under 'Post execution script').
+Use these additional lines to perform any further set up of the environment on the computer, for example loading modules or exporting environment variables:
 
 .. code-block:: bash
 
@@ -128,140 +77,69 @@ These additional lines need may set up the environment on the computer, for exam
 
 .. note::
 
-   Don't specify settings here that are specific to a code, calculation or scheduler -- you can set further pre-execution commands at the ``Code`` and ``CalcJob`` level.
+   Don't specify settings here that are specific to a code, calculation or scheduler: you can set further pre-execution commands at the ``Code`` and even ``CalcJob`` level.
 
 When you are done editing, save and quit (e.g. ``<ESC>:wq<ENTER>`` in ``vim``).
 The computer has now been created in the database but you still need to *configure* access to it using your credentials.
 
-In order to avoid having to retype the setup information the next time round, it is also possible provide some (or all) of the information described above via a configuration file using:
-
-.. code-block:: console
-
-   $ verdi computer setup --config computer.yml
-
-where ``computer.yml`` is a configuration file in the `YAML format <https://en.wikipedia.org/wiki/YAML#Syntax>`__.
-This file contains the information in a series of key:value pairs:
-
-.. code-block:: yaml
-
-   ---
-   label: "localhost"
-   hostname: "localhost"
-   transport: local
-   scheduler: "direct"
-   work_dir: "/home/max/.aiida_run"
-   mpirun_command: "mpirun -np {tot_num_mpiprocs}"
-   mpiprocs_per_machine: "2"
-   prepend_text: |
-      module load mymodule
-      export NEWVAR=1
-
 .. tip::
+    In order to avoid having to retype the setup information the next time round, you can provide some (or all) of the information via a configuration file:
 
-   The list of the keys that can be used is available from the options flags of the command:
+    .. code-block:: console
+
+       $ verdi computer setup --config computer.yml
+
+    where ``computer.yml`` is a configuration file in the `YAML format <https://en.wikipedia.org/wiki/YAML#Syntax>`__.
+    This file contains the information in a series of key:value pairs:
+
+    .. code-block:: yaml
+
+       ---
+       label: "localhost"
+       hostname: "localhost"
+       transport: local
+       scheduler: "direct"
+       work_dir: "/home/max/.aiida_run"
+       mpirun_command: "mpirun -np {tot_num_mpiprocs}"
+       mpiprocs_per_machine: "2"
+       prepend_text: |
+          module load mymodule
+          export NEWVAR=1
+
+   The list of the keys for the ``yaml`` file is given by the options flags of the command:
 
    .. code-block:: console
 
       $ verdi computer setup --help
 
-   Note the syntax differences: remove the ``--`` prefix and replace ``-`` within the keys by the underscore ``_``.
+   Note: Remove the ``--`` prefix and replace ``-`` within the keys by the underscore ``_``.
 
 .. _how-to:setup_computer:configuration:
 
 Configuration of the computer
 ------------------------------
 
-using the command:
+The second step configures private connection details using:
 
 .. code-block:: console
 
    $ verdi computer configure TRANSPORTTYPE COMPUTERNAME
 
-with the appropriate transport type (``ssh`` or ``local``) and computer label.
+with the appropriate transport type (``local`` for option 1., ``ssh`` for option 2.) and computer label.
 
-The configuration allows to access more detailed configurations, that are often user-dependent and depend on the specific transport.
+After setup and configuration have been completed, let AiiDA check if everything is working properly:
 
-The command will try to provide automatically default answers, that can be selected by pressing <Enter>.
+.. code-block:: console
 
-For ``local`` transport, the only information required is the minimum time interval between connections to the computer.
+   $ verdi computer test COMPUTERNAME
 
-For ``ssh`` transport, the following will be asked:
+This will test logging in, copying files, and checking the jobs in the scheduler queue.
 
-User name
-   Your username on the remote machine.
 
-port Nr
-   the port to connect to (the default SSH port is 22).
+Inspecting your computers
+=========================
 
-Look_for_keys
-   Automatically look for the private key in ``~/.ssh`` (Default: ``False``).
-
-SSH key file
-   The absolute path to your private SSH key.
-   You can leave it empty to use the default SSH key, if you set ``look_for_keys`` to ``True``.
-
-Connection timeout
-   A timeout in seconds if there is no response (e.g., the machine is down).
-   You can leave it empty to use the default value.
-
-Allow_ssh agent
-   If ``True``, it will try to use an SSH agent.
-
-SSH proxy_command
-   Leave empty if you do not need a proxy command (i.e., if you can directly connect to the machine).
-   If you instead need to connect to an intermediate computer first, you need to provide here the command for the proxy: see :ref:`the SSH proxy how-to <how-to:ssh:proxy>` for how to use this option, and in particular the  notes for the :ref:`format of this field <how-to:ssh:proxy:notes>`.
-
-Compress file transfer
-   ``True`` to compress the traffic (recommended).
-
-GSS auth
-   yes when using Kerberos token to connect.
-
-GSS kex
-   yes when using Kerberos token to connect, in some cases (depending on your ``.ssh/config`` file).
-
-GSS deleg_creds
-   yes when using Kerberos token to connect, in some cases (depending on your ``.ssh/config`` file).
-
-GSS host
-   Hostname when using Kerberos token to connect (defaults to the remote computer hostname
-
-Load system host keys
-   ``True`` to load the known hosts keys from the default SSH location (recommended).
-
-key policy
-   What is the policy in case the host is not known.
-   It is a string among the following:
-
-   * ``RejectPolicy`` (default, recommended): reject the connection if the host is not known.
-   * ``WarningPolicy`` (*not* recommended): issue a warning if the host is not known.
-   * ``AutoAddPolicy`` (*not* recommended): automatically add the host key at the first connection to the host.
-
-Connection cooldown time (s)
-   The minimum time interval between consecutive connection openings to the remote machine.
-
-After setup and configuration have been completed, your computer is ready to go!
-
-.. important::
-
-   To check if you set up the computer correctly, execute:
-
-   .. code-block:: console
-
-      $ verdi computer test COMPUTERNAME
-
-   that will run a few tests (file copy, file retrieval, check of the jobs in the scheduler queue) to verify that everything works as expected.
-
-Keberos tokens
---------------
-
-If the cluster you are using requires authentication through a Kerberos token (that you need to obtain before using ssh), you typically need to install ``libffi`` (``sudo apt-get install libffi-dev`` under Ubuntu), and make sure you install the ``ssh_kerberos`` optional dependencies during the installation process of AiiDA (see :ref:`intro:install:aiida-core`.
-Then, if your ``.ssh/config`` file is configured properly (in particular includes all the necessary ``GSSAPI`` options), ``verdi computer configure`` will contain already the correct suggestions for all the gss options needed to support Kerberos.
-
-Other commands for computers
-============================
-
-If you are not sure if your computer is already set up, use this command to get a list of existing computers:
+If you are unsure whether your computer is already set up, list configured computers with:
 
 .. code-block:: console
 
@@ -282,50 +160,45 @@ To rename a computer or remove it from the database:
 
 .. note::
 
-   You can delete computers **only if** no entry in the database is linked to them (as for instance ``CalcJob``, or ``RemoteData`` objects).
-   Otherwise, you will get an error message.
+   Before deleting a |Computer|, you will need to delete *all* nodes linked to it (e.g. any ``CalcJob`` and ``RemoteData`` nodes).
+   Otherwise, AiiDA will prevent you from doing so in order to preserve provenance.
 
-It is possible to **disable** a computer.
+If a remote machine is under maintenance (or no longer operational), you may want to **disable** the corresponding |Computer|.
 Doing so will prevent AiiDA from connecting to the given computer to check the state of calculations or to submit new calculations.
-This is particularly useful if, for instance, the computer is under maintenance but you still want to use AiiDA with other computers, or submit the calculations in the AiiDA database anyway.
-
-The relevant commands are:
 
 .. code-block:: console
 
-   $ verdi computer enable COMPUTERNAME
    $ verdi computer disable COMPUTERNAME
+   $ verdi computer enable COMPUTERNAME
 
 .. important::
 
-   The above commands will disable the computer for **all** AiiDA users.
+   The above commands will disable the computer for **all** AiiDA users on your profile.
 
 
-Limiting requests to the remote computer
-========================================
+Limiting requests to remote computers
+=====================================
 
-Some machine (particularly at supercomputing centres) may not tolerate opening connections and executing scheduler commands with a high frequency.
-To limit this AiiDA currently has two settings:
+Some compute resources, particularly large supercomputing centres, may not tolerate opening SSH connections and executing scheduler commands too frequently.
 
-* The transport safe open interval, and,
-* the minimum job poll interval
+There are two settings to control this in AiiDA:
 
-Neither of these can ever be violated.
-AiiDA will not try to update the jobs list on a remote machine until the job poll interval has elapsed since the last update (the first update will be immediate) at which point it will request a transport.
-Because of this the maximum possible time before a job update could be the sum of the two intervals, however this is unlikely to happen in practice.
+  * The connection cooldown time (in seconds).
 
-The transport open interval is currently hardcoded by the transport plugin; typically for SSH it's longer than for local transport.
+    This is the minimum time to wait between opening a new connection,
+    and is an input to the ``verdi computer configure`` command.
 
-The job poll interval can be set programmatically on the corresponding ``Computer`` object in verdi shell:
+  * The minimum time interval between polling the job queue (in seconds).
 
-.. code-block:: python
+    This can be set through the python API by loading the corresponding |Computer| node, e.g. in the ``verdi shell``:
 
-   load_computer('localhost').set_minimum_job_poll_interval(30.0)
+    .. code-block:: python
 
+        load_computer('fidis').set_minimum_job_poll_interval(30.0)
 
-This would set the transport interval on a computer called 'localhost' to 30 seconds.
+.. important::
 
-.. note::
+    Both intervals apply *per daemon worker*, i.e. doubling the number of workers may end up putting twice the load on the remote computer.
 
-    All of these intervals apply *per worker*, meaning that a daemon with multiple workers will not necessarily, overall, respect these limits.
-    For the time being there is no way around this and if these limits must be respected then do not run with more than one worker.
+.. |Code| replace:: :py:class:`~aiida.orm.nodes.data.Code`
+.. |Computer| replace:: :py:class:`~aiida.orm.Computer`
