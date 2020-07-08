@@ -25,13 +25,9 @@ jobs:
 
     - name: Install python dependencies
       run: |
-        pip install numpy==1.17.4
-        pip install -e .[all]
         pip freeze
+        pip uninstall -y pyyaml
 
-    - name: Run pre-commit
-      run:
-        pre-commit run --all-files || ( git status --short ; git diff ; exit 1 )
 
   check-requirements:
 
