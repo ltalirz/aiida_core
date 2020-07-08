@@ -26,7 +26,7 @@ jobs:
     - name: Install python dependencies
       run: |
         pip freeze
-        pip uninstall -y pyyaml
+        pip install "pyyaml~=5.1.2"
 
 
   check-requirements:
