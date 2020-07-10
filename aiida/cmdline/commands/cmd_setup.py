@@ -156,7 +156,7 @@ def quicksetup(
         'profile': profile,
         'email': email,
         'first_name': first_name,
-        'last_name': last_name,
+        'last_name': None,
         'institution': institution,
         'db_engine': db_engine,
         'db_backend': db_backend,
