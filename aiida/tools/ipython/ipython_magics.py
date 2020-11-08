@@ -147,8 +147,8 @@ def load_ipython_extension(ipython):
     """
     Registers the %aiida IPython extension.
 
-    .. deprecated:: 3.0.0
-        Use :py:meth:`register_ipython_extension` instead.
+    .. deprecated:: v3.0.0
+        Use :py:func:`~aiida.tools.ipython.ipython_magics.register_ipython_extension` instead.
     """
     register_ipython_extension(ipython)
 
@@ -159,10 +159,10 @@ def register_ipython_extension(ipython=None):
 
     The %aiida IPython extension provides the same environment as the `verdi shell`.
 
-    :param ipython: InteractiveShell instance. If `None`, the global InteractiveShell is used.
+    :param ipython: InteractiveShell instance. If omitted, the global InteractiveShell is used.
 
     """
-    if not ipython:
+    if ipython is None:
         ipython = get_ipython()
 
     ipython.register_magics(AiiDALoaderMagics)

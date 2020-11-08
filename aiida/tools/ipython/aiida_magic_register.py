@@ -25,6 +25,5 @@ if __name__ == '__main__':
         # AiiDA is not installed in this Python environment
         pass
     else:
-        # pylint: disable=ungrouped-imports
         from aiida.tools.ipython.ipython_magics import register_ipython_extension
         register_ipython_extension()
