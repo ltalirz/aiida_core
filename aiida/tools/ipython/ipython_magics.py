@@ -34,8 +34,8 @@ Usage
    In [2]: %aiida
 """
 
-from IPython import version_info, get_ipython
-from IPython.core import magic
+from IPython import version_info, get_ipython  # pylint: disable=no-name-in-module
+from IPython.core import magic  # pylint: disable=no-name-in-module,import-error
 
 
 def add_to_ns(local_ns, name, obj):
