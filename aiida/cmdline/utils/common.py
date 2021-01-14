@@ -476,8 +476,8 @@ def get_num_workers():
                 raise CircusCallError
         try:
             return response['numprocesses']
-        except KeyError:
-            raise CircusCallError('Circus did not return the number of daemon processes')
+        except KeyError as exc:
+            raise CircusCallError('Circus did not return the number of daemon processes') from exc
 
 
 def check_worker_load(active_slots):
@@ -511,3 +511,7 @@ def check_worker_load(active_slots):
             echo.echo('')  # New line
             echo.echo_warning(f'{percent_load * 100:.0f}% of the available daemon worker slots have been used!')
             echo.echo_warning("Increase the number of workers with 'verdi daemon incr'.\n")
+        else:
+            echo.echo_info(f'Using {percent_load * 100:.0f}% of the available daemon worker slots')
+    else:
+        echo.echo_info('No active daemon workers')
