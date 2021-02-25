@@ -78,22 +78,16 @@ class AiidaTestCase(unittest.TestCase):
         cls.__backend_instance = cls.get_backend_class()()
         cls._class_was_setup = True
 
-        cls.refurbish_db()
-
     @classmethod
     def tearDownClass(cls):
         """Tear down test class.
 
         Note: Also cleans file repository.
         """
-        # Double check for double security to avoid to run the tearDown
-        # if this is not a test profile
-
-        check_if_tests_can_run()
-        if orm.autogroup.CURRENT_AUTOGROUP is not None:
-            orm.autogroup.CURRENT_AUTOGROUP.clear_group_cache()
-        cls.clean_db()
         cls.clean_repository()
+
+    def setUp(self):
+        self.refurbish_db()
 
     def tearDown(self):
         reset_manager()

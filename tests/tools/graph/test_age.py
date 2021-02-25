@@ -85,10 +85,6 @@ def create_tree(max_depth=3, branching=3, starting_cls=orm.Data):
 class TestAiidaGraphExplorer(AiidaTestCase):
     """Tests for the AGE"""
 
-    def setUp(self):
-        super().setUp()
-        self.refurbish_db()
-
     @staticmethod
     def _create_basic_graph():
         """
@@ -667,10 +663,6 @@ class TestAiidaGraphExplorer(AiidaTestCase):
 
 class TestAiidaEntitySet(AiidaTestCase):
     """Tests for AiidaEntitySets"""
-
-    def setUp(self):
-        super().setUp()
-        self.refurbish_db()
 
     def test_class_mismatch(self):
         """

@@ -267,6 +267,7 @@ class TestMigrationSchemaVsModelsSchema(AiidaTestCase):
     def setUp(self):
         from sqlalchemydiff.util import get_temporary_uri
         from aiida.backends.sqlalchemy.migrations import versions
+        super().setUp()
 
         self.migr_method_dir_path = os.path.dirname(os.path.realpath(manager.__file__))
         # Set the alembic script directory location
@@ -300,6 +301,7 @@ class TestMigrationSchemaVsModelsSchema(AiidaTestCase):
         new_database(self.db_url_right)
 
     def tearDown(self):
+        super().tearDown()
         from sqlalchemydiff.util import destroy_database
         destroy_database(self.db_url_left)
         destroy_database(self.db_url_right)

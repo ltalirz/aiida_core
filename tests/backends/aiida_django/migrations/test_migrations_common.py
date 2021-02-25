@@ -37,6 +37,7 @@ class TestMigrations(AiidaTestCase):
         """Go to a specific schema version before running tests."""
         from aiida.backends.djsite import get_scoped_session
         from aiida.orm import autogroup
+        super().setUp()
 
         self.current_autogroup = autogroup.CURRENT_AUTOGROUP
         autogroup.CURRENT_AUTOGROUP = None
@@ -84,6 +85,7 @@ class TestMigrations(AiidaTestCase):
     def tearDown(self):
         """At the end make sure we go back to the latest schema version."""
         from aiida.orm import autogroup
+        super().tearDown()
         self._revert_database_schema()
         autogroup.CURRENT_AUTOGROUP = self.current_autogroup
 

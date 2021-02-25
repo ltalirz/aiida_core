@@ -21,10 +21,6 @@ from aiida.tools.visualization import graph as graph_mod
 class TestVisGraph(AiidaTestCase):
     """Tests for verdi graph"""
 
-    def setUp(self):
-        super().setUp()
-        self.refurbish_db()
-
     def create_provenance(self):
         """create an example provenance graph
         """
