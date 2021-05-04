@@ -333,9 +333,9 @@ Here are a few tips for tuning AiiDA's performance:
     .. dropdown:: Increase the number of daemon worker slots
 
 
-        By default, each daemon worker accepts only 200 tasks at a time.
+        By default, each daemon worker accepts only 200 tasks at a time, which is a conservative choice.
         If ``verdi process list`` warns about a high percentage of the daemon worker slots being used, but the CPU usage of the individual workers in ``verdi daemon status`` is not already close to 100%, you can increase the number of tasks handled by each daemon worker (thus increasing the workload per worker).
-        Increasing it to 1000 should typically work.
+        Increasing it to 1000 may work, depending on your hardware and the type of workload in the Processes you are running.
 
         Set the corresponding config variable and restart the daemon
         ::
