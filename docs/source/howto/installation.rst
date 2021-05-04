@@ -315,17 +315,17 @@ Tuning performance
 AiiDA supports running hundreds of thousands of calculations and graphs with millions of nodes.
 However, optimal performance at that scale might require some tweaks to the AiiDA configuration to balance the CPU and disk load.
 
-Here are a few tips for tuning AiiDA performance:
+Here are a few tips for tuning AiiDA's performance:
 
 
     .. dropdown:: Increase the number of daemon workers
 
         By default, the AiiDA daemon only uses a single worker, i.e. a single operating system process.
-        If ``verdi daemon status`` shows the daemon worker constantly at high CPU usage, you can use ``verdi daemon incr X`` to add ``X`` parallel daemon workers.
+        If ``verdi daemon status`` shows the daemon worker constantly at high CPU usage, you can use ``verdi daemon incr X`` to add ``X`` parallel daemon workers, where ``X`` is a positive integer.
 
         Keep in mind that other processes need to run on your computer (e.g. rabbitmq, the PostgreSQL database, ...), i.e. you likely want to stop increasing the number of workers *before* you reach the number of cores of your CPU.
 
-        To make the change permanent, set
+        To make sure the daemon will use 5 workers instead of 1 next time you (re)start it, do
         ::
 
             verdi config set daemon.default_workers 5
@@ -334,7 +334,7 @@ Here are a few tips for tuning AiiDA performance:
 
 
         By default, each daemon worker accepts only 200 tasks at a time.
-        If ``verdi daemon status`` constantly warns about a high percentage of the available daemon worker slots being used, you can increase the number of tasks handled by each daemon worker (thus increasing the workload per worker).
+        If ``verdi process list`` warns about a high percentage of the daemon worker slots being used, but the CPU usage of the individual workers in ``verdi daemon status`` is not already close to 100%, you can increase the number of tasks handled by each daemon worker (thus increasing the workload per worker).
         Increasing it to 1000 should typically work.
 
         Set the corresponding config variable and restart the daemon
